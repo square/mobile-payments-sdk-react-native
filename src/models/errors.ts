@@ -1,3 +1,7 @@
+// For documentation on the errors
+// Visit https://developer.squareup.com/docs/mobile-payments-sdk/ios/handling-errors and
+//       https://developer.squareup.com/docs/mobile-payments-sdk/android/handling-errors
+
 export enum AuthorizationError {
   ALREADY_AUTHORIZED,
   ALREADY_IN_PROGRESS,
