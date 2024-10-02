@@ -54,7 +54,7 @@
     "url": "git+https://github.com/square//mobile-payments-sdk-react-native.git"
   },
   "author": "Block, Inc <mpx@squareup.com> (https://github.com/square/)",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/square//mobile-payments-sdk-react-native/issues"
   },
