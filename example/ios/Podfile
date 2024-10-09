@@ -23,6 +23,12 @@ target 'MobilePaymentsSdkReactNativeExample' do
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
 
+  pod "SquareMobilePaymentsSDK", "~> 2.0.0-beta3"
+
+  # To use a simulated reader device to take sandbox payments, add the optional MockReaderUI:
+  pod "MockReaderUI", "~> 2.0.0-beta3", configurations: ['Debug']
+  
+  
   target 'MobilePaymentsSdkReactNativeExampleTests' do
     inherit! :complete
     # Pods for testing
