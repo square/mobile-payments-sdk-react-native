@@ -4,3 +4,15 @@ extensions.configure(com.facebook.react.ReactSettingsExtension){ ex -> ex.autoli
 rootProject.name = 'mobilepaymentssdkreactnative.example'
 include ':app'
 includeBuild('../node_modules/@react-native/gradle-plugin')
+
+
+dependencyResolutionManagement {
+  repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
+  repositories {
+    // Include only necessary repositories
+    google()
+    mavenCentral() // Optional, if you need Maven Central
+    maven { url("https://sdk.squareup.com/public/android/") }
+    // It's better to explicitly define the React Native repository if needed
+  }
+}
