@@ -4,12 +4,14 @@ import {
   StyleSheet,
   SafeAreaView,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import { defaultStyles } from '../styles/common';
 import { NativeModules, Platform } from 'react-native';
+import CustomButton from '../components/CustomButton';
 
-const { SettingsModule } = NativeModules;
+const { SettingsModule, SquarePayment, PaymentModule } = NativeModules;
 
 export function HomeScreen() {
   const showSettings = async () => {
@@ -23,6 +25,21 @@ export function HomeScreen() {
       console.log('Settings closed:', result);
     } catch (error) {
       console.error('Failed to show settings:', error);
+    }
+  };
+
+  const handlePayment = async () => {
+    try {
+      let result;
+      if (Platform.OS === 'ios') {
+        result = await PaymentModule.startPayment();
+      } else {
+        result = await SquarePayment.startPayment();
+      }
+      Alert.alert('Payment Successful', `Result: ${JSON.stringify(result)}`);
+    } catch (error) {
+      const errorMessage = (error as Error).message || 'Unknown error';
+      Alert.alert('Payment Failed', errorMessage);
     }
   };
 
@@ -44,6 +61,8 @@ export function HomeScreen() {
             of the Developer Portal.
           </Text>
         </View>
+
+        <CustomButton title="Start Payment" onPress={() => handlePayment()} />
       </View>
     </SafeAreaView>
   );

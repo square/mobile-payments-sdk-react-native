@@ -16,6 +16,8 @@
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		A1078E612CC13A0900DF8FB8 /* MockReaderModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1078E602CC13A0900DF8FB8 /* MockReaderModule.swift */; };
 		A1078E632CC13A2700DF8FB8 /* MockReaderModule.m in Sources */ = {isa = PBXBuildFile; fileRef = A1078E622CC13A2700DF8FB8 /* MockReaderModule.m */; };
+		A1078E652CC146E400DF8FB8 /* PaymentModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1078E642CC146E400DF8FB8 /* PaymentModule.swift */; };
+		A1078E672CC146F500DF8FB8 /* PaymentModule.m in Sources */ = {isa = PBXBuildFile; fileRef = A1078E662CC146F500DF8FB8 /* PaymentModule.m */; };
 		A1682D0D2CBE8D470011933F /* libmobile-payments-sdk-react-native.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A1682D0C2CBE8D470011933F /* libmobile-payments-sdk-react-native.a */; };
 		A1682D162CBE90620011933F /* SquareMobilePaymentsSDK.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1682D152CBE90620011933F /* SquareMobilePaymentsSDK.xcframework */; };
 		A1682D172CBE90620011933F /* SquareMobilePaymentsSDK.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A1682D152CBE90620011933F /* SquareMobilePaymentsSDK.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -73,6 +75,8 @@
 		89C6BE57DB24E9ADA2F236DE /* Pods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests.release.xcconfig"; path = "Target Support Files/Pods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests/Pods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests.release.xcconfig"; sourceTree = "<group>"; };
 		A1078E602CC13A0900DF8FB8 /* MockReaderModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockReaderModule.swift; sourceTree = "<group>"; };
 		A1078E622CC13A2700DF8FB8 /* MockReaderModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MockReaderModule.m; sourceTree = "<group>"; };
+		A1078E642CC146E400DF8FB8 /* PaymentModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentModule.swift; sourceTree = "<group>"; };
+		A1078E662CC146F500DF8FB8 /* PaymentModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PaymentModule.m; sourceTree = "<group>"; };
 		A1682D0C2CBE8D470011933F /* libmobile-payments-sdk-react-native.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = "libmobile-payments-sdk-react-native.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A1682D0F2CBE902C0011933F /* libmobile-payments-sdk-react-native.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = "libmobile-payments-sdk-react-native.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A1682D112CBE904B0011933F /* libPods-MobilePaymentsSdkReactNativeExample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = "libPods-MobilePaymentsSdkReactNativeExample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -146,6 +150,8 @@
 				A1682D252CBFC8100011933F /* SettingsModule.m */,
 				A1078E602CC13A0900DF8FB8 /* MockReaderModule.swift */,
 				A1078E622CC13A2700DF8FB8 /* MockReaderModule.m */,
+				A1078E642CC146E400DF8FB8 /* PaymentModule.swift */,
+				A1078E662CC146F500DF8FB8 /* PaymentModule.m */,
 			);
 			name = MobilePaymentsSdkReactNativeExample;
 			sourceTree = "<group>";
@@ -480,7 +486,9 @@
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
 				A1078E612CC13A0900DF8FB8 /* MockReaderModule.swift in Sources */,
 				A1682D222CBEA6100011933F /* AuthorizationModule.m in Sources */,
+				A1078E652CC146E400DF8FB8 /* PaymentModule.swift in Sources */,
 				A1078E632CC13A2700DF8FB8 /* MockReaderModule.m in Sources */,
+				A1078E672CC146F500DF8FB8 /* PaymentModule.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				A1682D202CBEA1730011933F /* AuthorizationModule.swift in Sources */,
 			);
