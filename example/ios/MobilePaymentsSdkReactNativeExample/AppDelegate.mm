@@ -21,9 +21,6 @@
   return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }
 
-- (NSArray<id<RCTBridgeModule>> *)extraModulesForBridge:(RCTBridge *)bridge {
-    return @[[AuthorizationModule new]];
-}
 
 - (NSURL *)sourceURLForBridge:(RCTBridge *)bridge
 {

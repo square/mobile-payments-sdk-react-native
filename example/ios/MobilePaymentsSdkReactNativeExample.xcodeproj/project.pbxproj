@@ -20,6 +20,8 @@
 		A1682D1E2CBE9EC20011933F /* AuthorizationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1682D1D2CBE9EC20011933F /* AuthorizationController.swift */; };
 		A1682D202CBEA1730011933F /* AuthorizationModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1682D1F2CBEA1730011933F /* AuthorizationModule.swift */; };
 		A1682D222CBEA6100011933F /* AuthorizationModule.m in Sources */ = {isa = PBXBuildFile; fileRef = A1682D212CBEA6100011933F /* AuthorizationModule.m */; };
+		A1682D242CBFC7350011933F /* SettingsModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1682D232CBFC7350011933F /* SettingsModule.swift */; };
+		A1682D262CBFC8100011933F /* SettingsModule.m in Sources */ = {isa = PBXBuildFile; fileRef = A1682D252CBFC8100011933F /* SettingsModule.m */; };
 		EAB847EDC876649DB783D7CC /* libPods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A1682D132CBE90530011933F /* libPods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests.a */; };
 		EE29F7BA8B341EE5191ABF15 /* libPods-MobilePaymentsSdkReactNativeExample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A1682D112CBE904B0011933F /* libPods-MobilePaymentsSdkReactNativeExample.a */; };
 /* End PBXBuildFile section */
@@ -76,6 +78,8 @@
 		A1682D1D2CBE9EC20011933F /* AuthorizationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationController.swift; sourceTree = "<group>"; };
 		A1682D1F2CBEA1730011933F /* AuthorizationModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationModule.swift; sourceTree = "<group>"; };
 		A1682D212CBEA6100011933F /* AuthorizationModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = AuthorizationModule.m; path = " /  PaymentsBridge.m /  MobilePaymentsSdkReactNativeExample / /  Created by Nilay Gupta on 07/10/24. /  #import <Foundation/Foundation.h> #import \"React/RCTBridgeModule.h\"      @interface RCT_EXTERN_MODULE(MockReaderModule, NSObject)   RCT_EXTERN_METHOD(presentMockReaderUI) /AuthorizationModule.m"; sourceTree = "<group>"; };
+		A1682D232CBFC7350011933F /* SettingsModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsModule.swift; sourceTree = "<group>"; };
+		A1682D252CBFC8100011933F /* SettingsModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingsModule.m; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -134,6 +138,8 @@
 				A1682D1C2CBE9EC10011933F /* MobilePaymentsSdkReactNativeExample-Bridging-Header.h */,
 				A1682D1F2CBEA1730011933F /* AuthorizationModule.swift */,
 				A1682D212CBEA6100011933F /* AuthorizationModule.m */,
+				A1682D232CBFC7350011933F /* SettingsModule.swift */,
+				A1682D252CBFC8100011933F /* SettingsModule.m */,
 			);
 			name = MobilePaymentsSdkReactNativeExample;
 			sourceTree = "<group>";
@@ -462,7 +468,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A1682D242CBFC7350011933F /* SettingsModule.swift in Sources */,
 				A1682D1E2CBE9EC20011933F /* AuthorizationController.swift in Sources */,
+				A1682D262CBFC8100011933F /* SettingsModule.m in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
 				A1682D222CBEA6100011933F /* AuthorizationModule.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
