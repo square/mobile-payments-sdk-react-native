@@ -11,6 +11,7 @@ import com.squareup.sdk.mobilepayments.MobilePaymentsSdk
 import com.squareup.sdk.mobilepayments.authorization.AuthorizeErrorCode
 import com.squareup.sdk.mobilepayments.core.CallbackReference
 import com.squareup.sdk.mobilepayments.core.Result
+import com.squareup.sdk.mobilepayments.mockreader.ui.MockReaderUI
 
 class MainActivity : ReactActivity() {
 
@@ -32,7 +33,7 @@ class MainActivity : ReactActivity() {
     super.onResume()
     val authorizationManager = MobilePaymentsSdk.authorizationManager()
     // Authorize and handle authorization successes or failures
-     callbackReference = authorizationManager.authorize($SQUARE_READER_SDK_ACCESS_TOKEN, $SQUARE_READER_SDK_LOCATION_ID) { result ->
+     callbackReference = authorizationManager.authorize("EAAAl_TKTStAld6XMy_wwyuTz7810rfCGCzchtXDJc3O9-GfNqRodeNb4QT0vuSL", "L1H3XZ07G1J94") { result ->
       when (result) {
         is Result.Success -> {
           val sharedPreferences = this.getSharedPreferences("MyAppPreferences", MODE_PRIVATE)
@@ -41,6 +42,9 @@ class MainActivity : ReactActivity() {
           editor.apply()
           finishWithAuthorizedSuccess(result.value)
           Log.d("MobilePayments", "Authorization Success: ${result.value}")
+          if (MobilePaymentsSdk.isSandboxEnvironment()) {
+            MockReaderUI.show()
+          }
         }
         is Result.Failure -> {
           when (result.errorCode) {
@@ -56,12 +60,16 @@ class MainActivity : ReactActivity() {
             }
             else -> {}
           }
+          deauthorize();
         }
 
       }
     }
   }
 
+  private fun deauthorize() {
+    MockReaderUI.hide()
+  }
   override fun onPause() {
     super.onPause()
     // Remove the callback reference to prevent memory leaks

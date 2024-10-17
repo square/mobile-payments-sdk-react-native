@@ -17,8 +17,10 @@ class AuthorizationController: UIViewController {
     }
   func authorizeMobilePaymentsSDK() {
 
+    let mockReaderModule = MockReaderModule()
           // Check if the SDK is not already authorized
           guard MobilePaymentsSDK.shared.authorizationManager.state == .notAuthorized else {
+              mockReaderModule.presentMockReaderUI();
               print("Already authorized.")
               return
           }
@@ -35,6 +37,8 @@ class AuthorizationController: UIViewController {
               }
 
               print("Square Mobile Payments SDK successfully authorized.")
+            
+            mockReaderModule.presentMockReaderUI()
               // You can proceed with other operations after successful authorization
           }
       }
