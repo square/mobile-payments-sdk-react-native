@@ -15,13 +15,12 @@ const { AuthorizationModule } = NativeModules;
 import { PermissionsAndroid } from 'react-native';
 import { PERMISSIONS, request } from 'react-native-permissions';
 
-export default function SplashScreen() {
+export default function SplashScreen({ navigation }) {
   const [logoTranslateY] = useState(new Animated.Value(0));
 
   const requestPermissions = async () => {
     try {
       if (Platform.OS === 'ios') {
-        // Request iOS permissions
         const bluetoothPermission = await request(
           PERMISSIONS.IOS.BLUETOOTH_PERIPHERAL
         );
@@ -29,7 +28,7 @@ export default function SplashScreen() {
           PERMISSIONS.IOS.LOCATION_WHEN_IN_USE
         );
         const microphonePermission = await request(PERMISSIONS.IOS.MICROPHONE);
-        // Check permissions
+
         if (
           locationPermission !== 'granted' ||
           microphonePermission !== 'granted' ||
@@ -41,7 +40,6 @@ export default function SplashScreen() {
           );
         }
       } else if (Platform.OS === 'android') {
-        // Request Android permissions
         const permissions = [
           PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
           PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
@@ -49,15 +47,15 @@ export default function SplashScreen() {
           PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN,
           PermissionsAndroid.PERMISSIONS.READ_PHONE_STATE,
         ];
-        // Filter out undefined permissions
+
         const granted = await PermissionsAndroid.requestMultiple(
           permissions.filter((permission) => permission !== undefined)
         );
 
-        // Check which permissions were granted
         const allGranted = Object.values(granted).every(
           (status) => status === PermissionsAndroid.RESULTS.GRANTED
         );
+
         if (!allGranted) {
           Alert.alert(
             'Permissions required',
@@ -94,9 +92,9 @@ export default function SplashScreen() {
       duration: 1500,
       useNativeDriver: true,
     }).start();
-
     fetchAuthorizationResponse();
-  }, [logoTranslateY]);
+    navigation.replace('Home');
+  }, [logoTranslateY, navigation]); // Added navigation here
 
   return (
     <View style={styles.container}>

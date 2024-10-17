@@ -20,9 +20,7 @@ class AuthorizationModule: NSObject, RCTBridgeModule {
 
             if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
                 if let rootViewController = windowScene.windows.first?.rootViewController {
-                    rootViewController.present(authorizationController, animated: true) {
                         authorizationController.authorizeMobilePaymentsSDK()
-                    }
                 }
             }
         }
