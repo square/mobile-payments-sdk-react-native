@@ -1,35 +1,19 @@
 import { useState, useEffect } from 'react';
-import {
-  StyleSheet,
-  View,
-  Animated,
-  Easing,
-  Dimensions,
-  Platform,
-} from 'react-native';
+import { StyleSheet, View, Animated, Easing, Dimensions } from 'react-native';
 import SquareLogo from '../components/SquareLogo';
 import { backgroundColor } from '../styles/common';
-import { NativeModules } from 'react-native';
-
-const { AuthorizationModule } = NativeModules;
+import { authorize } from 'mobile-payments-sdk-react-native';
 
 export default function SplashScreen() {
   const [logoTranslateY] = useState(new Animated.Value(0));
 
-  const fetchAuthorizationResponse = async () => {
-    try {
-      let response;
-
-      if (Platform.OS === 'ios') {
-        response = await AuthorizationModule.authorize();
-      } else {
-        response = await AuthorizationModule.getAuthorizationResponse();
-      }
-      console.log('Authorization Response is Here:', AuthorizationModule);
-      console.log('Authorization Response is:', response);
-    } catch (error) {
-      console.log('Failed to fetch authorization response:', error);
-    }
+  const authorizeSDK = async () => {
+    authorize(
+      'EAAAl_TKTStAld6XMy_wwyuTz7810rfCGCzchtXDJc3O9-GfNqRodeNb4QT0vuSL',
+      'L1H3XZ07G1J94'
+    ).then((authResult) => {
+      console.log('auth ====>>>>', authResult);
+    });
   };
 
   useEffect(() => {
@@ -40,7 +24,7 @@ export default function SplashScreen() {
       useNativeDriver: true,
     }).start();
 
-    fetchAuthorizationResponse();
+    authorizeSDK();
   }, [logoTranslateY]);
 
   return (
