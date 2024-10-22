@@ -71,8 +71,8 @@ export default function SplashScreen() {
 
   const authorizeSDK = async () => {
     authorize(
-      $SQUARE_READER_SDK_ACCESS_TOKEN,
-      $SQUARE_READER_SDK_LOCATION_ID
+      '$SQUARE_READER_SDK_ACCESS_TOKEN',
+      '$SQUARE_READER_SDK_LOCATION_ID'
     ).then((authResult) => {
       console.log('auth ====>>>>', authResult);
     });
