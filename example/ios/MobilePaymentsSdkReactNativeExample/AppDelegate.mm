@@ -1,7 +1,6 @@
 #import "AppDelegate.h"
 #import <SquareMobilePaymentsSDK/SquareMobilePaymentsSDK-Swift.h>
 #import <React/RCTBundleURLProvider.h>
-#import "MobilePaymentsSdkReactNativeExample-Swift.h"
 
 @implementation AppDelegate
 
@@ -21,9 +20,6 @@
   return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }
 
-- (NSArray<id<RCTBridgeModule>> *)extraModulesForBridge:(RCTBridge *)bridge {
-    return @[[AuthorizationModule new]];
-}
 
 - (NSURL *)sourceURLForBridge:(RCTBridge *)bridge
 {
