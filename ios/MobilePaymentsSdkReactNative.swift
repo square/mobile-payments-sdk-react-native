@@ -1,5 +1,11 @@
+
+import UIKit
+import SquareMobilePaymentsSDK
+
 @objc(MobilePaymentsSdkReactNative)
 class MobilePaymentsSdkReactNative: NSObject {
+    
+ 
 
   @objc(multiply:withB:withResolver:withRejecter:)
   func multiply(a: Float, b: Float, resolve:RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
@@ -8,8 +14,24 @@ class MobilePaymentsSdkReactNative: NSObject {
 
    @objc(authorize:locationId:withResolver:withRejecter:)
     func authorize(accessToken: String, locationId: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
-        let response = "Authorized with token: \(accessToken) and location: \(locationId)"
+         let response = "Authorized with token: \(accessToken) and location: \(locationId)"
+         guard MobilePaymentsSDK.shared.authorizationManager.state == .notAuthorized else {
+             return
+         }
+
+         MobilePaymentsSDK.shared.authorizationManager.authorize(
+            withAccessToken: accessToken,
+             locationID: locationId) { error in
+                 if let authError = error {
+                     // Handle auth error
+                     print("errorssss: \(authError.localizedDescription)")
+                     return
+                 }
+                 print("Square Mobile Payments SDK successfully authorized.")
+         }
         resolve(response)
+
+        
     }
 
     // Deauthorize method

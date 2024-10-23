@@ -7,7 +7,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   
- [SQMPMobilePaymentsSDK initializeWithApplicationLaunchOptions:launchOptions squareApplicationID:@$SQUARE_READER_SDK_APPLICATION_ID];
+ [SQMPMobilePaymentsSDK initializeWithApplicationLaunchOptions:launchOptions squareApplicationID:@"sandbox-sq0idb-UpSRXj5jp7SaNLEH9A-lgQ"];
   
 
 
