@@ -5,7 +5,7 @@ require Pod::Executable.execute_command('node', ['-p',
     {paths: [process.argv[1]]},
   )', __dir__]).strip
 
-platform :ios, min_ios_version_supported
+platform :ios, 15.1
 prepare_react_native_project!
 
 linkage = ENV['USE_FRAMEWORKS']
@@ -24,11 +24,18 @@ target 'MobilePaymentsSdkReactNativeExample' do
   )
 
   pod "SquareMobilePaymentsSDK", "~> 2.0.0-beta3"
-
-  # To use a simulated reader device to take sandbox payments, add the optional MockReaderUI:
+  
   pod "MockReaderUI", "~> 2.0.0-beta3", configurations: ['Debug']
-  
-  
+
+ 
+  permissions_path = '../node_modules/react-native-permissions/ios'
+  pod 'Permission-BluetoothPeripheral', :path => "#{permissions_path}/BluetoothPeripheral"
+  pod 'Permission-LocationAccuracy', :path => "#{permissions_path}/LocationAccuracy"
+  pod 'Permission-LocationAlways', :path => "#{permissions_path}/LocationAlways"
+  pod 'Permission-LocationWhenInUse', :path => "#{permissions_path}/LocationWhenInUse"
+  pod 'Permission-Microphone', :path => "#{permissions_path}/Microphone"
+
+
   target 'MobilePaymentsSdkReactNativeExampleTests' do
     inherit! :complete
     # Pods for testing
@@ -40,7 +47,7 @@ target 'MobilePaymentsSdkReactNativeExample' do
       installer,
       config[:reactNativePath],
       :mac_catalyst_enabled => false,
-      # :ccache_enabled => true
+      :ccache_enabled => true
     )
   end
 end

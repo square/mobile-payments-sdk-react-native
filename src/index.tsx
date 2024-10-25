@@ -3,3 +3,5 @@ export * from './models/enums';
 export * from './models/errors';
 export * from './models/objects';
 export * from './features/auth';
+export * from './features/settings';
+export * from './features/payment';
