@@ -7,25 +7,9 @@ import {
 } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import { defaultStyles } from '../styles/common';
-import { NativeModules, Platform } from 'react-native';
-
-const { SettingsModule } = NativeModules;
+import { showSettings } from 'mobile-payments-sdk-react-native';
 
 export function HomeScreen() {
-  const showSettings = async () => {
-    try {
-      let result = null;
-      if (Platform.OS === 'ios') {
-        result = await SettingsModule.showSettingsForIOS();
-      } else {
-        result = await SettingsModule.showSettings();
-      }
-      console.log('Settings closed:', result);
-    } catch (error) {
-      console.error('Failed to show settings:', error);
-    }
-  };
-
   return (
     <SafeAreaView style={defaultStyles.pageContainer}>
       <View style={defaultStyles.pageContainer}>
