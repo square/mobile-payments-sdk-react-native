@@ -82,6 +82,13 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
   @ReactMethod
   fun authorize(accessToken: String, locationId: String, promise: Promise) {
     val authorizationManager = MobilePaymentsSdk.authorizationManager()
+
+    if(authorizationManager.authorizationState.isAuthorized){
+      reactContext.currentActivity?.runOnUiThread {
+        showMockReaderUI(createMockPromise())
+      }
+      return
+    }
     authorizationManager.authorize(accessToken, locationId) { result ->
       when (result) {
         is Result.Success -> {
