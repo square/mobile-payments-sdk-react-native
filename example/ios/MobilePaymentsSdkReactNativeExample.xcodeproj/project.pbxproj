@@ -17,11 +17,6 @@
 		A1682D0D2CBE8D470011933F /* libmobile-payments-sdk-react-native.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A1682D0C2CBE8D470011933F /* libmobile-payments-sdk-react-native.a */; };
 		A1682D162CBE90620011933F /* SquareMobilePaymentsSDK.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1682D152CBE90620011933F /* SquareMobilePaymentsSDK.xcframework */; };
 		A1682D172CBE90620011933F /* SquareMobilePaymentsSDK.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A1682D152CBE90620011933F /* SquareMobilePaymentsSDK.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		A1682D1E2CBE9EC20011933F /* AuthorizationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1682D1D2CBE9EC20011933F /* AuthorizationController.swift */; };
-		A1682D202CBEA1730011933F /* AuthorizationModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1682D1F2CBEA1730011933F /* AuthorizationModule.swift */; };
-		A1682D222CBEA6100011933F /* AuthorizationModule.m in Sources */ = {isa = PBXBuildFile; fileRef = A1682D212CBEA6100011933F /* AuthorizationModule.m */; };
-		A1682D242CBFC7350011933F /* SettingsModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1682D232CBFC7350011933F /* SettingsModule.swift */; };
-		A1682D262CBFC8100011933F /* SettingsModule.m in Sources */ = {isa = PBXBuildFile; fileRef = A1682D252CBFC8100011933F /* SettingsModule.m */; };
 		EAB847EDC876649DB783D7CC /* libPods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A1682D132CBE90530011933F /* libPods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests.a */; };
 		EE29F7BA8B341EE5191ABF15 /* libPods-MobilePaymentsSdkReactNativeExample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A1682D112CBE904B0011933F /* libPods-MobilePaymentsSdkReactNativeExample.a */; };
 /* End PBXBuildFile section */
@@ -75,11 +70,6 @@
 		A1682D132CBE90530011933F /* libPods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = "libPods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A1682D152CBE90620011933F /* SquareMobilePaymentsSDK.xcframework */ = {isa = PBXFileReference; expectedSignature = "AppleDeveloperProgram:EYF346PHUG:Block, Inc."; lastKnownFileType = wrapper.xcframework; name = SquareMobilePaymentsSDK.xcframework; path = Pods/SquareMobilePaymentsSDK/SquareMobilePaymentsSDK.xcframework; sourceTree = "<group>"; };
 		A1682D1C2CBE9EC10011933F /* MobilePaymentsSdkReactNativeExample-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MobilePaymentsSdkReactNativeExample-Bridging-Header.h"; sourceTree = "<group>"; };
-		A1682D1D2CBE9EC20011933F /* AuthorizationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationController.swift; sourceTree = "<group>"; };
-		A1682D1F2CBEA1730011933F /* AuthorizationModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationModule.swift; sourceTree = "<group>"; };
-		A1682D212CBEA6100011933F /* AuthorizationModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = AuthorizationModule.m; path = " /  PaymentsBridge.m /  MobilePaymentsSdkReactNativeExample / /  Created by Nilay Gupta on 07/10/24. /  #import <Foundation/Foundation.h> #import \"React/RCTBridgeModule.h\"      @interface RCT_EXTERN_MODULE(MockReaderModule, NSObject)   RCT_EXTERN_METHOD(presentMockReaderUI) /AuthorizationModule.m"; sourceTree = "<group>"; };
-		A1682D232CBFC7350011933F /* SettingsModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsModule.swift; sourceTree = "<group>"; };
-		A1682D252CBFC8100011933F /* SettingsModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingsModule.m; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -134,12 +124,7 @@
 				13B07FB71A68108700A75B9A /* main.m */,
 				13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */,
 				2D836B28FA8B57D7645367CD /* PrivacyInfo.xcprivacy */,
-				A1682D1D2CBE9EC20011933F /* AuthorizationController.swift */,
 				A1682D1C2CBE9EC10011933F /* MobilePaymentsSdkReactNativeExample-Bridging-Header.h */,
-				A1682D1F2CBEA1730011933F /* AuthorizationModule.swift */,
-				A1682D212CBEA6100011933F /* AuthorizationModule.m */,
-				A1682D232CBFC7350011933F /* SettingsModule.swift */,
-				A1682D252CBFC8100011933F /* SettingsModule.m */,
 			);
 			name = MobilePaymentsSdkReactNativeExample;
 			sourceTree = "<group>";
@@ -175,6 +160,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
+				A12801772CCB6B17007FD339 /* Recovered References */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -188,6 +174,13 @@
 				00E356EE1AD99517003FC87E /* MobilePaymentsSdkReactNativeExampleTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		A12801772CCB6B17007FD339 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "Recovered References";
 			sourceTree = "<group>";
 		};
 		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
@@ -468,13 +461,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A1682D242CBFC7350011933F /* SettingsModule.swift in Sources */,
-				A1682D1E2CBE9EC20011933F /* AuthorizationController.swift in Sources */,
-				A1682D262CBFC8100011933F /* SettingsModule.m in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
-				A1682D222CBEA6100011933F /* AuthorizationModule.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
-				A1682D202CBEA1730011933F /* AuthorizationModule.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -493,7 +481,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 5B7EB9410499542E8C5724F5 /* Pods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -521,7 +508,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 89C6BE57DB24E9ADA2F236DE /* Pods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
 				INFOPLIST_FILE = MobilePaymentsSdkReactNativeExampleTests/Info.plist;
@@ -739,6 +725,7 @@
 					"\"$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)\"",
 					"\"$(inherited)\"",
 				);
+				"LIBRARY_SEARCH_PATHS[arch=*]" = "$(SRCROOT)/../example/ios\n";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_CPLUSPLUSFLAGS = (
 					"$(OTHER_CFLAGS)",
