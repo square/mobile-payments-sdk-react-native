@@ -15,7 +15,6 @@ import com.squareup.sdk.mobilepayments.mockreader.ui.MockReaderUI
 
 class MainActivity : ReactActivity() {
 
-  private var callbackReference : CallbackReference? = null
   /**
    * Returns the name of the main component registered from JavaScript. This is used to schedule
    * rendering of the component.
@@ -29,74 +28,4 @@ class MainActivity : ReactActivity() {
   override fun createReactActivityDelegate(): ReactActivityDelegate =
       DefaultReactActivityDelegate(this, mainComponentName, fabricEnabled)
 
-  override fun onResume() {
-    super.onResume()
-    val authorizationManager = MobilePaymentsSdk.authorizationManager()
-    // Authorize and handle authorization successes or failures
-     callbackReference = authorizationManager.authorize("EAAAl_TKTStAld6XMy_wwyuTz7810rfCGCzchtXDJc3O9-GfNqRodeNb4QT0vuSL", "L1H3XZ07G1J94") { result ->
-      when (result) {
-        is Result.Success -> {
-          val sharedPreferences = this.getSharedPreferences("MyAppPreferences", MODE_PRIVATE)
-          val editor = sharedPreferences.edit()
-          editor.putString("authorization_response", result.value.toString()) // Convert to JSON if needed
-          editor.apply()
-          finishWithAuthorizedSuccess(result.value)
-          Log.d("MobilePayments", "Authorization Success: ${result.value}")
-          if (MobilePaymentsSdk.isSandboxEnvironment()) {
-            MockReaderUI.show()
-          }
-        }
-        is Result.Failure -> {
-          when (result.errorCode) {
-            AuthorizeErrorCode.NO_NETWORK -> {
-              showRetryDialog(result)
-
-              Log.d("MobilePayments", "Authorization Failed: $result")
-            }
-            AuthorizeErrorCode.USAGE_ERROR -> {
-              showUsageErrorDialog(result)
-              Log.d("MobilePayments", "Authorization Error: $result")
-
-            }
-            else -> {}
-          }
-          deauthorize();
-        }
-
-      }
-    }
-  }
-
-  private fun deauthorize() {
-    MockReaderUI.hide()
-  }
-  override fun onPause() {
-    super.onPause()
-    // Remove the callback reference to prevent memory leaks
-    callbackReference?.clear()
-  }
-
-  private fun showRetryDialog(result: Result.Failure<*, *>) {
-    val builder = AlertDialog.Builder(this)
-    builder.setTitle("Network Error")
-      .setMessage("No network connection. Would you like to retry?")
-      .setPositiveButton("Retry") { _, _ -> onResume() }
-      .setNegativeButton("Cancel") { dialog, _ -> dialog.dismiss() }
-    builder.create().show()
-  }
-
-  private fun showUsageErrorDialog(result: Result.Failure<*, *>) {
-    val builder = AlertDialog.Builder(this)
-    builder.setTitle("Usage Error")
-      .setMessage("There was an error with the usage of the payment system. Please check your settings.")
-      .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
-    builder.create().show()
-  }
-
-  private fun finishWithAuthorizedSuccess(value: Any) {
-    Toast.makeText(this, "Authorization successful: $value", Toast.LENGTH_LONG).show()
-    // Uncomment to finish this activity or navigate to another one
-    // finish()
-    // startActivity(Intent(this, NextActivity::class.java))
-  }
 }
