@@ -10,10 +10,9 @@ import {
 } from 'react-native';
 import SquareLogo from '../components/SquareLogo';
 import { backgroundColor } from '../styles/common';
-import { NativeModules } from 'react-native';
-const { AuthorizationModule } = NativeModules;
 import { PermissionsAndroid } from 'react-native';
 import { PERMISSIONS, request } from 'react-native-permissions';
+import { authorize } from 'mobile-payments-sdk-react-native';
 
 export default function SplashScreen({ navigation }) {
   const [logoTranslateY] = useState(new Animated.Value(0));
@@ -68,20 +67,11 @@ export default function SplashScreen({ navigation }) {
     }
   };
 
-  const fetchAuthorizationResponse = async () => {
-    try {
-      let response;
-
-      if (Platform.OS === 'ios') {
-        response = await AuthorizationModule.authorize();
-      } else {
-        response = await AuthorizationModule.getAuthorizationResponse();
-      }
-      console.log('Authorization Response is Here:', AuthorizationModule);
-      console.log('Authorization Response is:', response);
-    } catch (error) {
-      console.log('Failed to fetch authorization response:', error);
-    }
+  const authorizeSDK = async () => {
+    authorize(
+      '$SQUARE_READER_SDK_ACCESS_TOKEN',
+      '$SQUARE_READER_SDK_LOCATION_ID'
+    ).then(() => {});
   };
 
   useEffect(() => {
@@ -92,9 +82,10 @@ export default function SplashScreen({ navigation }) {
       duration: 1500,
       useNativeDriver: true,
     }).start();
-    fetchAuthorizationResponse();
+
+    authorizeSDK();
     navigation.replace('Home');
-  }, [logoTranslateY, navigation]); // Added navigation here
+  }, [logoTranslateY, navigation]);
 
   return (
     <View style={styles.container}>
