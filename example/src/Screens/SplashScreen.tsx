@@ -9,11 +9,9 @@ export default function SplashScreen() {
 
   const authorizeSDK = async () => {
     authorize(
-      '$SQUARE_READER_SDK_TOKEN',
-      '$SQUARE_READER_SDK_LOCATION_ID'
-    ).then((authResult) => {
-      console.log('auth ====>>>>', authResult);
-    });
+      '$MOBILE_PAYMENT_SDK_TOKEN',
+      '$MOBILE_PAYMENT_SDK_LOCATION_ID'
+    ).then(() => {});
   };
 
   useEffect(() => {

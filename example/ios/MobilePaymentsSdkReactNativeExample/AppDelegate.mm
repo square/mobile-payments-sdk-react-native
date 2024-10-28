@@ -1,25 +1,19 @@
 #import "AppDelegate.h"
 #import <SquareMobilePaymentsSDK/SquareMobilePaymentsSDK-Swift.h>
 #import <React/RCTBundleURLProvider.h>
-
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+ [SQMPMobilePaymentsSDK initializeWithApplicationLaunchOptions:launchOptions squareApplicationID:@$MOBILE_PAYMENT_SDK_APPLICATION_ID];
   
- [SQMPMobilePaymentsSDK initializeWithApplicationLaunchOptions:launchOptions squareApplicationID:@"sandbox-sq0idb-UpSRXj5jp7SaNLEH9A-lgQ"];
-  
-
-
- 
   self.moduleName = @"MobilePaymentsSdkReactNativeExample";
-  // You can add your custom initial props in the dictionary below.
-  // They will be passed down to the ViewController used by React Native.
+//  // You can add your custom initial props in the dictionary below.
+//  // They will be passed down to the ViewController used by React Native.
   self.initialProps = @{};
 
   return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }
-
 
 - (NSURL *)sourceURLForBridge:(RCTBridge *)bridge
 {
