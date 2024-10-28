@@ -96,6 +96,5 @@ dependencies {
   implementation "com.facebook.react:react-native:+"
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
   implementation("com.squareup.sdk:mobile-payments-sdk:$squareSdkVersion")
-
 }
 
