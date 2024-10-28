@@ -21,11 +21,6 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
   }
 
   @ReactMethod
-  fun multiply(a: Double, b: Double, promise: Promise) {
-    promise.resolve(a * b)
-  }
-
-  @ReactMethod
   fun authorize(accessToken: String, locationId: String, promise: Promise) {
     val authorizationManager = MobilePaymentsSdk.authorizationManager()
     authorizationManager.authorize(accessToken, locationId) { result ->
@@ -43,17 +38,17 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
 
   @ReactMethod
   fun deauthorize(promise: Promise) {
-    promise.resolve("Deauthorized successfully")
+    promise.resolve("Not yet implemented")
   }
 
   @ReactMethod
   fun getAuthorizedLocation(promise: Promise) {
-    promise.resolve(mapOf("locationId" to "location123", "name" to "Sample Location"))
+    promise.resolve("Not yet implemented")
   }
 
   @ReactMethod
   fun getAuthorizationState(promise: Promise) {
-    promise.resolve("Authorized")
+    promise.resolve("Not yet implemented")
   }
 
   companion object {
