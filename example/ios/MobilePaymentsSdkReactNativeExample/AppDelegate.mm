@@ -1,5 +1,4 @@
 #import "AppDelegate.h"
-#import <SquareMobilePaymentsSDK/SquareMobilePaymentsSDK-Swift.h>
 #import <React/RCTBundleURLProvider.h>
 @implementation AppDelegate
 
