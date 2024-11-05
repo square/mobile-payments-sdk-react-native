@@ -19,6 +19,7 @@ export default function SplashScreen() {
 
   const requestPermissions = async () => {
     try {
+      let permissionsRequired = false;
       if (Platform.OS === 'ios') {
         // Request iOS permissions
         const bluetoothPermission = await request(
@@ -28,19 +29,15 @@ export default function SplashScreen() {
           PERMISSIONS.IOS.LOCATION_WHEN_IN_USE
         );
         const microphonePermission = await request(PERMISSIONS.IOS.MICROPHONE);
-        // Check permissions
+
         if (
+          bluetoothPermission !== 'granted' ||
           locationPermission !== 'granted' ||
-          microphonePermission !== 'granted' ||
-          bluetoothPermission !== 'granted'
+          microphonePermission !== 'granted'
         ) {
-          Alert.alert(
-            'Permissions required',
-            'This app requires additional permissions.'
-          );
+          permissionsRequired = true;
         }
       } else if (Platform.OS === 'android') {
-        // Request Android permissions
         const permissions = [
           PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
           PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
@@ -48,21 +45,23 @@ export default function SplashScreen() {
           PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN,
           PermissionsAndroid.PERMISSIONS.READ_PHONE_STATE,
         ];
-        // Filter out undefined permissions
+
         const granted = await PermissionsAndroid.requestMultiple(
           permissions.filter((permission) => permission !== undefined)
         );
 
-        // Check which permissions were granted
         const allGranted = Object.values(granted).every(
           (status) => status === PermissionsAndroid.RESULTS.GRANTED
         );
         if (!allGranted) {
-          Alert.alert(
-            'Permissions required',
-            'This app requires additional permissions.'
-          );
+          permissionsRequired = true;
         }
+      }
+      if (permissionsRequired) {
+        Alert.alert(
+          'Permissions required',
+          'This app requires additional permissions.'
+        );
       }
     } catch (error) {
       console.error(error);
@@ -71,11 +70,9 @@ export default function SplashScreen() {
 
   const authorizeSDK = async () => {
     authorize(
-      '$SQUARE_READER_SDK_ACCESS_TOKEN',
-      '$SQUARE_READER_SDK_LOCATION_ID'
-    ).then((authResult) => {
-      console.log('auth ====>>>>', authResult);
-    });
+      '$MOBILE_PAYMENT_SDK_TOKEN',
+      '$MOBILE_PAYMENT_SDK_LOCATION_ID'
+    ).then(() => {});
   };
 
   useEffect(() => {
