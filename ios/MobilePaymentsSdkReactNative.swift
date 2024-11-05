@@ -4,13 +4,6 @@ import SquareMobilePaymentsSDK
 
 @objc(MobilePaymentsSdkReactNative)
 class MobilePaymentsSdkReactNative: NSObject {
-    
- 
-
-  @objc(multiply:withB:withResolver:withRejecter:)
-  func multiply(a: Float, b: Float, resolve:RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
-    resolve(a*b)
-  }
 
    @objc(authorize:locationId:withResolver:withRejecter:)
     func authorize(accessToken: String, locationId: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
@@ -37,7 +30,7 @@ class MobilePaymentsSdkReactNative: NSObject {
     // Deauthorize method
     @objc(deauthorize:withRejecter:)
     func deauthorize(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
-        resolve("Deauthorized successfully")
+        resolve("Not yet implemented")
     }
 
     // Get Authorized Location method
@@ -50,6 +43,6 @@ class MobilePaymentsSdkReactNative: NSObject {
     // Get Authorization State method
     @objc(getAuthorizationState:withRejecter:)
     func getAuthorizationState(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
-        resolve("Authorized")
+        resolve("Not yet implemented")
     }
 }
