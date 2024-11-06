@@ -13,7 +13,11 @@ export default function App() {
           component={HomeScreen}
           options={{ headerShown: false }}
         />
-        <Stack.Screen name="Permission" component={PermissionsScreen} />
+        <Stack.Screen
+          name="Permission"
+          component={PermissionsScreen}
+          options={{ headerTitleAlign: 'center', headerShadowVisible: false }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -1,9 +1,13 @@
-import { useEffect } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, Image } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+  SafeAreaView,
+} from 'react-native';
+import SvgUri from 'react-native-svg-uri';
 
 export default function HomeScreen({ navigation }: any) {
-  useEffect(() => {}, []);
-
   function handlePermission() {
     navigation.navigate('Permission');
   }
@@ -11,29 +15,33 @@ export default function HomeScreen({ navigation }: any) {
   function handleSettings() {}
 
   return (
-    <View style={styles.container}>
-      <View style={styles.topBar}>
-        <TouchableOpacity style={styles.button} onPress={handlePermission}>
-          <Text style={styles.buttonText}>Permission</Text>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.container}>
+        <View style={styles.topBar}>
+          <TouchableOpacity style={styles.button} onPress={handlePermission}>
+            <Text style={styles.buttonText}>Permission</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={handleSettings}>
+            <Text style={styles.buttonText}>Settings</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.donut}>
+          <SvgUri
+            width="250"
+            height="300"
+            source={require('../assets/donut.svg')}
+          />
+        </View>
+        <Text style={styles.donutText}>Donut Counter</Text>
+        <TouchableOpacity style={styles.buyButton}>
+          <Text style={styles.buyButtonText}>Buy for $1</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={handleSettings}>
-          <Text style={styles.buttonText}>Settings</Text>
-        </TouchableOpacity>
+
+        <Text style={styles.warningText}>
+          ⚠️ Device not authorized. Open your settings to authorize.
+        </Text>
       </View>
-      <Image
-        source={require('../assets/donut.png')} // Use your local image or remote URL
-        style={styles.image}
-      />
-
-      <Text style={styles.donutText}>Donut Counter</Text>
-      <TouchableOpacity style={styles.buyButton}>
-        <Text style={styles.buyButtonText}>Buy for $1</Text>
-      </TouchableOpacity>
-
-      <Text style={styles.warningText}>
-        ⚠️ Device not authorized. Open your settings to authorize.
-      </Text>
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -79,7 +87,7 @@ const styles = StyleSheet.create({
     color: 'black',
     fontWeight: 'bold',
     fontSize: 25,
-    marginTop: 80,
+    marginTop: 30,
   },
   buyButtonText: {
     color: '#c6c6c6',
@@ -90,5 +98,8 @@ const styles = StyleSheet.create({
   warningText: {
     color: '#b6906d',
     marginTop: 5,
+  },
+  donut: {
+    paddingTop: '30%',
   },
 });
