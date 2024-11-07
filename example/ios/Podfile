@@ -25,15 +25,13 @@ target 'MobilePaymentsSdkReactNativeExample' do
 
   pod "SquareMobilePaymentsSDK", "~> 2.0.0-beta3"
 
- 
   permissions_path = '../node_modules/react-native-permissions/ios'
   pod 'Permission-BluetoothPeripheral', :path => "#{permissions_path}/BluetoothPeripheral"
   pod 'Permission-LocationAccuracy', :path => "#{permissions_path}/LocationAccuracy"
   pod 'Permission-LocationAlways', :path => "#{permissions_path}/LocationAlways"
   pod 'Permission-LocationWhenInUse', :path => "#{permissions_path}/LocationWhenInUse"
   pod 'Permission-Microphone', :path => "#{permissions_path}/Microphone"
-
-
+  
   target 'MobilePaymentsSdkReactNativeExampleTests' do
     inherit! :complete
     # Pods for testing
