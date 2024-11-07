@@ -3,10 +3,12 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import HomeScreen from './screens/HomeScreen';
 import PermissionsScreen from './screens/PermissionScreen';
 import CustomBackButton from './components/CustomBackButton';
+import SplashScreen from './Screens/SplashScreen';
 
-export default function App() {
+                                  
   const Stack = createNativeStackNavigator();
 
+export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Home">
@@ -24,6 +26,12 @@ export default function App() {
             headerLeft: () => <CustomBackButton />,
             headerTitleStyle: { fontWeight: 'bold' },
           }}
+        />
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Splash"
+          component={SplashScreen}
+          options={{ headerShown: false }}
         />
       </Stack.Navigator>
     </NavigationContainer>

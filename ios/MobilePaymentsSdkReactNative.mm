@@ -2,9 +2,22 @@
 
 @interface RCT_EXTERN_MODULE(MobilePaymentsSdkReactNative, NSObject)
 
-RCT_EXTERN_METHOD(multiply:(float)a withB:(float)b
-                 withResolver:(RCTPromiseResolveBlock)resolve
-                 withRejecter:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(authorize:(NSString *)accessToken 
+                  locationId:(NSString *)locationId
+                  withResolver:(RCTPromiseResolveBlock)resolve
+                  withRejecter:(RCTPromiseRejectBlock)reject)
+
+// New deauthorize method
+RCT_EXTERN_METHOD(deauthorize:(RCTPromiseResolveBlock)resolve
+                  withRejecter:(RCTPromiseRejectBlock)reject)
+
+// New getAuthorizedLocation method
+RCT_EXTERN_METHOD(getAuthorizedLocation:(RCTPromiseResolveBlock)resolve
+                  withRejecter:(RCTPromiseRejectBlock)reject)
+
+// New getAuthorizationState method
+RCT_EXTERN_METHOD(getAuthorizationState:(RCTPromiseResolveBlock)resolve
+                  withRejecter:(RCTPromiseRejectBlock)reject)
 
 + (BOOL)requiresMainQueueSetup
 {
