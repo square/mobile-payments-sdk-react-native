@@ -14,7 +14,7 @@ import { PermissionsAndroid } from 'react-native';
 import { PERMISSIONS, request } from 'react-native-permissions';
 import { authorize } from 'mobile-payments-sdk-react-native';
 
-export default function SplashScreen() {
+export default function SplashScreen({ navigation }) {
   const [logoTranslateY] = useState(new Animated.Value(0));
 
   const requestPermissions = async () => {
@@ -82,10 +82,12 @@ export default function SplashScreen() {
       easing: Easing.bezier(0.25, 0.1, 0.25, 1),
       duration: 1500,
       useNativeDriver: true,
-    }).start();
+    }).start(() => {
+      navigation.replace('Home');
+    });
 
     authorizeSDK();
-  }, [logoTranslateY]);
+  }, [logoTranslateY, navigation]);
 
   return (
     <View style={styles.container}>
