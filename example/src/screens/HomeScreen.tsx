@@ -9,20 +9,20 @@ import SvgUri from 'react-native-svg-uri';
 
 export default function HomeScreen({ navigation }: any) {
   function handlePermission() {
-    navigation.navigate('Permission');
+    navigation.navigate('Permissions');
   }
 
   function handleSettings() {}
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.container}>
+      <View style={styles.contentContainer}>
         <View style={styles.topBar}>
-          <TouchableOpacity style={styles.button} onPress={handlePermission}>
-            <Text style={styles.buttonText}>Permission</Text>
-          </TouchableOpacity>
           <TouchableOpacity style={styles.button} onPress={handleSettings}>
             <Text style={styles.buttonText}>Settings</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={handlePermission}>
+            <Text style={styles.buttonText}>Permissions</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.donut}>
@@ -38,7 +38,7 @@ export default function HomeScreen({ navigation }: any) {
         </TouchableOpacity>
 
         <Text style={styles.warningText}>
-          ⚠️ Device not authorized. Open your settings to authorize.
+          Device not authorized. Open your permissions to authorize.
         </Text>
       </View>
     </SafeAreaView>
@@ -48,38 +48,38 @@ export default function HomeScreen({ navigation }: any) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: 'white',
+  },
+  contentContainer: {
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'flex-start',
-    backgroundColor: 'white',
+    paddingHorizontal: 20,
   },
   topBar: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '100%',
-    paddingHorizontal: 20,
     marginTop: 20,
   },
   button: {
     backgroundColor: '#f2f2f2',
-    padding: 10,
     borderRadius: 5,
+    height: 45,
+    paddingHorizontal: 20,
+    justifyContent: 'center',
   },
   buttonText: {
     color: '#1f6cdc',
     textAlign: 'center',
     fontWeight: 'bold',
-  },
-  image: {
-    width: 200,
-    height: 200,
     justifyContent: 'center',
-    marginTop: 100,
+    fontSize: 16,
   },
   buyButton: {
-    width: '90%',
-    padding: 15,
-    justifyContent: 'center',
-    marginTop: 20,
+    width: '100%',
+    padding: 12,
+    marginTop: 35,
     backgroundColor: '#f2f2f2',
     borderRadius: 5,
   },
@@ -98,6 +98,7 @@ const styles = StyleSheet.create({
   warningText: {
     color: '#b6906d',
     marginTop: 5,
+    alignSelf: 'flex-start',
   },
   donut: {
     paddingTop: '30%',
