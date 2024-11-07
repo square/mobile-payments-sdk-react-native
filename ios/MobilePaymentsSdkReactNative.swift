@@ -81,19 +81,4 @@ class MobilePaymentsSdkReactNative: NSObject {
         }
     }
 
-    // New method to get environment
-    @objc(getEnvironment:withRejecter:)
-    func getEnvironment(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
-        // Replace with actual logic to get environment
-        let environment = "Production" // Example value
-        resolve(environment)
-    }
-
-    // New method to get SDK version
-    @objc(getSdkVersion:withRejecter:)
-    func getSdkVersion(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
-        // Replace with actual logic to get SDK version
-        let sdkVersion = "1.0.0" // Example version
-        resolve(sdkVersion)
-    }
 }

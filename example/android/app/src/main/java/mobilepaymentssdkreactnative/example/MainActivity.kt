@@ -1,16 +1,9 @@
 package mobilepaymentssdkreactnative.example
 
-import android.app.AlertDialog
-import android.util.Log
-import android.widget.Toast
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.fabricEnabled
 import com.facebook.react.defaults.DefaultReactActivityDelegate
-import com.squareup.sdk.mobilepayments.MobilePaymentsSdk
-import com.squareup.sdk.mobilepayments.authorization.AuthorizeErrorCode
-import com.squareup.sdk.mobilepayments.core.CallbackReference
-import com.squareup.sdk.mobilepayments.core.Result
 
 class MainActivity : ReactActivity() {
 

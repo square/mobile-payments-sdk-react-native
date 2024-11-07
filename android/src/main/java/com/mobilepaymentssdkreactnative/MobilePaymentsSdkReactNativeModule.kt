@@ -68,27 +68,12 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
           }
           is Result.Failure -> {
             // Handle failure
-            promise.reject(result.errorCode.toString(), result.errorMessage ?: "An unknown error occurred")
+            promise.reject(result.errorCode.toString(), result.errorMessage ?: "settings screen can't be presented")
           }
         }
       }
     }
   }
-
-  @ReactMethod
-  fun getEnvironment(promise: Promise) {
-    // Logic to get the current environment
-    val environment = "Production" // Replace with actual logic
-    promise.resolve(environment)
-  }
-
-  @ReactMethod
-  fun getSdkVersion(promise: Promise) {
-    // Logic to get SDK version
-    val sdkVersion = "1.0.0" // Replace with actual version retrieval logic
-    promise.resolve(sdkVersion)
-  }
-
 
   companion object {
     const val NAME = "MobilePaymentsSdkReactNative"
