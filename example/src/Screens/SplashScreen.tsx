@@ -14,14 +14,13 @@ import { PermissionsAndroid } from 'react-native';
 import { PERMISSIONS, request } from 'react-native-permissions';
 import { authorize } from 'mobile-payments-sdk-react-native';
 
-export default function SplashScreen() {
+export default function SplashScreen({ navigation }) {
   const [logoTranslateY] = useState(new Animated.Value(0));
 
   const requestPermissions = async () => {
     try {
       let permissionsRequired = false;
       if (Platform.OS === 'ios') {
-        // Request iOS permissions
         const bluetoothPermission = await request(
           PERMISSIONS.IOS.BLUETOOTH_PERIPHERAL
         );
@@ -53,6 +52,7 @@ export default function SplashScreen() {
         const allGranted = Object.values(granted).every(
           (status) => status === PermissionsAndroid.RESULTS.GRANTED
         );
+
         if (!allGranted) {
           permissionsRequired = true;
         }
@@ -85,7 +85,8 @@ export default function SplashScreen() {
     }).start();
 
     authorizeSDK();
-  }, [logoTranslateY]);
+    navigation.replace('Home');
+  }, [logoTranslateY, navigation]);
 
   return (
     <View style={styles.container}>

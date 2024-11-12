@@ -160,6 +160,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
+				A12801772CCB6B17007FD339 /* Recovered References */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -173,6 +174,13 @@
 				00E356EE1AD99517003FC87E /* MobilePaymentsSdkReactNativeExampleTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		A12801772CCB6B17007FD339 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "Recovered References";
 			sourceTree = "<group>";
 		};
 		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
