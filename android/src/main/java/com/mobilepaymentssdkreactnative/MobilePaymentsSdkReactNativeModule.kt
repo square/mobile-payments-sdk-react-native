@@ -15,17 +15,11 @@ import com.squareup.sdk.mobilepayments.authorization.AuthorizeErrorCode
 import com.squareup.sdk.mobilepayments.core.Result
 import com.squareup.sdk.mobilepayments.mockreader.ui.MockReaderUI
 
-
 class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicationContext) :
   ReactContextBaseJavaModule(reactContext) {
 
   override fun getName(): String {
     return NAME
-  }
-
-  @ReactMethod
-  fun multiply(a: Double, b: Double, promise: Promise) {
-    promise.resolve(a * b)
   }
 
   private fun createMockPromise(): Promise {
@@ -76,8 +70,6 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
       }
     }
   }
-
-
 
   @ReactMethod
   fun authorize(accessToken: String, locationId: String, promise: Promise) {
@@ -138,20 +130,6 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
   }
 
   @ReactMethod
-  fun getEnvironment(promise: Promise) {
-    // Logic to get the current environment
-    val environment = "Production" // Replace with actual logic
-    promise.resolve(environment)
-  }
-
-  @ReactMethod
-  fun getSdkVersion(promise: Promise) {
-    // Logic to get SDK version
-    val sdkVersion = "1.0.0" // Replace with actual version retrieval logic
-    promise.resolve(sdkVersion)
-  }
-
-  @ReactMethod
   fun showMockReaderUI(promise: Promise) {
     if (MobilePaymentsSdk.isSandboxEnvironment()) {
       MockReaderUI.show()
@@ -164,7 +142,6 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
     MockReaderUI.hide()
     promise.resolve("Mock Reader UI hidden successfully")
   }
-
 
   companion object {
     const val NAME = "MobilePaymentsSdkReactNative"
