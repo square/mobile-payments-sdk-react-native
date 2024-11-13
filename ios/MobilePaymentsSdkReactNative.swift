@@ -5,13 +5,6 @@ import MockReaderUI
 
 @objc(MobilePaymentsSdkReactNative)
 class MobilePaymentsSdkReactNative: NSObject {
-    
- 
-
-  @objc(multiply:withB:withResolver:withRejecter:)
-  func multiply(a: Float, b: Float, resolve:RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
-    resolve(a*b)
-  }
 
    @objc(authorize:locationId:withResolver:withRejecter:)
     func authorize(accessToken: String, locationId: String, resolve: @escaping RCTPromiseResolveBlock, reject:@escaping RCTPromiseRejectBlock) {
@@ -87,21 +80,6 @@ class MobilePaymentsSdkReactNative: NSObject {
         }
     }
 
-    // New method to get environment
-    @objc(getEnvironment:withRejecter:)
-    func getEnvironment(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
-        // Replace with actual logic to get environment
-        let environment = "Production" // Example value
-        resolve(environment)
-    }
-
-    // New method to get SDK version
-    @objc(getSdkVersion:withRejecter:)
-    func getSdkVersion(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
-        // Replace with actual logic to get SDK version
-        let sdkVersion = "1.0.0" // Example version
-        resolve(sdkVersion)
-    }
     private lazy var mockReaderUI: MockReaderUI? = {
         do {
             return try MockReaderUI(for: MobilePaymentsSDK.shared)
@@ -127,10 +105,8 @@ class MobilePaymentsSdkReactNative: NSObject {
                 return
             }
 
-            // Assuming you have a method or property to hide the UI
             if let mockReaderUI = self.mockReaderUI {
-                // Call a method to hide the UI (make sure this doesn't throw)
-                mockReaderUI.dismiss() // Replace with the actual method to hide the UI
+                mockReaderUI.dismiss() 
                 resolve("Mock Reader UI hidden successfully")
             } else {
                 reject("HIDE_MOCK_READER_UI_ERROR", "Mock Reader UI is not presented", nil)
