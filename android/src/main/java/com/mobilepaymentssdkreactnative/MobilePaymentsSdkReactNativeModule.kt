@@ -9,7 +9,6 @@ import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
-import com.facebook.react.bridge.WritableMap
 import com.squareup.sdk.mobilepayments.MobilePaymentsSdk
 import com.squareup.sdk.mobilepayments.authorization.AuthorizeErrorCode
 import com.squareup.sdk.mobilepayments.core.Result
@@ -22,62 +21,13 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
     return NAME
   }
 
-  private fun createMockPromise(): Promise {
-    return object : Promise {
-      override fun resolve(value: Any?) {
-        println(value) // Handle success
-      }
-
-      override fun reject(code: String?, message: String?) {
-        println("Error code: $code, Error: $message") // Handle error
-      }
-
-      override fun reject(p0: String?, p1: Throwable?) {
-        TODO("Not yet implemented")
-      }
-
-      // Ensure you implement all required methods of the Promise interface.
-      override fun reject(code: String?, message: String?, throwable: Throwable?) {
-        println("Error code: $code, Error: ${throwable?.message}") // Handle error
-      }
-
-      override fun reject(p0: Throwable?) {
-        TODO("Not yet implemented")
-      }
-
-      override fun reject(p0: Throwable?, p1: WritableMap?) {
-        TODO("Not yet implemented")
-      }
-
-      override fun reject(p0: String?, p1: WritableMap) {
-        TODO("Not yet implemented")
-      }
-
-      override fun reject(p0: String?, p1: Throwable?, p2: WritableMap?) {
-        TODO("Not yet implemented")
-      }
-
-      override fun reject(p0: String?, p1: String?, p2: WritableMap) {
-        TODO("Not yet implemented")
-      }
-
-      override fun reject(p0: String?, p1: String?, p2: Throwable?, p3: WritableMap?) {
-        TODO("Not yet implemented")
-      }
-
-      override fun reject(p0: String?) {
-        TODO("Not yet implemented")
-      }
-    }
-  }
-
   @ReactMethod
   fun authorize(accessToken: String, locationId: String, promise: Promise) {
     val authorizationManager = MobilePaymentsSdk.authorizationManager()
 
     if(authorizationManager.authorizationState.isAuthorized){
       reactContext.currentActivity?.runOnUiThread {
-        showMockReaderUI(createMockPromise())
+        showMockReaderUI(promise)
       }
       return
     }
@@ -85,7 +35,7 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
       when (result) {
         is Result.Success -> {
           finishWithAuthorizedSuccess(reactContext, result.value)
-          showMockReaderUI(createMockPromise())
+          showMockReaderUI(promise)
           promise.resolve("Authorized with token: $accessToken and location: $locationId")
         }
         is Result.Failure<*, *> -> { // Match any Failure type
@@ -108,25 +58,6 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
   @ReactMethod
   fun getAuthorizationState(promise: Promise) {
     promise.resolve("Authorized")
-  }
-
-  @ReactMethod
-  fun showSettings(promise: Promise) {
-    reactContext.runOnUiQueueThread {
-      val settingsManager = MobilePaymentsSdk.settingsManager()
-      settingsManager.showSettings { result ->
-        when (result) {
-          is Result.Success -> {
-            // Ensure that the value can be resolved correctly
-            promise.resolve("Settings closed successfully")
-          }
-          is Result.Failure -> {
-            // Handle failure
-            promise.reject(result.errorCode.toString(), result.errorMessage ?: "An unknown error occurred")
-          }
-        }
-      }
-    }
   }
 
   @ReactMethod
