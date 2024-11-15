@@ -10,10 +10,7 @@ class MobilePaymentsSdkReactNative: NSObject {
     func authorize(accessToken: String, locationId: String, resolve: @escaping RCTPromiseResolveBlock, reject:@escaping RCTPromiseRejectBlock) {
          let response = "Authorized with token: \(accessToken) and location: \(locationId)"
         if MobilePaymentsSDK.shared.authorizationManager.state == .authorized {
-             print("Already authorized, showing mock reader UI.")
-            self.showMockReaderUI(resolve: resolve, reject: reject)
-
-             return
+             print("Already authorized")
         }
 
          MobilePaymentsSDK.shared.authorizationManager.authorize(
@@ -25,12 +22,8 @@ class MobilePaymentsSdkReactNative: NSObject {
                      return
                  }
                  print("Square Mobile Payments SDK successfully authorized.")
-                 self.showMockReaderUI(resolve: resolve, reject: reject)
          }
-        
         resolve(response)
-     
-        
     }
 
     // Deauthorize method
@@ -50,34 +43,6 @@ class MobilePaymentsSdkReactNative: NSObject {
     @objc(getAuthorizationState:withRejecter:)
     func getAuthorizationState(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         resolve("Authorized")
-    }
-    
-    @objc(showSettings:withRejecter:)
-    func showSettings(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
-          DispatchQueue.main.async {
-            // Get the active scene
-            guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-                  let rootViewController = windowScene.windows.first?.rootViewController else {
-                print("No window scene or root view controller found.")
-                return
-            }
-
-            // Check if a view controller is currently presented
-            if let presentedViewController = rootViewController.presentedViewController {
-                // Optionally dismiss the currently presented view controller
-                presentedViewController.dismiss(animated: false) {
-                    // Present the settings screen after dismissing
-                    MobilePaymentsSDK.shared.settingsManager.presentSettings(with: rootViewController) { _ in
-                        print("Settings screen closed.")
-                    }
-                }
-            } else {
-                // No view controller presented, so present the settings screen directly
-                MobilePaymentsSDK.shared.settingsManager.presentSettings(with: rootViewController) { _ in
-                    print("Settings screen closed.")
-                }
-            }
-        }
     }
 
     private lazy var mockReaderUI: MockReaderUI? = {
@@ -113,6 +78,4 @@ class MobilePaymentsSdkReactNative: NSObject {
             }
         }
     }
-
-
 }

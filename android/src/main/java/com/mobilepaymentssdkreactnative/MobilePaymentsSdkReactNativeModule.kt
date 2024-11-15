@@ -27,7 +27,6 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
 
     if(authorizationManager.authorizationState.isAuthorized){
       reactContext.currentActivity?.runOnUiThread {
-        showMockReaderUI(promise)
       }
       return
     }
@@ -35,7 +34,6 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
       when (result) {
         is Result.Success -> {
           finishWithAuthorizedSuccess(reactContext, result.value)
-          showMockReaderUI(promise)
           promise.resolve("Authorized with token: $accessToken and location: $locationId")
         }
         is Result.Failure<*, *> -> { // Match any Failure type
@@ -63,7 +61,9 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
   @ReactMethod
   fun showMockReaderUI(promise: Promise) {
     if (MobilePaymentsSdk.isSandboxEnvironment()) {
-      MockReaderUI.show()
+      reactContext.currentActivity?.runOnUiThread {
+        MockReaderUI.show()
+      }
     }
     promise.resolve("Mock Reader UI shown successfully")
   }
