@@ -26,8 +26,6 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
     val authorizationManager = MobilePaymentsSdk.authorizationManager()
 
     if(authorizationManager.authorizationState.isAuthorized){
-      reactContext.currentActivity?.runOnUiThread {
-      }
       return
     }
     authorizationManager.authorize(accessToken, locationId) { result ->
@@ -69,9 +67,8 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
   }
 
   @ReactMethod
-  fun hideMockReaderUI(promise: Promise) {
+  fun hideMockReaderUI() {
     MockReaderUI.hide()
-    promise.resolve("Mock Reader UI hidden successfully")
   }
 
   companion object {
