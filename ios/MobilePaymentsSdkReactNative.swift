@@ -29,7 +29,7 @@ class MobilePaymentsSdkReactNative: NSObject {
     // Deauthorize method
     @objc(deauthorize:withRejecter:)
     func deauthorize(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
-        resolve("Deauthorized successfully")
+        resolve("Not yet implemented")
     }
 
     // Get Authorized Location method
@@ -42,7 +42,35 @@ class MobilePaymentsSdkReactNative: NSObject {
     // Get Authorization State method
     @objc(getAuthorizationState:withRejecter:)
     func getAuthorizationState(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
-        resolve("Authorized")
+        resolve("Not yet implemented")
+    }
+    
+    @objc(showSettings:withRejecter:)
+    func showSettings(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+          DispatchQueue.main.async {
+            // Get the active scene
+            guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                  let rootViewController = windowScene.windows.first?.rootViewController else {
+                print("No window scene or root view controller found.")
+                return
+            }
+
+            // Check if a view controller is currently presented
+            if let presentedViewController = rootViewController.presentedViewController {
+                // Optionally dismiss the currently presented view controller
+                presentedViewController.dismiss(animated: false) {
+                    // Present the settings screen after dismissing
+                    MobilePaymentsSDK.shared.settingsManager.presentSettings(with: rootViewController) { _ in
+                        print("Settings screen closed.")
+                    }
+                }
+            } else {
+                // No view controller presented, so present the settings screen directly
+                MobilePaymentsSDK.shared.settingsManager.presentSettings(with: rootViewController) { _ in
+                    print("Settings screen closed.")
+                }
+            }
+        }
     }
 
     private lazy var mockReaderUI: MockReaderUI? = {

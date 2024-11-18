@@ -17,6 +17,7 @@ export function HomeScreen() {
   useEffect(() => {
     showMockReaderUI();
   });
+  
   return (
     <SafeAreaView style={defaultStyles.pageContainer}>
       <View style={defaultStyles.pageContainer}>
