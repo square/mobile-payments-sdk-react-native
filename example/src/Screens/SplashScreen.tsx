@@ -19,6 +19,7 @@ export default function SplashScreen({ navigation }) {
 
   const requestPermissions = async () => {
     try {
+      let permissionsRequired = false;
       if (Platform.OS === 'ios') {
         const bluetoothPermission = await request(
           PERMISSIONS.IOS.BLUETOOTH_PERIPHERAL
@@ -29,14 +30,11 @@ export default function SplashScreen({ navigation }) {
         const microphonePermission = await request(PERMISSIONS.IOS.MICROPHONE);
 
         if (
+          bluetoothPermission !== 'granted' ||
           locationPermission !== 'granted' ||
-          microphonePermission !== 'granted' ||
-          bluetoothPermission !== 'granted'
+          microphonePermission !== 'granted'
         ) {
-          Alert.alert(
-            'Permissions required',
-            'This app requires additional permissions.'
-          );
+          permissionsRequired = true;
         }
       } else if (Platform.OS === 'android') {
         const permissions = [
@@ -56,11 +54,14 @@ export default function SplashScreen({ navigation }) {
         );
 
         if (!allGranted) {
-          Alert.alert(
-            'Permissions required',
-            'This app requires additional permissions.'
-          );
+          permissionsRequired = true;
         }
+      }
+      if (permissionsRequired) {
+        Alert.alert(
+          'Permissions required',
+          'This app requires additional permissions.'
+        );
       }
     } catch (error) {
       console.error(error);
