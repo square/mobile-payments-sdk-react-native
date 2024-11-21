@@ -13,7 +13,6 @@ import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.ReadableMap
-import com.facebook.react.bridge.WritableMap
 import com.squareup.sdk.mobilepayments.MobilePaymentsSdk
 import com.squareup.sdk.mobilepayments.authorization.AuthorizeErrorCode
 import com.squareup.sdk.mobilepayments.core.Result
@@ -35,76 +34,16 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
   }
 
   @ReactMethod
-  fun multiply(a: Double, b: Double, promise: Promise) {
-    promise.resolve(a * b)
-  }
-
-  private fun createMockPromise(): Promise {
-    return object : Promise {
-      override fun resolve(value: Any?) {
-        println(value) // Handle success
-      }
-
-      override fun reject(code: String?, message: String?) {
-        println("Error code: $code, Error: $message") // Handle error
-      }
-
-      override fun reject(p0: String?, p1: Throwable?) {
-        TODO("Not yet implemented")
-      }
-
-      // Ensure you implement all required methods of the Promise interface.
-      override fun reject(code: String?, message: String?, throwable: Throwable?) {
-        println("Error code: $code, Error: ${throwable?.message}") // Handle error
-      }
-
-      override fun reject(p0: Throwable?) {
-        TODO("Not yet implemented")
-      }
-
-      override fun reject(p0: Throwable?, p1: WritableMap?) {
-        TODO("Not yet implemented")
-      }
-
-      override fun reject(p0: String?, p1: WritableMap) {
-        TODO("Not yet implemented")
-      }
-
-      override fun reject(p0: String?, p1: Throwable?, p2: WritableMap?) {
-        TODO("Not yet implemented")
-      }
-
-      override fun reject(p0: String?, p1: String?, p2: WritableMap) {
-        TODO("Not yet implemented")
-      }
-
-      override fun reject(p0: String?, p1: String?, p2: Throwable?, p3: WritableMap?) {
-        TODO("Not yet implemented")
-      }
-
-      override fun reject(p0: String?) {
-        TODO("Not yet implemented")
-      }
-    }
-  }
-
-
-
-  @ReactMethod
   fun authorize(accessToken: String, locationId: String, promise: Promise) {
     val authorizationManager = MobilePaymentsSdk.authorizationManager()
 
     if(authorizationManager.authorizationState.isAuthorized){
-      reactContext.currentActivity?.runOnUiThread {
-        showMockReaderUI(createMockPromise())
-      }
       return
     }
     authorizationManager.authorize(accessToken, locationId) { result ->
       when (result) {
         is Result.Success -> {
           finishWithAuthorizedSuccess(reactContext, result.value)
-          showMockReaderUI(createMockPromise())
           promise.resolve("Authorized with token: $accessToken and location: $locationId")
         }
         is Result.Failure<*, *> -> { // Match any Failure type
@@ -141,7 +80,7 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
           }
           is Result.Failure -> {
             // Handle failure
-            promise.reject(result.errorCode.toString(), result.errorMessage ?: "An unknown error occurred")
+            promise.reject(result.errorCode.toString(), result.errorMessage ?: "settings screen can't be presented")
           }
         }
       }
@@ -149,31 +88,18 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
   }
 
   @ReactMethod
-  fun getEnvironment(promise: Promise) {
-    // Logic to get the current environment
-    val environment = "Production" // Replace with actual logic
-    promise.resolve(environment)
-  }
-
-  @ReactMethod
-  fun getSdkVersion(promise: Promise) {
-    // Logic to get SDK version
-    val sdkVersion = "1.0.0" // Replace with actual version retrieval logic
-    promise.resolve(sdkVersion)
-  }
-
-  @ReactMethod
   fun showMockReaderUI(promise: Promise) {
     if (MobilePaymentsSdk.isSandboxEnvironment()) {
-      MockReaderUI.show()
+      reactContext.currentActivity?.runOnUiThread {
+        MockReaderUI.show()
+      }
     }
     promise.resolve("Mock Reader UI shown successfully")
   }
 
   @ReactMethod
-  fun hideMockReaderUI(promise: Promise) {
+  fun hideMockReaderUI() {
     MockReaderUI.hide()
-    promise.resolve("Mock Reader UI hidden successfully")
   }
 
   @ReactMethod
@@ -216,7 +142,6 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
 
   @ReactMethod
   fun cancelPayment(promise: Promise) {
-
   }
 
 

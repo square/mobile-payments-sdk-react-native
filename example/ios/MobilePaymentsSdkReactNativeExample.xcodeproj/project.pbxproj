@@ -17,6 +17,7 @@
 		A1682D0D2CBE8D470011933F /* libmobile-payments-sdk-react-native.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A1682D0C2CBE8D470011933F /* libmobile-payments-sdk-react-native.a */; };
 		A1682D162CBE90620011933F /* SquareMobilePaymentsSDK.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1682D152CBE90620011933F /* SquareMobilePaymentsSDK.xcframework */; };
 		A1682D172CBE90620011933F /* SquareMobilePaymentsSDK.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A1682D152CBE90620011933F /* SquareMobilePaymentsSDK.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		A1F000522CEF5D9800385E41 /* SquareMobilePaymentsSDK in Frameworks */ = {isa = PBXBuildFile; productRef = A1F000512CEF5D9800385E41 /* SquareMobilePaymentsSDK */; };
 		EAB847EDC876649DB783D7CC /* libPods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A1682D132CBE90530011933F /* libPods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests.a */; };
 		EE29F7BA8B341EE5191ABF15 /* libPods-MobilePaymentsSdkReactNativeExample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A1682D112CBE904B0011933F /* libPods-MobilePaymentsSdkReactNativeExample.a */; };
 /* End PBXBuildFile section */
@@ -79,6 +80,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A1682D162CBE90620011933F /* SquareMobilePaymentsSDK.xcframework in Frameworks */,
+				A1F000522CEF5D9800385E41 /* SquareMobilePaymentsSDK in Frameworks */,
 				EAB847EDC876649DB783D7CC /* libPods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -789,6 +791,13 @@
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		A1F000512CEF5D9800385E41 /* SquareMobilePaymentsSDK */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SquareMobilePaymentsSDK;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 83CBB9F71A601CBA00E9B192 /* Project object */;
 }

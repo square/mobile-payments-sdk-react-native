@@ -111,7 +111,6 @@ dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
     implementation("com.squareup.sdk:mobile-payments-sdk:$squareSdkVersion")
-    implementation project(':react-native-vector-icons')
     implementation("com.squareup.sdk:mockreader-ui:$squareSdkVersion")
 
   if (hermesEnabled.toBoolean()) {

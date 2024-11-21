@@ -9,13 +9,19 @@ import Feather from 'react-native-vector-icons/Feather';
 import { defaultStyles } from '../styles/common';
 import {
   showSettings,
+  showMockReaderUI,
   startPayment,
   CurrencyCode,
   DelayAction,
 } from 'mobile-payments-sdk-react-native';
 import CustomButton from '../components/CustomButton';
+import { useEffect } from 'react';
 
 export function HomeScreen() {
+  useEffect(() => {
+    showMockReaderUI();
+  }, []);
+
   const handleStartPayment = async () => {
     const paymentParameters = {
       acceptPartialAuthorization: false,

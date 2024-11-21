@@ -69,8 +69,8 @@ export default function SplashScreen({ navigation }) {
 
   const authorizeSDK = async () => {
     authorize(
-      '$SQUARE_READER_SDK_ACCESS_TOKEN',
-      '$SQUARE_READER_SDK_LOCATION_ID'
+      '$MOBILE_PAYMENT_SDK_TOKEN',
+      '$MOBILE_PAYMENT_SDK_LOCATION_ID'
     ).then(() => {});
   };
 
