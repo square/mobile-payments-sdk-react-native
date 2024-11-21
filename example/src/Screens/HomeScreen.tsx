@@ -46,6 +46,7 @@ export function HomeScreen() {
       console.log('Payment error:', error);
     }
   };
+
   return (
     <SafeAreaView style={defaultStyles.pageContainer}>
       <View style={defaultStyles.pageContainer}>

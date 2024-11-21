@@ -29,7 +29,7 @@ class MobilePaymentsSdkReactNative: NSObject, PaymentManagerDelegate {
     // Deauthorize method
     @objc(deauthorize:withRejecter:)
     func deauthorize(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
-        resolve("Deauthorized successfully")
+        resolve("Not yet implemented")
     }
 
     // Get Authorized Location method
@@ -42,8 +42,9 @@ class MobilePaymentsSdkReactNative: NSObject, PaymentManagerDelegate {
     // Get Authorization State method
     @objc(getAuthorizationState:withRejecter:)
     func getAuthorizationState(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
-        resolve("Authorized")
+        resolve("Not yet implemented")
     }
+    
   @objc(showSettings:withRejecter:)
   func showSettings(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         DispatchQueue.main.async {
@@ -156,6 +157,5 @@ class MobilePaymentsSdkReactNative: NSObject, PaymentManagerDelegate {
        @objc(cancelPayment:withRejecter:)
        func cancelPayment(resolver: @escaping RCTPromiseResolveBlock, rejecter: @escaping RCTPromiseRejectBlock) {
        }
-
 
 }

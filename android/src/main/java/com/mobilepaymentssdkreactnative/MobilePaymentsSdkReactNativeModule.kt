@@ -55,17 +55,36 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
 
   @ReactMethod
   fun deauthorize(promise: Promise) {
-    promise.resolve("Deauthorized successfully")
+    promise.resolve("Not yet implemented")
   }
 
   @ReactMethod
   fun getAuthorizedLocation(promise: Promise) {
-    promise.resolve(mapOf("locationId" to "location123", "name" to "Sample Location"))
+    promise.resolve("Not yet implemented")
   }
 
   @ReactMethod
   fun getAuthorizationState(promise: Promise) {
-    promise.resolve("Authorized")
+    promise.resolve("Not yet implemented")
+  }
+
+  @ReactMethod
+  fun showSettings(promise: Promise) {
+    reactContext.runOnUiQueueThread {
+      val settingsManager = MobilePaymentsSdk.settingsManager()
+      settingsManager.showSettings { result ->
+        when (result) {
+          is Result.Success -> {
+            // Ensure that the value can be resolved correctly
+            promise.resolve("Settings closed successfully")
+          }
+          is Result.Failure -> {
+            // Handle failure
+            promise.reject(result.errorCode.toString(), result.errorMessage ?: "settings screen can't be presented")
+          }
+        }
+      }
+    }
   }
 
   @ReactMethod
