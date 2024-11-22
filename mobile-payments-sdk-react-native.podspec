@@ -14,6 +14,9 @@ Pod::Spec.new do |s|
   s.platforms    = { :ios => min_ios_version_supported }
   s.source       = { :git => "https://github.com/square//mobile-payments-sdk-react-native.git", :tag => "#{s.version}" }
 
+  s.dependency "SquareMobilePaymentsSDK", "~> 2.0.1"
+  s.dependency "MockReaderUI", "~> 2.0.1", configurations: ['Debug']
+
   s.source_files = "ios/**/*.{h,m,mm,swift}"
 
   # Use install_modules_dependencies helper to install the dependencies if React Native version >=0.71.0.
