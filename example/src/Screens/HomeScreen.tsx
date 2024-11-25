@@ -7,9 +7,17 @@ import {
 } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import { defaultStyles } from '../styles/common';
-import { showSettings } from 'mobile-payments-sdk-react-native';
+import {
+  showSettings,
+  showMockReaderUI,
+} from 'mobile-payments-sdk-react-native';
+import { useEffect } from 'react';
 
 export function HomeScreen() {
+  useEffect(() => {
+    showMockReaderUI();
+  });
+  
   return (
     <SafeAreaView style={defaultStyles.pageContainer}>
       <View style={defaultStyles.pageContainer}>
