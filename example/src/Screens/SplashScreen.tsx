@@ -83,7 +83,6 @@ export default function SplashScreen({ navigation }) {
       duration: 1500,
       useNativeDriver: true,
     }).start();
-
     authorizeSDK();
     navigation.replace('Home');
   }, [logoTranslateY, navigation]);

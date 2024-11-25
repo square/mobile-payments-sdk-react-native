@@ -5,13 +5,14 @@ import android.app.AlertDialog
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
+import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
-import com.facebook.react.bridge.Promise
+import com.squareup.sdk.mobilepayments.MobilePaymentsSdk
 import com.squareup.sdk.mobilepayments.authorization.AuthorizeErrorCode
 import com.squareup.sdk.mobilepayments.core.Result
-import com.squareup.sdk.mobilepayments.MobilePaymentsSdk
+import com.squareup.sdk.mobilepayments.mockreader.ui.MockReaderUI
 
 class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicationContext) :
   ReactContextBaseJavaModule(reactContext) {
@@ -23,6 +24,10 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
   @ReactMethod
   fun authorize(accessToken: String, locationId: String, promise: Promise) {
     val authorizationManager = MobilePaymentsSdk.authorizationManager()
+
+    if(authorizationManager.authorizationState.isAuthorized){
+      return
+    }
     authorizationManager.authorize(accessToken, locationId) { result ->
       when (result) {
         is Result.Success -> {
@@ -68,6 +73,21 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
         }
       }
     }
+  }
+
+  @ReactMethod
+  fun showMockReaderUI(promise: Promise) {
+    if (MobilePaymentsSdk.isSandboxEnvironment()) {
+      reactContext.currentActivity?.runOnUiThread {
+        MockReaderUI.show()
+      }
+    }
+    promise.resolve("Mock Reader UI shown successfully")
+  }
+
+  @ReactMethod
+  fun hideMockReaderUI() {
+    MockReaderUI.hide()
   }
 
   companion object {
