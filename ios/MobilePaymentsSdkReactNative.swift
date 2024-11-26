@@ -4,7 +4,7 @@ import SquareMobilePaymentsSDK
 import MockReaderUI
 
 @objc(MobilePaymentsSdkReactNative)
-class MobilePaymentsSdkReactNative: NSObject, PaymentManagerDelegate {
+class MobilePaymentsSdkReactNative: UIViewController, PaymentManagerDelegate {
 
    @objc(authorize:locationId:withResolver:withRejecter:)
     func authorize(accessToken: String, locationId: String, resolve: @escaping RCTPromiseResolveBlock, reject:@escaping RCTPromiseRejectBlock) {
@@ -108,8 +108,7 @@ class MobilePaymentsSdkReactNative: NSObject, PaymentManagerDelegate {
     }
     
     
-      private var paymentHandle: PaymentHandle?
-      private var paymentM : PaymentManager?
+  private var paymentHandle: PaymentHandle?
     
   @objc(startPayment:withResolver:withRejecter:)
     func startPayment(paymentParameters: [String: Any], resolver: @escaping RCTPromiseResolveBlock, rejecter: @escaping RCTPromiseRejectBlock) {
@@ -125,7 +124,7 @@ class MobilePaymentsSdkReactNative: NSObject, PaymentManagerDelegate {
                          mode: .default,
                          additionalMethods: .all
                      ),
-                  from: appDelegate?.rootViewController ?? UIViewController(),
+                  from: appDelegate?.rootViewController ?? self,
                      delegate: self
                  )
              }
