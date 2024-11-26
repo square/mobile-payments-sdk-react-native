@@ -25,7 +25,6 @@ import com.squareup.sdk.mobilepayments.payment.PromptMode
 import com.squareup.sdk.mobilepayments.payment.PromptParameters
 import java.util.UUID
 
-
 class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicationContext) :
   ReactContextBaseJavaModule(reactContext) {
 
@@ -143,8 +142,7 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
   @ReactMethod
   fun cancelPayment(promise: Promise) {
   }
-
-
+  
   companion object {
     const val NAME = "MobilePaymentsSdkReactNative"
   }

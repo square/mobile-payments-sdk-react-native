@@ -15,6 +15,7 @@ import {
   DelayAction,
 } from 'mobile-payments-sdk-react-native';
 import CustomButton from '../components/CustomButton';
+} from 'mobile-payments-sdk-react-native';
 import { useEffect } from 'react';
 
 export function HomeScreen() {
@@ -46,7 +47,8 @@ export function HomeScreen() {
       console.log('Payment error:', error);
     }
   };
-
+  });
+  
   return (
     <SafeAreaView style={defaultStyles.pageContainer}>
       <View style={defaultStyles.pageContainer}>
