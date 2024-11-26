@@ -112,7 +112,7 @@ class MobilePaymentsSdkReactNative: UIViewController, PaymentManagerDelegate {
     
   @objc(startPayment:withResolver:withRejecter:)
     func startPayment(paymentParameters: [String: Any], resolver: @escaping RCTPromiseResolveBlock, rejecter: @escaping RCTPromiseRejectBlock) {
-
+      showMockReaderUI(resolve: resolver, reject: rejecter)
         print("Start Payment called with parameters: \(paymentParameters)")
 
         DispatchQueue.main.async { [weak self] in
@@ -130,17 +130,18 @@ class MobilePaymentsSdkReactNative: UIViewController, PaymentManagerDelegate {
              }
     }
     
-       public func paymentManager(_ paymentManager: PaymentManager, didFinish payment: Payment) {
+       public func paymentManager(_ paymentManager: PaymentManager, didFinish payment: Payment) {    hideMockReaderUI(resolve: { _ in }, reject: { _, _, _ in })
             print("Payment Did Finish: \(payment)")
             // Handle successful payment (e.g., dismiss the view)
         }
 
        public func paymentManager(_ paymentManager: PaymentManager, didFail payment: Payment, withError error: Error) {
+         hideMockReaderUI(resolve: { _ in }, reject: { _, _, _ in })
             print("Payment Failed: \(error.localizedDescription)")
             // Handle payment failure (e.g., show error to the user)
         }
 
-       public func paymentManager(_ paymentManager: PaymentManager, didCancel payment: Payment) {
+       public func paymentManager(_ paymentManager: PaymentManager, didCancel payment: Payment) {    hideMockReaderUI(resolve: { _ in }, reject: { _, _, _ in })
             print("Payment Canceled")
             // Handle payment cancellation (e.g., inform the user)
         }
@@ -156,38 +157,4 @@ class MobilePaymentsSdkReactNative: UIViewController, PaymentManagerDelegate {
        @objc(cancelPayment:withRejecter:)
        func cancelPayment(resolver: @escaping RCTPromiseResolveBlock, rejecter: @escaping RCTPromiseRejectBlock) {
        }
-
-    private lazy var mockReaderUI: MockReaderUI? = {
-        do {
-            return try MockReaderUI(for: MobilePaymentsSDK.shared)
-        } catch {
-            assertionFailure("Could not instantiate a mock reader UI: \(error.localizedDescription)")
-            return nil
-        }
-    }()
-    
-    @objc(showMockReaderUI:withRejecter:)
-    func showMockReaderUI(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
-            try? self.mockReaderUI?.present()
-        }
-    }
-
-    @objc(hideMockReaderUI:withRejecter:)
-    func hideMockReaderUI(resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else {
-                reject("HIDE_MOCK_READER_UI_ERROR", "Failed to hide Mock Reader UI: Self is nil", nil)
-                return
-            }
-
-            if let mockReaderUI = self.mockReaderUI {
-                mockReaderUI.dismiss() 
-                resolve("Mock Reader UI hidden successfully")
-            } else {
-                reject("HIDE_MOCK_READER_UI_ERROR", "Mock Reader UI is not presented", nil)
-            }
-        }
-    }
 }

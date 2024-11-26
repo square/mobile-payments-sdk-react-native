@@ -103,6 +103,7 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
 
   @ReactMethod
   fun startPayment(paymentParameters: ReadableMap, promise: Promise) {
+    showMockReaderUI(promise)
     Handler(Looper.getMainLooper()).post {
       val paymentManager = MobilePaymentsSdk.paymentManager()
       val paymentParams = PaymentParameters.Builder(
@@ -132,7 +133,7 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
             promise.reject("PAYMENT_ERROR", result.errorMessage)
           }
         }
-
+        hideMockReaderUI()
       }
 
       Log.d("PaymentModule", "Payment activity started.")
@@ -142,7 +143,7 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
   @ReactMethod
   fun cancelPayment(promise: Promise) {
   }
-  
+
   companion object {
     const val NAME = "MobilePaymentsSdkReactNative"
   }
