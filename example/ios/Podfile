@@ -23,10 +23,6 @@ target 'MobilePaymentsSdkReactNativeExample' do
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
 
-  pod "SquareMobilePaymentsSDK", "~> 2.0.0-beta3"
-  
-  pod "MockReaderUI", "~> 2.0.0-beta3", configurations: ['Debug']
-
   permissions_path = '../node_modules/react-native-permissions/ios'
   pod 'Permission-BluetoothPeripheral', :path => "#{permissions_path}/BluetoothPeripheral"
   pod 'Permission-LocationAccuracy', :path => "#{permissions_path}/LocationAccuracy"
