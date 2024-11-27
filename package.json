@@ -2,6 +2,7 @@
   "name": "mobile-payments-sdk-react-native",
   "version": "0.1.0",
   "description": "asd3",
+  "mobilePaymentsSdkVersion": "2.0.1",
   "source": "./src/index.tsx",
   "main": "./lib/commonjs/index.js",
   "module": "./lib/module/index.js",
