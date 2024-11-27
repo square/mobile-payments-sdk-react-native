@@ -14,8 +14,8 @@ Pod::Spec.new do |s|
   s.platforms    = { :ios => min_ios_version_supported }
   s.source       = { :git => "https://github.com/square//mobile-payments-sdk-react-native.git", :tag => "#{s.version}" }
 
-  s.dependency "SquareMobilePaymentsSDK", "~> 2.0.1"
-  s.dependency "MockReaderUI", "~> 2.0.1", configurations: ['Debug']
+  s.dependency "SquareMobilePaymentsSDK", "~> #{package["mobilePaymentsSdkVersion"]}"
+  s.dependency "MockReaderUI", "~> #{package["mobilePaymentsSdkVersion"]}", configurations: ['Debug']
 
   s.source_files = "ios/**/*.{h,m,mm,swift}"
 
