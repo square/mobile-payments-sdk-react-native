@@ -13,8 +13,13 @@ import { backgroundColor } from '../styles/common';
 import { PermissionsAndroid } from 'react-native';
 import { PERMISSIONS, request } from 'react-native-permissions';
 import { authorize, showMockReaderUI } from 'mobile-payments-sdk-react-native';
+import type { NavigationProp } from '@react-navigation/native';
 
-export default function SplashScreen({ navigation }) {
+type SplashScreenProps = {
+  navigation: NavigationProp<any, any>;
+};
+
+export default function SplashScreen({ navigation }: SplashScreenProps) {
   const [logoTranslateY] = useState(new Animated.Value(0));
 
   const requestPermissions = async () => {
