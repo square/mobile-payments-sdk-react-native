@@ -7,7 +7,6 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.widget.Toast
-import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
@@ -19,7 +18,6 @@ import com.squareup.sdk.mobilepayments.core.Result
 import com.squareup.sdk.mobilepayments.mockreader.ui.MockReaderUI
 import com.squareup.sdk.mobilepayments.payment.CurrencyCode
 import com.squareup.sdk.mobilepayments.payment.Money
-import com.squareup.sdk.mobilepayments.payment.Payment
 import com.squareup.sdk.mobilepayments.payment.PaymentParameters
 import com.squareup.sdk.mobilepayments.payment.PromptMode
 import com.squareup.sdk.mobilepayments.payment.PromptParameters
@@ -103,12 +101,24 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
 
   @ReactMethod
   fun startPayment(paymentParameters: ReadableMap, promise: Promise) {
-    showMockReaderUI(promise)
     Handler(Looper.getMainLooper()).post {
       val paymentManager = MobilePaymentsSdk.paymentManager()
+      val amount = paymentParameters.getMap("amountMoney")?.getInt("amount") ?: 0
+      val currencyCode = try {
+        paymentParameters.getMap("amountMoney")?.getString("currencyCode") ?: "USD"
+      } catch (e: Exception) {
+        "USD"
+      }
+      val idempotencyKey = paymentParameters.getString("idempotencyKey") ?: UUID.randomUUID().toString()
+      val currency = try {
+        CurrencyCode.valueOf(currencyCode)
+      } catch (e: IllegalArgumentException) {
+        CurrencyCode.USD
+      }
+
       val paymentParams = PaymentParameters.Builder(
-        amount = Money(1000, CurrencyCode.USD),
-        idempotencyKey = UUID.randomUUID().toString()
+        amount = Money(amount.toLong(), currency),
+        idempotencyKey = idempotencyKey
       ).build()
       val promptParams = PromptParameters(
         mode = PromptMode.DEFAULT,
@@ -119,29 +129,21 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
         when (result) {
           is Result.Success -> {
             Log.d("PaymentModule", "Payment succeeded with result: ${result.value}")
-            val onlinePayment = result.value as? Payment.OnlinePayment
-            if (onlinePayment != null) {
-              val paymentInfo = Arguments.createMap().apply {
-              }
-              promise.resolve(paymentInfo)
-            } else {
-              promise.reject("PAYMENT_ERROR", "Invalid payment result type")
-            }
+            promise.resolve(result.value.amountMoney.toString())
           }
           is Result.Failure -> {
             Log.e("PaymentModule", "Payment failed with error: ${result.errorMessage}")
             promise.reject("PAYMENT_ERROR", result.errorMessage)
           }
         }
-        hideMockReaderUI()
       }
-
       Log.d("PaymentModule", "Payment activity started.")
     }
   }
 
   @ReactMethod
   fun cancelPayment(promise: Promise) {
+    // TODO: Implement cancellation logic here
   }
 
   companion object {

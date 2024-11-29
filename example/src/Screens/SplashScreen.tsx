@@ -12,7 +12,7 @@ import SquareLogo from '../components/SquareLogo';
 import { backgroundColor } from '../styles/common';
 import { PermissionsAndroid } from 'react-native';
 import { PERMISSIONS, request } from 'react-native-permissions';
-import { authorize } from 'mobile-payments-sdk-react-native';
+import { authorize, showMockReaderUI } from 'mobile-payments-sdk-react-native';
 
 export default function SplashScreen({ navigation }) {
   const [logoTranslateY] = useState(new Animated.Value(0));
@@ -84,6 +84,7 @@ export default function SplashScreen({ navigation }) {
       useNativeDriver: true,
     }).start();
     authorizeSDK();
+    showMockReaderUI();
     navigation.replace('Home');
   }, [logoTranslateY, navigation]);
 

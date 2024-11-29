@@ -24,7 +24,7 @@ export function HomeScreen() {
       autocomplete: true,
       customerId: 'customer-id-example',
       delayAction: DelayAction.COMPLETE,
-      idempotencyKey: 'unique-key-example',
+      idempotencyKey: Math.random().toString(),
       locationId: 'location-id-example',
       note: 'Payment for services',
       orderId: 'order-id-example',

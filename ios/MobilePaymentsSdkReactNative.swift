@@ -106,55 +106,93 @@ class MobilePaymentsSdkReactNative: UIViewController, PaymentManagerDelegate {
             }
         }
     }
-    
-    
+  
+  enum CurrencyCode: String {
+      case AUD = "AUD"
+      case CAD = "CAD"
+      case EUR = "EUR"
+      case GBP = "GBP"
+      case JPY = "JPY"
+      case USD = "USD"
+  }
+  
+  struct MobilePaymentsSdkPaymentParameters {
+    let amount: Double
+    let currencyCode: Int
+    let customerId: String
+    let orderId: String
+    let referenceId: String
+    let idempotencyKey: String
+  }
+
   private var paymentHandle: PaymentHandle?
     
   @objc(startPayment:withResolver:withRejecter:)
-    func startPayment(paymentParameters: [String: Any], resolver: @escaping RCTPromiseResolveBlock, rejecter: @escaping RCTPromiseRejectBlock) {
-      showMockReaderUI(resolve: resolver, reject: rejecter)
-        print("Start Payment called with parameters: \(paymentParameters)")
+  func startPayment(paymentParameters: [String: Any], resolver: @escaping RCTPromiseResolveBlock, rejecter: @escaping RCTPromiseRejectBlock) {
 
-        DispatchQueue.main.async { [weak self] in
-                 guard let self = self else { return }
-               guard let appDelegate = UIApplication.shared.delegate?.window else { return }
-                 self.paymentHandle = MobilePaymentsSDK.shared.paymentManager.startPayment(
-                  self.makePaymentParameters(amount: 10),
-                     promptParameters: PromptParameters(
-                         mode: .default,
-                         additionalMethods: .all
-                     ),
-                  from: appDelegate?.rootViewController ?? self,
-                     delegate: self
-                 )
-             }
+    guard
+        let amountMoney = paymentParameters["amountMoney"] as? [String: Any],
+        let amount = amountMoney["amount"] as? Int,
+        let currencyCodeString = amountMoney["currencyCode"] as? Int,
+//        let currencyCode = CurrencyCode(rawValue: currencyCodeString),
+        let customerId = paymentParameters["customerId"] as? String,
+        let orderId = paymentParameters["orderId"] as? String,
+        let referenceId = paymentParameters["referenceId"] as? String,
+        let idempotencyKey = paymentParameters["idempotencyKey"] as? String
+    else {
+        rejecter("E_INVALID_PARAMETERS", "Missing or invalid parameters", nil)
+        return
     }
-    
-       public func paymentManager(_ paymentManager: PaymentManager, didFinish payment: Payment) {    hideMockReaderUI(resolve: { _ in }, reject: { _, _, _ in })
+      
+      DispatchQueue.main.async { [weak self] in
+        guard let self = self else { return }
+        guard let appDelegate = UIApplication.shared.delegate?.window else { return }
+        let paymentParams = MobilePaymentsSdkPaymentParameters(
+            amount: Double(amount),
+            currencyCode: currencyCodeString,
+            customerId: customerId,
+            orderId: orderId,
+            referenceId: referenceId,
+            idempotencyKey: idempotencyKey  // Add idempotencyKey here
+        )
+        
+        self.paymentHandle = MobilePaymentsSDK.shared.paymentManager.startPayment(
+          self.makePaymentParameters(paymentParams),
+            promptParameters: PromptParameters(
+                mode: .default,
+                additionalMethods: .all
+            ),
+            from: appDelegate?.rootViewController ?? self,
+            delegate: self
+        )
+
+          resolver("Payment started successfully")
+      }
+  }
+
+       public func paymentManager(_ paymentManager: PaymentManager, didFinish payment: Payment) {
             print("Payment Did Finish: \(payment)")
             // Handle successful payment (e.g., dismiss the view)
         }
 
        public func paymentManager(_ paymentManager: PaymentManager, didFail payment: Payment, withError error: Error) {
-         hideMockReaderUI(resolve: { _ in }, reject: { _, _, _ in })
             print("Payment Failed: \(error.localizedDescription)")
             // Handle payment failure (e.g., show error to the user)
         }
 
-       public func paymentManager(_ paymentManager: PaymentManager, didCancel payment: Payment) {    hideMockReaderUI(resolve: { _ in }, reject: { _, _, _ in })
+       public func paymentManager(_ paymentManager: PaymentManager, didCancel payment: Payment) {
             print("Payment Canceled")
             // Handle payment cancellation (e.g., inform the user)
         }
+  
+       func makePaymentParameters(_ paymentParams: MobilePaymentsSdkPaymentParameters) -> PaymentParameters {
+           return PaymentParameters(
+            idempotencyKey: paymentParams.idempotencyKey,
+            amountMoney: Money(amount: UInt(paymentParams.amount), currency: Currency(rawValue: UInt(paymentParams.currencyCode)) ?? .USD)
+         )
+       }
 
-
-    func makePaymentParameters(amount: Double) -> PaymentParameters {
-        return PaymentParameters(
-            idempotencyKey: UUID().uuidString,
-            amountMoney: Money(amount: UInt(Int(amount * 100)), currency: .USD) // Assuming amount is in dollars
-        )
-    }
-       // Cancel payment method
-       @objc(cancelPayment:withRejecter:)
-       func cancelPayment(resolver: @escaping RCTPromiseResolveBlock, rejecter: @escaping RCTPromiseRejectBlock) {
+       func cancelPayment() {
+         // TODO: Implement cancellation logic here
        }
 }
