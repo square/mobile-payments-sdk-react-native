@@ -13,14 +13,15 @@ import {
   CurrencyCode,
   DelayAction,
 } from 'mobile-payments-sdk-react-native';
+import type { PaymentParameters } from 'mobile-payments-sdk-react-native';
 import CustomButton from '../components/CustomButton';
 
 export function HomeScreen() {
   const handleStartPayment = async () => {
-    const paymentParameters = {
+    const paymentParameters: PaymentParameters = {
       acceptPartialAuthorization: false,
-      amountMoney: { amount: 1000, currencyCode: CurrencyCode.USD }, // Use the enum
-      appFeeMoney: { amount: 0, currencyCode: CurrencyCode.USD }, // Use the enum
+      amountMoney: { amount: 1000, currencyCode: CurrencyCode.USD },
+      appFeeMoney: { amount: 0, currencyCode: CurrencyCode.USD },
       autocomplete: true,
       customerId: 'customer-id-example',
       delayAction: DelayAction.COMPLETE,
@@ -30,7 +31,7 @@ export function HomeScreen() {
       orderId: 'order-id-example',
       referenceId: 'reference-id-example',
       teamMemberId: 'team-member-id-example',
-      tipMoney: { amount: 0, currencyCode: CurrencyCode.USD }, // Use the enum
+      tipMoney: { amount: 0, currencyCode: CurrencyCode.USD },
     };
 
     try {

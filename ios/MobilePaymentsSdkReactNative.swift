@@ -79,92 +79,103 @@ class MobilePaymentsSdkReactNative: UIViewController, PaymentManagerDelegate {
         }
     }
   
-  enum CurrencyCode: String {
-      case AUD = "AUD"
-      case CAD = "CAD"
-      case EUR = "EUR"
-      case GBP = "GBP"
-      case JPY = "JPY"
-      case USD = "USD"
-  }
-  
-  struct MobilePaymentsSdkPaymentParameters {
-    let amount: Double
-    let currencyCode: Int
-    let customerId: String
-    let orderId: String
-    let referenceId: String
-    let idempotencyKey: String
+  private var resolver: RCTPromiseResolveBlock?
+  private var rejecter: RCTPromiseRejectBlock?
+  private var paymentHandle: PaymentHandle?
+  private var isPaymentCompleted = false
+
+  // This method will map the input data to the PaymentParameters object
+  func mapToPaymentParameters(paymentParameters: [String: Any]) -> Result<PaymentParameters, Error> {
+      guard
+          let amountMoney = paymentParameters["amountMoney"] as? [String: Any],
+          let amount = amountMoney["amount"] as? Int,
+          let currencyCodeString = amountMoney["currencyCode"] as? Int, // currencyCode as Int
+          let customerId = paymentParameters["customerId"] as? String,
+          let orderId = paymentParameters["orderId"] as? String,
+          let referenceId = paymentParameters["referenceId"] as? String,
+          let idempotencyKey = paymentParameters["idempotencyKey"] as? String
+      else {
+          return .failure(NSError(domain: "E_INVALID_PARAMETERS", code: 0, userInfo: [NSLocalizedDescriptionKey: "Missing or invalid parameters"]))
+      }
+    
+      guard let currencyCode = Currency(rawValue: UInt(currencyCodeString)) else {
+          return .failure(NSError(domain: "E_INVALID_CURRENCY", code: 0, userInfo: [NSLocalizedDescriptionKey: "Invalid currency code"]))
+      }
+
+      print("currencyCode: ", currencyCode)
+
+      let amountMoneyObject = Money(amount: UInt(amount), currency: currencyCode)
+
+      let paymentParams = PaymentParameters(
+          idempotencyKey: idempotencyKey,
+          amountMoney: amountMoneyObject
+      )
+
+      return .success(paymentParams)
   }
 
-  private var paymentHandle: PaymentHandle?
-    
   @objc(startPayment:withResolver:withRejecter:)
   func startPayment(paymentParameters: [String: Any], resolver: @escaping RCTPromiseResolveBlock, rejecter: @escaping RCTPromiseRejectBlock) {
+    
+      guard !isPaymentCompleted else {
+          rejecter("E_PAYMENT_ALREADY_IN_PROGRESS", "Payment process already in progress", nil)
+          return
+      }
 
-    guard
-        let amountMoney = paymentParameters["amountMoney"] as? [String: Any],
-        let amount = amountMoney["amount"] as? Int,
-        let currencyCodeString = amountMoney["currencyCode"] as? Int,
-//        let currencyCode = CurrencyCode(rawValue: currencyCodeString),
-        let customerId = paymentParameters["customerId"] as? String,
-        let orderId = paymentParameters["orderId"] as? String,
-        let referenceId = paymentParameters["referenceId"] as? String,
-        let idempotencyKey = paymentParameters["idempotencyKey"] as? String
-    else {
-        rejecter("E_INVALID_PARAMETERS", "Missing or invalid parameters", nil)
-        return
-    }
-      
-      DispatchQueue.main.async { [weak self] in
-        guard let self = self else { return }
-        guard let appDelegate = UIApplication.shared.delegate?.window else { return }
-        let paymentParams = MobilePaymentsSdkPaymentParameters(
-            amount: Double(amount),
-            currencyCode: currencyCodeString,
-            customerId: customerId,
-            orderId: orderId,
-            referenceId: referenceId,
-            idempotencyKey: idempotencyKey  // Add idempotencyKey here
-        )
-        
-        self.paymentHandle = MobilePaymentsSDK.shared.paymentManager.startPayment(
-          self.makePaymentParameters(paymentParams),
-            promptParameters: PromptParameters(
-                mode: .default,
-                additionalMethods: .all
-            ),
-            from: appDelegate?.rootViewController ?? self,
-            delegate: self
-        )
+      let result = mapToPaymentParameters(paymentParameters: paymentParameters)
 
-          resolver("Payment started successfully")
+      switch result {
+      case .failure(let error):
+          rejecter(error.localizedDescription, error.localizedDescription, nil)
+          return
+      case .success(let paymentParams):
+          DispatchQueue.main.async { [weak self] in
+              guard let self = self else { return }
+              guard let appDelegate = UIApplication.shared.delegate?.window else { return }
+
+              self.isPaymentCompleted = false
+
+              self.paymentHandle = MobilePaymentsSDK.shared.paymentManager.startPayment(
+                  paymentParams,
+                  promptParameters: PromptParameters(
+                      mode: .default,
+                      additionalMethods: .all
+                  ),
+                  from: appDelegate?.rootViewController ?? self,
+                  delegate: self
+              )
+
+              resolver("Payment started successfully")
+          }
       }
   }
 
-       public func paymentManager(_ paymentManager: PaymentManager, didFinish payment: Payment) {
-            print("Payment Did Finish: \(payment)")
-            // Handle successful payment (e.g., dismiss the view)
-        }
+  public func paymentManager(_ paymentManager: PaymentManager, didFinish payment: Payment) {
+      if !isPaymentCompleted {
+          isPaymentCompleted = true
+          self.resolver?("Payment completed successfully")
+          self.resolver = nil
+      }
+  }
 
-       public func paymentManager(_ paymentManager: PaymentManager, didFail payment: Payment, withError error: Error) {
-            print("Payment Failed: \(error.localizedDescription)")
-            // Handle payment failure (e.g., show error to the user)
-        }
+  public func paymentManager(_ paymentManager: PaymentManager, didFail payment: Payment, withError error: Error) {
+      if !isPaymentCompleted {
+          isPaymentCompleted = true
+          self.rejecter?("E_PAYMENT_FAILED", error.localizedDescription, nil)
+          self.rejecter = nil
+      }
+  }
 
-       public func paymentManager(_ paymentManager: PaymentManager, didCancel payment: Payment) {
-            print("Payment Canceled")
-            // Handle payment cancellation (e.g., inform the user)
-        }
+  public func paymentManager(_ paymentManager: PaymentManager, didCancel payment: Payment) {
+      if !isPaymentCompleted {
+          isPaymentCompleted = true
+          self.rejecter?("E_PAYMENT_CANCELED", "Payment was canceled", nil)
+          self.rejecter = nil
+      }
+  }
   
-       func makePaymentParameters(_ paymentParams: MobilePaymentsSdkPaymentParameters) -> PaymentParameters {
-           return PaymentParameters(
-            idempotencyKey: paymentParams.idempotencyKey,
-            amountMoney: Money(amount: UInt(paymentParams.amount), currency: Currency(rawValue: UInt(paymentParams.currencyCode)) ?? .USD)
-         )
-       }
+  func cancelPayment() {
+    fatalError("Cancellation isn't yet implemented")
+  }
 
-       func cancelPayment() {
-         // TODO: Implement cancellation logic here
-       }
 }

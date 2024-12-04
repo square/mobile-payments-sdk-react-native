@@ -21,7 +21,6 @@ import com.squareup.sdk.mobilepayments.payment.Money
 import com.squareup.sdk.mobilepayments.payment.PaymentParameters
 import com.squareup.sdk.mobilepayments.payment.PromptMode
 import com.squareup.sdk.mobilepayments.payment.PromptParameters
-import java.util.UUID
 
 class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicationContext) :
   ReactContextBaseJavaModule(reactContext) {
@@ -99,51 +98,72 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
     MockReaderUI.hide()
   }
 
+  private fun mapToPaymentParameters(paymentParameters: ReadableMap): PaymentParameters {
+    val amountMoney = paymentParameters.getMap("amountMoney")
+    val amount = amountMoney?.getInt("amount") ?: 0
+
+    val currencyCodeOrdinal: Int = try {
+      paymentParameters.getMap("amountMoney")?.getInt("currencyCode") ?: -1
+    } catch (e: Exception) {
+      -1
+    }
+
+    val validCurrencyCode = try {
+      if (currencyCodeOrdinal in CurrencyCode.entries.toTypedArray().indices) {
+        CurrencyCode.entries[currencyCodeOrdinal]
+      } else {
+        throw IllegalArgumentException("Invalid currency code ordinal: $currencyCodeOrdinal")
+      }
+    } catch (e: IllegalArgumentException) {
+      throw IllegalArgumentException("Invalid currency code provided: $currencyCodeOrdinal")
+    }
+
+    val idempotencyKey = paymentParameters.getString("idempotencyKey")
+      ?.takeIf { it.isNotEmpty() }
+      ?: throw IllegalArgumentException("idempotencyKey is required and cannot be null or empty.")
+    return PaymentParameters.Builder(
+      amount = Money(amount.toLong(), validCurrencyCode),
+      idempotencyKey = idempotencyKey
+    ).build()
+  }
+
   @ReactMethod
   fun startPayment(paymentParameters: ReadableMap, promise: Promise) {
     Handler(Looper.getMainLooper()).post {
       val paymentManager = MobilePaymentsSdk.paymentManager()
-      val amount = paymentParameters.getMap("amountMoney")?.getInt("amount") ?: 0
-      val currencyCode = try {
-        paymentParameters.getMap("amountMoney")?.getString("currencyCode") ?: "USD"
-      } catch (e: Exception) {
-        "USD"
-      }
-      val idempotencyKey = paymentParameters.getString("idempotencyKey") ?: UUID.randomUUID().toString()
-      val currency = try {
-        CurrencyCode.valueOf(currencyCode)
-      } catch (e: IllegalArgumentException) {
-        CurrencyCode.USD
-      }
 
-      val paymentParams = PaymentParameters.Builder(
-        amount = Money(amount.toLong(), currency),
-        idempotencyKey = idempotencyKey
-      ).build()
-      val promptParams = PromptParameters(
-        mode = PromptMode.DEFAULT,
-        additionalPaymentMethods = listOf() // Use the correct reference
-      )
+      try {
+        val paymentParams = mapToPaymentParameters(paymentParameters)
 
-      val handle = paymentManager.startPaymentActivity(paymentParams, promptParams) { result ->
-        when (result) {
-          is Result.Success -> {
-            Log.d("PaymentModule", "Payment succeeded with result: ${result.value}")
-            promise.resolve(result.value.amountMoney.toString())
-          }
-          is Result.Failure -> {
-            Log.e("PaymentModule", "Payment failed with error: ${result.errorMessage}")
-            promise.reject("PAYMENT_ERROR", result.errorMessage)
+        val promptParams = PromptParameters(
+          mode = PromptMode.DEFAULT,
+          additionalPaymentMethods = listOf()
+        )
+
+        paymentManager.startPaymentActivity(paymentParams, promptParams) { result ->
+          when (result) {
+            is Result.Success -> {
+              Log.d("PaymentModule", "Payment succeeded with result: ${result.value}")
+              promise.resolve(result.value.amountMoney.toString())
+            }
+            is Result.Failure -> {
+              Log.e("PaymentModule", "Payment failed with error: ${result.errorMessage}")
+              promise.reject("PAYMENT_ERROR", result.errorMessage)
+            }
           }
         }
+        Log.d("PaymentModule", "Payment activity started.")
+      } catch (e: IllegalArgumentException) {
+        Log.e("PaymentModule", "Invalid input: ${e.message}")
+        promise.reject("INVALID_INPUT", e.message)
       }
-      Log.d("PaymentModule", "Payment activity started.")
     }
   }
 
+
   @ReactMethod
   fun cancelPayment(promise: Promise) {
-    // TODO: Implement cancellation logic here
+    TODO("cancellation isn't yet implemented")
   }
 
   companion object {
