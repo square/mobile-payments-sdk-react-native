@@ -13,10 +13,15 @@ import { backgroundColor } from '../styles/common';
 import { PermissionsAndroid } from 'react-native';
 import { PERMISSIONS, request } from 'react-native-permissions';
 import { authorize, showMockReaderUI } from 'mobile-payments-sdk-react-native';
-import type { NavigationProp } from '@react-navigation/native';
+import type { StackNavigationProp } from '@react-navigation/stack';
+
+type RootStackParamList = {
+  SplashScreen: undefined;
+  Home: undefined;
+};
 
 type SplashScreenProps = {
-  navigation: NavigationProp<any, any>;
+  navigation: StackNavigationProp<RootStackParamList, 'SplashScreen'>;
 };
 
 export default function SplashScreen({ navigation }: SplashScreenProps) {
