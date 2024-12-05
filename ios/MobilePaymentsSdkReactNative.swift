@@ -82,14 +82,12 @@ class MobilePaymentsSdkReactNative: UIViewController, PaymentManagerDelegate {
   private var resolver: RCTPromiseResolveBlock?
   private var rejecter: RCTPromiseRejectBlock?
   private var paymentHandle: PaymentHandle?
-  private var isPaymentCompleted = false
 
-  // This method will map the input data to the PaymentParameters object
   func mapToPaymentParameters(paymentParameters: [String: Any]) -> Result<PaymentParameters, Error> {
       guard
           let amountMoney = paymentParameters["amountMoney"] as? [String: Any],
           let amount = amountMoney["amount"] as? Int,
-          let currencyCodeString = amountMoney["currencyCode"] as? Int, // currencyCode as Int
+          let currencyCodeString = amountMoney["currencyCode"] as? Int,
           let customerId = paymentParameters["customerId"] as? String,
           let orderId = paymentParameters["orderId"] as? String,
           let referenceId = paymentParameters["referenceId"] as? String,
@@ -116,11 +114,6 @@ class MobilePaymentsSdkReactNative: UIViewController, PaymentManagerDelegate {
 
   @objc(startPayment:withResolver:withRejecter:)
   func startPayment(paymentParameters: [String: Any], resolver: @escaping RCTPromiseResolveBlock, rejecter: @escaping RCTPromiseRejectBlock) {
-    
-      guard !isPaymentCompleted else {
-          rejecter("E_PAYMENT_ALREADY_IN_PROGRESS", "Payment process already in progress", nil)
-          return
-      }
 
       let result = mapToPaymentParameters(paymentParameters: paymentParameters)
 
@@ -132,8 +125,6 @@ class MobilePaymentsSdkReactNative: UIViewController, PaymentManagerDelegate {
           DispatchQueue.main.async { [weak self] in
               guard let self = self else { return }
               guard let appDelegate = UIApplication.shared.delegate?.window else { return }
-
-              self.isPaymentCompleted = false
 
               self.paymentHandle = MobilePaymentsSDK.shared.paymentManager.startPayment(
                   paymentParams,
@@ -151,27 +142,18 @@ class MobilePaymentsSdkReactNative: UIViewController, PaymentManagerDelegate {
   }
 
   public func paymentManager(_ paymentManager: PaymentManager, didFinish payment: Payment) {
-      if !isPaymentCompleted {
-          isPaymentCompleted = true
           self.resolver?("Payment completed successfully")
           self.resolver = nil
-      }
   }
 
   public func paymentManager(_ paymentManager: PaymentManager, didFail payment: Payment, withError error: Error) {
-      if !isPaymentCompleted {
-          isPaymentCompleted = true
           self.rejecter?("E_PAYMENT_FAILED", error.localizedDescription, nil)
           self.rejecter = nil
-      }
   }
 
   public func paymentManager(_ paymentManager: PaymentManager, didCancel payment: Payment) {
-      if !isPaymentCompleted {
-          isPaymentCompleted = true
           self.rejecter?("E_PAYMENT_CANCELED", "Payment was canceled", nil)
           self.rejecter = nil
-      }
   }
   
   func cancelPayment() {
