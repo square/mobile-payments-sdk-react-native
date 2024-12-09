@@ -1,0 +1,11 @@
+framework module SquareMobilePaymentsSDK {
+    umbrella header "SquareMobilePaymentsSDK-umbrella.h"
+
+    export *
+    module * { export * }
+}
+
+module SquareMobilePaymentsSDK.Swift {
+    header "SquareMobilePaymentsSDK-Swift.h"
+    requires objc
+}

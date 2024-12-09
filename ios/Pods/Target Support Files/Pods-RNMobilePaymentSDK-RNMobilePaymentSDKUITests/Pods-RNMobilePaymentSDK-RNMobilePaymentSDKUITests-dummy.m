@@ -1,0 +1,5 @@
+#import <Foundation/Foundation.h>
+@interface PodsDummy_Pods_RNMobilePaymentSDK_RNMobilePaymentSDKUITests : NSObject
+@end
+@implementation PodsDummy_Pods_RNMobilePaymentSDK_RNMobilePaymentSDKUITests
+@end

@@ -9,14 +9,40 @@ import Feather from 'react-native-vector-icons/Feather';
 import { defaultStyles } from '../styles/common';
 import {
   showSettings,
+  startPayment,
   showMockReaderUI,
+  type PaymentParameters,
+  CurrencyCode,
+  DelayAction,
 } from 'mobile-payments-sdk-react-native';
 import { useEffect } from 'react';
+import CustomButton from '../components/CustomButton';
 
 export function HomeScreen() {
-  useEffect(() => {
-    showMockReaderUI();
-  });
+  const handleStartPayment = async () => {
+    const paymentParameters: PaymentParameters = {
+      acceptPartialAuthorization: false,
+      amountMoney: { amount: 1000, currencyCode: CurrencyCode.USD },
+      appFeeMoney: { amount: 0, currencyCode: CurrencyCode.USD },
+      autocomplete: true,
+      customerId: 'customer-id-example',
+      delayAction: DelayAction.COMPLETE,
+      idempotencyKey: Math.random().toString(),
+      locationId: 'location-id-example',
+      note: 'Payment for services',
+      orderId: 'order-id-example',
+      referenceId: 'reference-id-example',
+      teamMemberId: 'team-member-id-example',
+      tipMoney: { amount: 0, currencyCode: CurrencyCode.USD },
+    };
+
+    try {
+      const payment = await startPayment(paymentParameters);
+      console.log('Payment successful:', payment);
+    } catch (error) {
+      console.log('Payment error:', error);
+    }
+  };
   
   return (
     <SafeAreaView style={defaultStyles.pageContainer}>
@@ -36,6 +62,7 @@ export function HomeScreen() {
             of the Developer Portal.
           </Text>
         </View>
+        <CustomButton title="Start Payment" onPress={handleStartPayment} />
       </View>
     </SafeAreaView>
   );

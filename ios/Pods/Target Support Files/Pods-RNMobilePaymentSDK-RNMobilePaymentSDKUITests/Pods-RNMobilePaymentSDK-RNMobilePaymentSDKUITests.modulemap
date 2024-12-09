@@ -1,0 +1,6 @@
+framework module Pods_RNMobilePaymentSDK_RNMobilePaymentSDKUITests {
+  umbrella header "Pods-RNMobilePaymentSDK-RNMobilePaymentSDKUITests-umbrella.h"
+
+  export *
+  module * { export * }
+}

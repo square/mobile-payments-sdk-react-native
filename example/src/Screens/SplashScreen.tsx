@@ -21,16 +21,16 @@ export default function SplashScreen({ navigation }) {
     try {
       let permissionsRequired = false;
       if (Platform.OS === 'ios') {
-        const bluetoothPermission = await request(
-          PERMISSIONS.IOS.BLUETOOTH_PERIPHERAL
-        );
+        // const bluetoothPermission = await request(
+        //   PERMISSIONS.IOS.BLUETOOTH_PERIPHERAL
+        // );
         const locationPermission = await request(
           PERMISSIONS.IOS.LOCATION_WHEN_IN_USE
         );
         const microphonePermission = await request(PERMISSIONS.IOS.MICROPHONE);
 
         if (
-          bluetoothPermission !== 'granted' ||
+          // bluetoothPermission !== 'granted' ||
           locationPermission !== 'granted' ||
           microphonePermission !== 'granted'
         ) {

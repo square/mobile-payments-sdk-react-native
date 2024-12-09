@@ -4,7 +4,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
- [SQMPMobilePaymentsSDK initializeWithApplicationLaunchOptions:launchOptions squareApplicationID:@$MOBILE_PAYMENT_SDK_APPLICATION_ID];
+ [SQMPMobilePaymentsSDK initializeWithApplicationLaunchOptions:launchOptions squareApplicationID:@""];
 
   self.moduleName = @"MobilePaymentsSdkReactNativeExample";
 //  // You can add your custom initial props in the dictionary below.

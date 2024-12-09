@@ -47,20 +47,24 @@ export type OnlinePayment = {
 };
 
 export type PaymentParameters = {
-  acceptPartialAuthorization: Boolean;
+  // Required
   amountMoney: Money;
-  appFeeMoney: Money;
-  autocomplete: Boolean;
-  customerId: String;
-  delayAction: DelayAction;
-  delayDuration?: Number;
   idempotencyKey: String;
-  locationId: String;
-  note: String;
-  orderId: String;
-  referenceId: String;
-  teamMemberId: String;
-  tipMoney: Money;
+  // Optional. For defaults, check:
+  // Android: https://square.github.io/mobile-payments-sdk-android/-mobile%20-payments%20-s-d-k%20-android%20-technical%20-reference/com.squareup.sdk.mobilepayments.payment/-payment-parameters/index.html
+  // iOS: https://square.github.io/mobile-payments-sdk-ios/docs/documentation/mobilepaymentssdkapi/paymentparameters/ 
+  acceptPartialAuthorization?: Boolean;
+  appFeeMoney?: Money;
+  autocomplete?: Boolean;
+  customerId?: String;
+  delayAction?: DelayAction;
+  delayDuration?: Number;
+  locationId?: String;
+  note?: String;
+  orderId?: String;
+  referenceId?: String;
+  teamMemberId?: String;
+  tipMoney?: Money;
 };
 
 export type Card = {

@@ -58,17 +58,17 @@ export enum CardInsertionStatus {
 }
 
 export enum CurrencyCode {
-  AUD,
-  CAD,
-  EUR,
-  GBP,
-  JPY,
-  USD,
+  AUD = "AUD",
+  CAD = "CAD",
+  EUR = "EUR",
+  GBP = "GBP",
+  JPY = "JPY",
+  USD = "USD",
 }
 
 export enum DelayAction {
-  CANCEL,
-  COMPLETE,
+  CANCEL = 0,
+  COMPLETE = 1,
 }
 
 export enum EntryMethod {
