@@ -1,3 +1,4 @@
 *.pbxproj -text
 # specific for windows script files
 *.bat text eol=crlf
+ios/Pods/SquareMobilePaymentsSDK/SquareMobilePaymentsSDK.xcframework/ios-arm64_x86_64-simulator/SquareMobilePaymentsSDK.framework/SquareMobilePaymentsSDK filter=lfs diff=lfs merge=lfs -text
