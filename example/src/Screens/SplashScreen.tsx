@@ -20,17 +20,22 @@ export default function SplashScreen({ navigation }) {
   const requestPermissions = async () => {
     try {
       let permissionsRequired = false;
+      let bluetoothPermission = ''
       if (Platform.OS === 'ios') {
-        // const bluetoothPermission = await request(
-        //   PERMISSIONS.IOS.BLUETOOTH_PERIPHERAL
-        // );
+        if (!Platform.isTesting) {
+          bluetoothPermission= await request(
+            PERMISSIONS.IOS.BLUETOOTH_PERIPHERAL
+          );
+        } 
         const locationPermission = await request(
           PERMISSIONS.IOS.LOCATION_WHEN_IN_USE
         );
-        const microphonePermission = await request(PERMISSIONS.IOS.MICROPHONE);
+        const microphonePermission = await request(
+          PERMISSIONS.IOS.MICROPHONE
+        );
 
         if (
-          // bluetoothPermission !== 'granted' ||
+          bluetoothPermission !== 'granted' ||
           locationPermission !== 'granted' ||
           microphonePermission !== 'granted'
         ) {
@@ -70,8 +75,8 @@ export default function SplashScreen({ navigation }) {
 
   const authorizeSDK = async () => {
     authorize(
-      '$MOBILE_PAYMENT_SDK_TOKEN',
-      '$MOBILE_PAYMENT_SDK_LOCATION_ID'
+      'sq0atp-1SnWrqyMF577UmJPT6mGpg',
+      '8KCT0W4CF2S3EEEEEE'
     ).then(() => {});
   };
 

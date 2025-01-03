@@ -5,7 +5,8 @@ export enum AccountType {
 }
 
 export enum AdditionalPaymentMethodType {
-  KEYED,
+  ALL = "ALL",
+  KEYED = "KEYED",
 }
 
 export enum AuthorizationState {

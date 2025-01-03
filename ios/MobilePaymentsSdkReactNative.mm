@@ -29,6 +29,7 @@ RCT_EXTERN_METHOD(hideMockReaderUI:(RCTPromiseResolveBlock)resolve
                   withRejecter:(RCTPromiseRejectBlock)reject)
 
 RCT_EXTERN_METHOD(startPayment:(NSDictionary *)paymentParameters
+                  promptParameters:(NSDictionary *)paymentParameters
                   withResolver:(RCTPromiseResolveBlock)resolve
                   withRejecter:(RCTPromiseRejectBlock)reject)
 

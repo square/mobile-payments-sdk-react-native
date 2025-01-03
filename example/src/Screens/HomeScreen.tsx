@@ -14,30 +14,37 @@ import {
   type PaymentParameters,
   CurrencyCode,
   DelayAction,
+  type PromptParameters,
+  AdditionalPaymentMethodType,
+  PromptMode,
 } from 'mobile-payments-sdk-react-native';
-import { useEffect } from 'react';
 import CustomButton from '../components/CustomButton';
 
 export function HomeScreen() {
   const handleStartPayment = async () => {
     const paymentParameters: PaymentParameters = {
       acceptPartialAuthorization: false,
-      amountMoney: { amount: 1000, currencyCode: CurrencyCode.USD },
+      amountMoney: { amount: 100, currencyCode: CurrencyCode.USD },
       appFeeMoney: { amount: 0, currencyCode: CurrencyCode.USD },
       autocomplete: true,
       customerId: 'customer-id-example',
-      delayAction: DelayAction.COMPLETE,
+      delayAction: DelayAction.CANCEL,
       idempotencyKey: Math.random().toString(),
       locationId: 'location-id-example',
       note: 'Payment for services',
-      orderId: 'order-id-example',
+      orderId: '',
       referenceId: 'reference-id-example',
       teamMemberId: 'team-member-id-example',
       tipMoney: { amount: 0, currencyCode: CurrencyCode.USD },
     };
 
+    const promptParameters: PromptParameters = {
+      additionalPaymentMethods: [AdditionalPaymentMethodType.ALL],
+      mode: PromptMode.DEFAULT,
+    }
+
     try {
-      const payment = await startPayment(paymentParameters);
+      const payment = await startPayment(paymentParameters, promptParameters);
       console.log('Payment successful:', payment);
     } catch (error) {
       console.log('Payment error:', error);
