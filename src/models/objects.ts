@@ -20,8 +20,9 @@ import type {
 
 export type Location = {
   id: String;
-  currencyCode: CurrencyCode;
+  currencyCode: String;
   name: String;
+  mcc: String;
 };
 
 export type Money = {

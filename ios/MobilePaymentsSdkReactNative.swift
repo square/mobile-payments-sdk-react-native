@@ -2,52 +2,82 @@
 import UIKit
 import SquareMobilePaymentsSDK
 import MockReaderUI
+import React
 
 @objc(MobilePaymentsSdkReactNative)
-class MobilePaymentsSdkReactNative: NSObject {
+class MobilePaymentsSdkReactNative: RCTEventEmitter {
 
-   @objc(authorize:locationId:withResolver:withRejecter:)
-    func authorize(accessToken: String, locationId: String, resolve: @escaping RCTPromiseResolveBlock, reject:@escaping RCTPromiseRejectBlock) {
-         let response = "Authorized with token: \(accessToken) and location: \(locationId)"
-        if MobilePaymentsSDK.shared.authorizationManager.state == .authorized {
-             print("Already authorized")
-        }
+    private let mobilePaymentsSDK =  MobilePaymentsSDK.shared
+    private var observingAuthorizationChanges = false
 
-         MobilePaymentsSDK.shared.authorizationManager.authorize(
-            withAccessToken: accessToken,
-             locationID: locationId) { error in
-                 if let authError = error {
-                     // Handle auth error
-                     print("errorssss: \(authError.localizedDescription)")
-                     return
-                 }
-                 print("Square Mobile Payments SDK successfully authorized.")
-         }
-        resolve(response)
+    /// We use notifications to propagate authorization status changes and reader changes
+    override func supportedEvents() -> [String]! {
+        return ["AuthorizationStatusChange"]
     }
 
-    // Deauthorize method
+    /// Authorization Manager
+    @objc(authorize:locationId:withResolver:withRejecter:)
+    func authorize(accessToken: String, locationId: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+        if mobilePaymentsSDK.authorizationManager.state == .authorized {
+            return resolve("Already authorized, skipping")
+        }
+        mobilePaymentsSDK.authorizationManager.authorize(
+            withAccessToken: accessToken,
+            locationID: locationId) { error in
+                if let authError = error {
+                    // TODO: unwrap error
+                    return reject("AUTHENTICATION_ERROR", authError.localizedDescription, nil)
+                }
+                return resolve("Authorized with token: \(accessToken) and location: \(locationId)")
+            }
+    }
+
+    // Deauthorize
     @objc(deauthorize:withRejecter:)
-    func deauthorize(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
-        resolve("Not yet implemented")
+    func deauthorize(resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+        mobilePaymentsSDK.authorizationManager.deauthorize {
+            resolve("Square Mobile Payments SDK successfully deauthorized.")
+        }
     }
 
     // Get Authorized Location method
     @objc(getAuthorizedLocation:withRejecter:)
-    func getAuthorizedLocation(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
-        let locationInfo: [String: Any] = ["locationId": "location123", "name": "Sample Location"]
-        resolve(locationInfo)
+    func getAuthorizedLocation(resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+        guard let location = mobilePaymentsSDK.authorizationManager.location else {
+            return resolve("")
+        }
+        resolve(ReactMapper.mapToDictionary(location: location) as Any)
     }
 
     // Get Authorization State method
     @objc(getAuthorizationState:withRejecter:)
     func getAuthorizationState(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
-        resolve("Not yet implemented")
+        let state = mobilePaymentsSDK.authorizationManager.state
+        resolve(state.mapToString())
+    }
+
+    @objc(addAuthorizationObserver:withRejecter:)
+    func addAuthorizationObserver(resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            self.mobilePaymentsSDK.authorizationManager.add(self)
+            self.observingAuthorizationChanges = true
+            resolve("Authorization State Observer Added")
+        }
     }
     
+    @objc(removeAuthorizationObserver:withRejecter:)
+    func removeAuthorizationObserver(resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            self.mobilePaymentsSDK.authorizationManager.remove(self)
+            self.observingAuthorizationChanges = false
+            resolve("Authorization State Observer Removed")
+        }
+    }
     @objc(showSettings:withRejecter:)
     func showSettings(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
-          DispatchQueue.main.async {
+          DispatchQueue.main.async { [weak self] in
             // Get the active scene
             guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
                   let rootViewController = windowScene.windows.first?.rootViewController else {
@@ -60,13 +90,13 @@ class MobilePaymentsSdkReactNative: NSObject {
                 // Optionally dismiss the currently presented view controller
                 presentedViewController.dismiss(animated: false) {
                     // Present the settings screen after dismissing
-                    MobilePaymentsSDK.shared.settingsManager.presentSettings(with: rootViewController) { _ in
+                    self?.mobilePaymentsSDK.settingsManager.presentSettings(with: rootViewController) { _ in
                         print("Settings screen closed.")
                     }
                 }
             } else {
                 // No view controller presented, so present the settings screen directly
-                MobilePaymentsSDK.shared.settingsManager.presentSettings(with: rootViewController) { _ in
+                self?.mobilePaymentsSDK.settingsManager.presentSettings(with: rootViewController) { _ in
                     print("Settings screen closed.")
                 }
             }
@@ -75,7 +105,7 @@ class MobilePaymentsSdkReactNative: NSObject {
 
     private lazy var mockReaderUI: MockReaderUI? = {
         do {
-            return try MockReaderUI(for: MobilePaymentsSDK.shared)
+            return try MockReaderUI(for: mobilePaymentsSDK)
         } catch {
             assertionFailure("Could not instantiate a mock reader UI: \(error.localizedDescription)")
             return nil
@@ -105,5 +135,39 @@ class MobilePaymentsSdkReactNative: NSObject {
                 reject("HIDE_MOCK_READER_UI_ERROR", "Mock Reader UI is not presented", nil)
             }
         }
+    }
+}
+
+extension MobilePaymentsSdkReactNative : AuthorizationStateObserver {
+    func authorizationStateDidChange(_ authorizationState: AuthorizationState) {
+        if (observingAuthorizationChanges) {
+            sendEvent(withName: "AuthorizationStatusChange", body: ["state": authorizationState.mapToString()] )
+        }
+    }
+}
+
+extension SquareMobilePaymentsSDK.AuthorizationState {
+    func mapToString() -> String {
+        switch self {
+        case .authorized:
+            return "AUTHORIZED"
+        case .authorizing:
+            return "AUTHORIZING"
+        case .notAuthorized:
+            return "NOT_AUTHORIZED"
+        default:
+            return ""
+        }
+    }
+}
+
+class ReactMapper {
+    class func mapToDictionary(location: Location) -> NSDictionary {
+        return [
+            "id": location.id,
+            "name": location.name,
+            "mcc": location.mcc,
+            "currency": location.currency.currencyCode // TODO: map this to a currency object
+        ]
     }
 }

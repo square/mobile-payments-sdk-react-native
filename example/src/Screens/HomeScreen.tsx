@@ -15,7 +15,8 @@ import { useEffect } from 'react';
 
 export function HomeScreen() {
   useEffect(() => {
-    showMockReaderUI();
+    // If you wish to display mock reader UI, make sure you're initializing the SDK in sandbox mode first
+    // showMockReaderUI();
   });
   
   return (

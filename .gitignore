@@ -81,3 +81,6 @@ lib/
 # React Native Codegen
 ios/generated
 android/generated
+
+# Ignoring the pods folder. Make sure you run pod install
+ios/Pods/
