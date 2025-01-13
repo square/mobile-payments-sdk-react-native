@@ -19,6 +19,12 @@ RCT_EXTERN_METHOD(getAuthorizedLocation:(RCTPromiseResolveBlock)resolve
 RCT_EXTERN_METHOD(getAuthorizationState:(RCTPromiseResolveBlock)resolve
                   withRejecter:(RCTPromiseRejectBlock)reject)
 
+// New getAuthorizationState method
+RCT_EXTERN_METHOD(addAuthorizationObserver:(RCTPromiseResolveBlock)resolve
+                  withRejecter:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(removeAuthorizationObserver:(RCTPromiseResolveBlock)resolve
+                  withRejecter:(RCTPromiseRejectBlock)reject)
+
 RCT_EXTERN_METHOD(showSettings:(RCTPromiseResolveBlock)resolve
                   withRejecter:(RCTPromiseRejectBlock)reject)
 
@@ -30,7 +36,7 @@ RCT_EXTERN_METHOD(hideMockReaderUI:(RCTPromiseResolveBlock)resolve
 
 + (BOOL)requiresMainQueueSetup
 {
-  return NO;
+  return YES;
 }
 
 @end

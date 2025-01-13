@@ -11,6 +11,7 @@ PODS:
     - DoubleConversion
     - glog
     - hermes-engine
+    - MockReaderUI (~> 2.0.1)
     - RCT-Folly (= 2024.01.01.00)
     - RCTRequired
     - RCTTypeSafety
@@ -29,6 +30,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - SquareMobilePaymentsSDK (~> 2.0.1)
     - Yoga
+  - MockReaderUI (2.0.1)
   - Permission-BluetoothPeripheral (3.10.1):
     - RNPermissions
   - Permission-LocationAccuracy (3.10.1):
@@ -1658,6 +1660,7 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - MockReaderUI
     - SocketRocket
     - SquareMobilePaymentsSDK
 
@@ -1815,7 +1818,8 @@ SPEC CHECKSUMS:
   fmt: 4c2741a687cc09f0634a2e2c72a838b99f1ff120
   glog: 69ef571f3de08433d766d614c73a9838a06bf7eb
   hermes-engine: 8d2103d6c0176779aea4e25df6bb1410f9946680
-  mobile-payments-sdk-react-native: 1aaebbd10eed750f49de93964f093c81044f49f2
+  mobile-payments-sdk-react-native: 554021ccf667a0e7e8d0e4cedf46bb725c7fcfc9
+  MockReaderUI: 2d361b1fe0c1a0d13eb76a64bfa156399fde1f9d
   Permission-BluetoothPeripheral: 247e379c9ecb4b1af2b87f73e4a15a00a5bc0c1f
   Permission-LocationAccuracy: dc0b0989dd004f183a32ad5f99802d9e09b0571a
   Permission-LocationAlways: 0a0de4637662cfdf3603d6933779da2bdd657306

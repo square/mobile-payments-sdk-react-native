@@ -12,7 +12,7 @@ import SquareLogo from '../components/SquareLogo';
 import { backgroundColor } from '../styles/common';
 import { PermissionsAndroid } from 'react-native';
 import { PERMISSIONS, request } from 'react-native-permissions';
-import { authorize } from 'mobile-payments-sdk-react-native';
+import { authorize, observeAuthorizationChanges, AuthorizationState, stopObservingAuthorizationChanges, deauthorize, getAuthorizedLocation, getAuthorizationState, type Location } from 'mobile-payments-sdk-react-native';
 
 export default function SplashScreen({ navigation }) {
   const [logoTranslateY] = useState(new Animated.Value(0));
@@ -69,11 +69,32 @@ export default function SplashScreen({ navigation }) {
   };
 
   const authorizeSDK = async () => {
-    authorize(
-      '$MOBILE_PAYMENT_SDK_TOKEN',
-      '$MOBILE_PAYMENT_SDK_LOCATION_ID'
-    ).then(() => {});
+    try {
+      // Add your own access token and location ID from developer.squareup.com
+      let auth = await authorize(
+        'MOBILE_PAYMENT_SDK_ACCESS_TOKEN',
+        'MOBILE_PAYMENT_SDK_LOCATION_ID'
+      );
+      let authorizedLocation = await getAuthorizedLocation();
+      let authorizationStatus = await getAuthorizationState();
+      console.log('SDK Authorized with location ' + JSON.stringify(authorizedLocation));
+      console.log('SDK Authorization Status is ' + JSON.stringify(authorizationStatus));
+    } catch (error) {
+      Alert.alert('Error Authenticating', error.message)
+    }
+    observeAuthorizationChanges((newStatus) => {
+      if (newStatus == AuthorizationState.NOT_AUTHORIZED) {
+        // You can handle deauthorization here calling, for instance, your own authorization method.
+        console.log('The application has been deauthorized.')
+      }
+    });
   };
+
+  // This method is left as an example. Call it if you need to deauthorize
+  const deauthorizeSDK = async () => {
+    await deauthorize();
+    console.log('Deauthorization successful. The app is no longer authorized.');
+  }
 
   useEffect(() => {
     requestPermissions();
@@ -85,6 +106,10 @@ export default function SplashScreen({ navigation }) {
     }).start();
     authorizeSDK();
     navigation.replace('Home');
+    return () => {
+      // Remember to remove your observer once the component has been removed from the DOM
+      stopObservingAuthorizationChanges();
+    };
   }, [logoTranslateY, navigation]);
 
   return (
