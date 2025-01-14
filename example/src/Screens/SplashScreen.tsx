@@ -82,18 +82,21 @@ export default function SplashScreen({ navigation }) {
     } catch (error) {
       Alert.alert('Error Authenticating', error.message)
     }
-    observeAuthorizationChanges((newStatus) => {
-      if (newStatus == AuthorizationState.NOT_AUTHORIZED) {
-        // You can handle deauthorization here calling, for instance, your own authorization method.
-        console.log('The application has been deauthorized.')
-      }
-    });
   };
 
   // This method is left as an example. Call it if you need to deauthorize
   const deauthorizeSDK = async () => {
     await deauthorize();
     console.log('Deauthorization successful. The app is no longer authorized.');
+  }
+
+  const observeAuthChanges = async () => {
+    observeAuthorizationChanges((newStatus) => {
+      if (newStatus == AuthorizationState.NOT_AUTHORIZED) {
+        // You can handle deauthorization here calling, for instance, your own authorization method.
+        console.log('The application has been deauthorized.')
+      }
+    });
   }
 
   useEffect(() => {
@@ -104,6 +107,7 @@ export default function SplashScreen({ navigation }) {
       duration: 1500,
       useNativeDriver: true,
     }).start();
+    observeAuthChanges();
     authorizeSDK();
     navigation.replace('Home');
     return () => {
