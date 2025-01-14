@@ -9,13 +9,14 @@ class MobilePaymentsSdkReactNative: RCTEventEmitter {
 
     private let mobilePaymentsSDK =  MobilePaymentsSDK.shared
     private var observingAuthorizationChanges = false
+    private var authorizationObservers: NSHashTable<AnyObject> = .weakObjects()
 
     /// We use notifications to propagate authorization status changes and reader changes
     override func supportedEvents() -> [String]! {
         return ["AuthorizationStatusChange"]
     }
 
-    /// Authorization Manager
+    /// Authorize: https://developer.squareup.com/docs/mobile-payments-sdk/ios/configure-authorize
     @objc(authorize:locationId:withResolver:withRejecter:)
     func authorize(accessToken: String, locationId: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         if mobilePaymentsSDK.authorizationManager.state == .authorized {
@@ -44,7 +45,7 @@ class MobilePaymentsSdkReactNative: RCTEventEmitter {
     @objc(getAuthorizedLocation:withRejecter:)
     func getAuthorizedLocation(resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         guard let location = mobilePaymentsSDK.authorizationManager.location else {
-            return resolve("")
+            return resolve(nil)
         }
         resolve(ReactMapper.mapToDictionary(location: location) as Any)
     }
@@ -59,8 +60,12 @@ class MobilePaymentsSdkReactNative: RCTEventEmitter {
     @objc(addAuthorizationObserver:withRejecter:)
     func addAuthorizationObserver(resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         DispatchQueue.main.async { [weak self] in
-            guard let self else { return }
+            guard let self else {
+                return reject("AUTHENTICATION_OBSERVER_ERROR","Unable to add observer to Authorization changes. Please try again.", nil)
+            }
             self.mobilePaymentsSDK.authorizationManager.add(self)
+            // Keeping a weak reference to our observers to decide when no one's observing auth changes we can stop
+            self.authorizationObservers.add(self)
             self.observingAuthorizationChanges = true
             resolve("Authorization State Observer Added")
         }
@@ -69,9 +74,14 @@ class MobilePaymentsSdkReactNative: RCTEventEmitter {
     @objc(removeAuthorizationObserver:withRejecter:)
     func removeAuthorizationObserver(resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         DispatchQueue.main.async { [weak self] in
-            guard let self else { return }
+            guard let self else {
+                return reject("AUTHENTICATION_OBSERVER_ERROR","Unable to remove observer to Authorization changes. Please try again.", nil)
+            }
             self.mobilePaymentsSDK.authorizationManager.remove(self)
-            self.observingAuthorizationChanges = false
+            self.authorizationObservers.remove(self)
+            if (self.authorizationObservers.count == 0) {
+                self.observingAuthorizationChanges = false
+            }
             resolve("Authorization State Observer Removed")
         }
     }
@@ -104,6 +114,9 @@ class MobilePaymentsSdkReactNative: RCTEventEmitter {
     }
 
     private lazy var mockReaderUI: MockReaderUI? = {
+        guard mobilePaymentsSDK.settingsManager.sdkSettings.environment == .sandbox else {
+            return nil
+        }
         do {
             return try MockReaderUI(for: mobilePaymentsSDK)
         } catch {
