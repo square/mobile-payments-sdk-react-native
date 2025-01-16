@@ -5,7 +5,8 @@ export enum AccountType {
 }
 
 export enum AdditionalPaymentMethodType {
-  KEYED,
+  ALL = "ALL",
+  KEYED = "KEYED",
 }
 
 export enum AuthorizationState {
@@ -58,17 +59,17 @@ export enum CardInsertionStatus {
 }
 
 export enum CurrencyCode {
-  AUD,
-  CAD,
-  EUR,
-  GBP,
-  JPY,
-  USD,
+  AUD = "AUD",
+  CAD = "CAD",
+  EUR = "EUR",
+  GBP = "GBP",
+  JPY = "JPY",
+  USD = "USD",
 }
 
 export enum DelayAction {
-  CANCEL,
-  COMPLETE,
+  CANCEL = 0,
+  COMPLETE = 1,
 }
 
 export enum EntryMethod {
@@ -94,8 +95,8 @@ export enum PaymentStatus {
 }
 
 export enum PromptMode {
-  CUSTOM,
-  DEFAULT,
+  DEFAULT = 0,
+  CUSTOM = 1,
 }
 
 export enum SourceType {

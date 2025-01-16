@@ -5,3 +5,4 @@
 #import <React/RCTBridgeModule.h>
 #import <React/RCTBridge.h>
 #import <React/RCTView.h>
+#import <React/RCTUtils.h>
