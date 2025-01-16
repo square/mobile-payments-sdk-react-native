@@ -13,6 +13,7 @@ class MobilePaymentsSdkReactNative: RCTEventEmitter {
     
     private var startPaymentResolveBlock: RCTPromiseResolveBlock?
     private var startPaymentRejectBlock: RCTPromiseRejectBlock?
+    private var paymentHandle: PaymentHandle?
 
     /// We use notifications to propagate authorization status changes and reader changes
     override func supportedEvents() -> [String]! {
@@ -186,13 +187,26 @@ class MobilePaymentsSdkReactNative: RCTEventEmitter {
             guard let presentedViewController = RCTPresentedViewController() else {
                 return reject("NO_PRESENTED_VIEW_CONTROLLER", "Can't present payment view controller.", nil)
             }
-            self.mobilePaymentsSDK.paymentManager.startPayment(
+            self.paymentHandle = self.mobilePaymentsSDK.paymentManager.startPayment(
                 params,
                 promptParameters: promptParams,
                 from: presentedViewController,
                 delegate: self
             )
         }
+    }
+    
+    func cancelPayment(resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+        guard let handle = paymentHandle else {
+            return reject("PAYMENT_CANCEL_ERROR", "No payment available to cancel.", nil)
+        }
+        let cancelation = handle.cancelPayment()
+        if (cancelation == true) {
+            resolve("Payment successfully canceled")
+        } else {
+            reject("PAYMENT_CANCEL_ERROR", "This payment cannot be canceled.", nil)
+        }
+        paymentHandle = nil
     }
 
     private func mapPromptParameters(_ promptParameters: [String: Any]) -> Result<PromptParameters, PaymentPromptError> {
@@ -286,6 +300,7 @@ class ReactMapper {
 extension MobilePaymentsSdkReactNative: PaymentManagerDelegate {
     func paymentManager(_ paymentManager: PaymentManager, didFinish payment: Payment) {
         startPaymentResolveBlock?(payment)
+        paymentHandle = nil
     }
 
     func paymentManager(_ paymentManager: PaymentManager, didFail payment: Payment, withError error: Error) {
@@ -304,10 +319,12 @@ extension MobilePaymentsSdkReactNative: PaymentManagerDelegate {
             // You should delete your idempotency key, since it's already been used.
         }
         startPaymentRejectBlock?("PAYMENT_FAILED", (error as NSError).userInfo.description, nil);
+        paymentHandle = nil
     }
 
     func paymentManager(_ paymentManager: PaymentManager, didCancel payment: Payment) {
         startPaymentRejectBlock?("PAYMENT_CANCELLED", "PAYMENT_CANCELLED", nil);
+        paymentHandle = nil
     }
 }
 
