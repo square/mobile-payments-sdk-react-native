@@ -3,8 +3,9 @@ import { NativeEventEmitter, EmitterSubscription } from 'react-native';
 import type { Location } from '../models/objects';
 import { AuthorizationState } from '../models/enums';
 export const eventEmitter = new NativeEventEmitter(MobilePaymentsSdkReactNative);
-export const authorizationObserver: EmitterSubscription = null;
+export let authorizationObserver: EmitterSubscription = null;
 
+// Authorization: https://developer.squareup.com/docs/mobile-payments-sdk/ios/configure-authorize
 export const authorize = (
   accessToken: String,
   locationId: String

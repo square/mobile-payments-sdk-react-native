@@ -7,6 +7,7 @@ import {
   Dimensions,
   Platform,
   Alert,
+  InteractionManager,
 } from 'react-native';
 import SquareLogo from '../components/SquareLogo';
 import { backgroundColor } from '../styles/common';
@@ -109,7 +110,9 @@ export default function SplashScreen({ navigation }) {
     }).start();
     observeAuthChanges();
     authorizeSDK();
-    navigation.replace('Home');
+    InteractionManager.runAfterInteractions(() => {
+      navigation.replace('Home');
+    });
     return () => {
       // Remember to remove your observer once the component has been removed from the DOM
       stopObservingAuthorizationChanges();

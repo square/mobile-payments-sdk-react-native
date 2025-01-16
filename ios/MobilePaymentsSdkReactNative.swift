@@ -10,6 +10,9 @@ class MobilePaymentsSdkReactNative: RCTEventEmitter {
     private let mobilePaymentsSDK =  MobilePaymentsSDK.shared
     private var observingAuthorizationChanges = false
     private var authorizationObservers: NSHashTable<AnyObject> = .weakObjects()
+    
+    private var startPaymentResolveBlock: RCTPromiseResolveBlock?
+    private var startPaymentRejectBlock: RCTPromiseRejectBlock?
 
     /// We use notifications to propagate authorization status changes and reader changes
     override func supportedEvents() -> [String]! {
@@ -85,6 +88,8 @@ class MobilePaymentsSdkReactNative: RCTEventEmitter {
             resolve("Authorization State Observer Removed")
         }
     }
+    
+    /// Settings: https://developer.squareup.com/docs/mobile-payments-sdk/ios/pair-manage-readers#settings-manager
     @objc(showSettings:withRejecter:)
     func showSettings(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
           DispatchQueue.main.async { [weak self] in
@@ -113,6 +118,7 @@ class MobilePaymentsSdkReactNative: RCTEventEmitter {
         }
     }
 
+    /// Mock Readers, available only in Sandbox: https://developer.squareup.com/docs/mobile-payments-sdk/ios#mock-readers
     private lazy var mockReaderUI: MockReaderUI? = {
         guard mobilePaymentsSDK.settingsManager.sdkSettings.environment == .sandbox else {
             return nil
@@ -149,6 +155,98 @@ class MobilePaymentsSdkReactNative: RCTEventEmitter {
             }
         }
     }
+    
+    /// Start Payment: https://developer.squareup.com/docs/mobile-payments-sdk/ios/take-payments
+    @objc(startPayment:promptParameters:withResolver:withRejecter:)
+    func startPayment(_ paymentParameters: [String: Any], promptParameters: [String: Any], resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+        // Keeping a reference for the resolvers so the protocol can propagate the results
+        self.startPaymentResolveBlock = resolve
+        self.startPaymentRejectBlock = reject
+        
+        let params: PaymentParameters
+        let paymentResult = mapPaymentParameters(paymentParameters)
+        switch paymentResult {
+        case .success(let validParams):
+            params = validParams
+        case .failure(let error):
+            return reject("INVALID_PAYMENT_PARAMETERS", error.localizedDescription, nil)
+        }
+        
+        let promptParams:PromptParameters
+        let promptResult = mapPromptParameters(promptParameters)
+        switch promptResult {
+        case .success(let validPromptParams):
+            promptParams = validPromptParams
+        case .failure(let error):
+            return reject("INVALID_PAYMENT_PROMPT", error.localizedDescription, nil)
+        }
+
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            guard let presentedViewController = RCTPresentedViewController() else {
+                return reject("NO_PRESENTED_VIEW_CONTROLLER", "Can't present payment view controller.", nil)
+            }
+            self.mobilePaymentsSDK.paymentManager.startPayment(
+                params,
+                promptParameters: promptParams,
+                from: presentedViewController,
+                delegate: self
+            )
+        }
+    }
+
+    private func mapPromptParameters(_ promptParameters: [String: Any]) -> Result<PromptParameters, PaymentPromptError> {
+        guard let additionalPaymentsRawArray = promptParameters["additionalMethods"] as? [String],
+                let promptMode = promptParameters["mode"] as? Int else {
+            return .failure(.invalidPromptParameters)
+        }
+        var additionalPayments:AdditionalPaymentMethods
+        if (additionalPaymentsRawArray.contains("ALL")) {
+            additionalPayments = AdditionalPaymentMethods.all
+        } else if (additionalPaymentsRawArray.contains("KEYED")) {
+            additionalPayments = AdditionalPaymentMethods.keyed
+        } else {
+            additionalPayments = AdditionalPaymentMethods.all
+        }
+        let prompt = PromptMode(rawValue: promptMode)!
+        return .success(PromptParameters(mode: prompt, additionalMethods: additionalPayments))
+    }
+
+    private func mapPaymentParameters(_ paymentParameters: [String: Any]) -> Result<PaymentParameters, PaymentParametersError> {
+        // Validating mandatory parameters
+        guard let amountMoney = Money(paymentParameters["amountMoney"] as! [String : Any]) else {
+            return .failure(.missingAmount)
+        }
+        guard let idempotencyKey = paymentParameters["idempotencyKey"] as? String else {
+            return .failure(.missingIdempotencyKey)
+        }
+        let paymentParams = PaymentParameters(idempotencyKey: idempotencyKey, amountMoney: amountMoney)
+        
+        // Optional parameters
+        paymentParams.acceptPartialAuthorization = paymentParameters["acceptPartialAuthorization"] as? Bool ?? false
+        
+        if let fee = paymentParameters["appFeeMoney"] as? [String : Any] {
+            paymentParams.appFeeMoney = Money(fee)
+        }
+        paymentParams.autocomplete = paymentParameters["autocomplete"] as? Bool ?? true
+        paymentParams.customerID = paymentParameters["referenceId"] as? String ?? ""
+        paymentParams.delayAction = DelayAction(rawValue: (paymentParameters["delayAction"] as? Int ?? 0)) ?? DelayAction.cancel
+        
+        if let delayDuration = paymentParameters["delayDuration"] as? Int {
+            paymentParams.delayDuration = TimeInterval(delayDuration)
+        }
+        paymentParams.locationID = paymentParameters["locationID"] as? String ?? ""
+        paymentParams.note = paymentParameters["note"] as? String ?? ""
+        paymentParams.orderID = paymentParameters["orderID"] as? String ?? nil
+        paymentParams.referenceID = paymentParameters["referenceId"] as? String ?? ""
+        paymentParams.teamMemberID = paymentParameters["teamMemberID"] as? String ?? ""
+        
+        if let tipMoney = paymentParameters["tipMoney"] as? [String : Any] {
+            paymentParams.tipMoney = Money(tipMoney)
+        }
+        
+        return .success(paymentParams)
+    }
 }
 
 extension MobilePaymentsSdkReactNative : AuthorizationStateObserver {
@@ -183,4 +281,51 @@ class ReactMapper {
             "currency": location.currency.currencyCode // TODO: map this to a currency object
         ]
     }
+}
+
+extension MobilePaymentsSdkReactNative: PaymentManagerDelegate {
+    func paymentManager(_ paymentManager: PaymentManager, didFinish payment: Payment) {
+        startPaymentResolveBlock?(payment)
+    }
+
+    func paymentManager(_ paymentManager: PaymentManager, didFail payment: Payment, withError error: Error) {
+        let paymentError = PaymentError(rawValue: (error as NSError).code)
+        switch paymentError {
+        case .paymentAlreadyInProgress,
+                .notAuthorized,
+                .timedOut:
+            // These errors surface before the idempotency key is used, so there is no need to delete your idempotency key.
+            print(error)
+        case .idempotencyKeyReused:
+            print("Developer error: Idempotency key reused. Check the most recent payments to see their status.")
+            // You should delete your idempotency key, since it's already been used.
+        default:
+            print(error)
+            // You should delete your idempotency key, since it's already been used.
+        }
+        startPaymentRejectBlock?("PAYMENT_FAILED", (error as NSError).userInfo.description, nil);
+    }
+
+    func paymentManager(_ paymentManager: PaymentManager, didCancel payment: Payment) {
+        startPaymentRejectBlock?("PAYMENT_CANCELLED", "PAYMENT_CANCELLED", nil);
+    }
+}
+
+extension Money {
+    convenience init?(_ params: [String:Any]) {
+        guard let amountInt = params["amount"] as? UInt,
+              let currencyString = params["currencyCode"] as? String else {
+            return nil
+        }
+        self.init(amount: amountInt, currency: Currency(currencyString))
+    }
+}
+
+enum PaymentParametersError: Error {
+    case missingAmount
+    case missingIdempotencyKey
+}
+
+enum PaymentPromptError: Error {
+    case invalidPromptParameters
 }
