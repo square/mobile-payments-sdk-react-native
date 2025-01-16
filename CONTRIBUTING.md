@@ -4,6 +4,15 @@ Contributions are always welcome, no matter how large or small!
 
 We want this community to be friendly and respectful to each other. Please follow it in all your interactions with the project. Before contributing, please read the [code of conduct](./CODE_OF_CONDUCT.md).
 
+## Initial setup
+We use yarn as a dependency manager and runtime environment.  To set _that_ up,
+however, you would use npm:
+```sh
+npm install --global yarn
+```
+
+If you don't already have NPM, the installation guide is at https://nodejs.org/en/download.
+
 ## Development workflow
 
 This project is a monorepo managed using [Yarn workspaces](https://yarnpkg.com/features/workspaces). It contains the following packages:

@@ -10,6 +10,7 @@ import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
 import com.squareup.sdk.mobilepayments.MobilePaymentsSdk
+import com.squareup.sdk.mobilepayments.authorization.AuthorizationState
 import com.squareup.sdk.mobilepayments.authorization.AuthorizeErrorCode
 import com.squareup.sdk.mobilepayments.core.Result
 import com.squareup.sdk.mobilepayments.mockreader.ui.MockReaderUI
@@ -41,19 +42,26 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
     }
   }
 
+  /** Deauthorizes MPSDK (instantly), and resolves the promise with a success string. */
   @ReactMethod
   fun deauthorize(promise: Promise) {
-    promise.resolve("Not yet implemented")
+    MobilePaymentsSdk.authorizationManager().deauthorize()
+    promise.resolve("Square Mobile Payments SDK successfully deauthorized.")
   }
 
+  /** Resolves the promise (instantly) with a possibly-null location (null if not authorized). */
   @ReactMethod
   fun getAuthorizedLocation(promise: Promise) {
-    promise.resolve("Not yet implemented")
+    val location = MobilePaymentsSdk.authorizationManager().authorizedLocation
+    promise.resolve(MobilePaymentsSdk.authorizationManager().authorizedLocation)
   }
 
+  /** Resolves the promise (instantly) with the name of the authorization state. */
   @ReactMethod
   fun getAuthorizationState(promise: Promise) {
-    promise.resolve("Not yet implemented")
+    val state = MobilePaymentsSdk.authorizationManager().authorizationState
+    val name = state.toName()
+    promise.resolve(MobilePaymentsSdk.authorizationManager().authorizationState.toName())
   }
 
   @ReactMethod
@@ -133,8 +141,13 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
     }
   }
 
-
   private fun finishWithAuthorizedSuccess(context: Context, value: Any) {
     Toast.makeText(context, "Authorization successful: $value", Toast.LENGTH_LONG).show()
+  }
+
+  private fun AuthorizationState.toName() = when {
+    isAuthorized -> "AUTHORIZED"
+    isAuthorizationInProgress -> "AUTHORIZING"
+    else -> "NOT_AUTHORIZED"
   }
 }
