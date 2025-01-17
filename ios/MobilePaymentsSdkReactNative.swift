@@ -197,17 +197,21 @@ class MobilePaymentsSdkReactNative: RCTEventEmitter {
         }
     }
     
+    @objc(cancelPayment:withRejecter:)
     func cancelPayment(resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         guard let handle = paymentHandle else {
             return reject("PAYMENT_CANCEL_ERROR", "No payment available to cancel.", nil)
         }
-        let cancelation = handle.cancelPayment()
-        if (cancelation == true) {
-            resolve("Payment successfully canceled")
-        } else {
-            reject("PAYMENT_CANCEL_ERROR", "This payment cannot be canceled.", nil)
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            let cancelation = handle.cancelPayment()
+            if (cancelation == true) {
+                resolve("Payment successfully canceled")
+            } else {
+                reject("PAYMENT_CANCEL_ERROR", "This payment cannot be canceled.", nil)
+            }
+            paymentHandle = nil
         }
-        paymentHandle = nil
     }
 }
 
