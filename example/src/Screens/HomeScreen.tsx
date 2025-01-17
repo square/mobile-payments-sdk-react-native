@@ -9,10 +9,8 @@ import Feather from 'react-native-vector-icons/Feather';
 import { defaultStyles } from '../styles/common';
 import {
   showSettings,
-  showMockReaderUI,
   type PaymentParameters,
   CurrencyCode,
-  DelayAction,
   type PromptParameters,
   AdditionalPaymentMethodType,
   PromptMode,
@@ -20,28 +18,28 @@ import {
 } from 'mobile-payments-sdk-react-native';
 import { useEffect } from 'react';
 import CustomButton from '../components/CustomButton';
+import uuid from 'react-native-uuid';
 
 const handleStartPayment = async () => {
   const paymentParameters: PaymentParameters = {
-    acceptPartialAuthorization: false,
     amountMoney: { amount: 100, currencyCode: CurrencyCode.USD },
     appFeeMoney: { amount: 0, currencyCode: CurrencyCode.USD },
-    autocomplete: true,
-    customerId: 'customer-id-example',
-    delayAction: DelayAction.CANCEL,
-    idempotencyKey: Math.random().toString(),
-    locationId: 'location-id-example',
+    idempotencyKey: uuid.v4(),
     note: 'Payment for services',
-    orderId: '',
-    referenceId: 'reference-id-example',
-    teamMemberId: 'team-member-id-example',
-    tipMoney: { amount: 0, currencyCode: CurrencyCode.USD },
+    // Other parameters you could add:
+    // autocomplete: true,
+    // delayAction: DelayAction.CANCEL,
+    // tipMoney: { amount: 0, currencyCode: CurrencyCode.USD },
+    // etc
+    // For more information, visit 
+    // iOS: https://developer.squareup.com/docs/mobile-payments-sdk/ios/take-payments#create-payment-parameters
+    // Android: https://developer.squareup.com/docs/mobile-payments-sdk/android/take-payments#create-payment-parameters
   };
 
   const promptParameters: PromptParameters = {
     additionalMethods: [AdditionalPaymentMethodType.ALL],
     mode: PromptMode.DEFAULT,
-  }
+  };
 
   try {
     const payment = await startPayment(paymentParameters, promptParameters);
@@ -58,7 +56,7 @@ export function HomeScreen() {
     // https://developer.squareup.com/docs/mobile-payments-sdk/ios#3-initialize-the-mobile-payments-sdk
     // showMockReaderUI();
   });
-  
+
   return (
     <SafeAreaView style={defaultStyles.pageContainer}>
       <View style={defaultStyles.pageContainer}>

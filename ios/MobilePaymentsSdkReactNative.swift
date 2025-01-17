@@ -165,7 +165,7 @@ class MobilePaymentsSdkReactNative: RCTEventEmitter {
         self.startPaymentRejectBlock = reject
         
         let params: PaymentParameters
-        let paymentResult = mapPaymentParameters(paymentParameters)
+        let paymentResult = Mappers.mapPaymentParameters(paymentParameters)
         switch paymentResult {
         case .success(let validParams):
             params = validParams
@@ -174,7 +174,7 @@ class MobilePaymentsSdkReactNative: RCTEventEmitter {
         }
         
         let promptParams:PromptParameters
-        let promptResult = mapPromptParameters(promptParameters)
+        let promptResult = Mappers.mapPromptParameters(promptParameters)
         switch promptResult {
         case .success(let validPromptParams):
             promptParams = validPromptParams
@@ -184,6 +184,7 @@ class MobilePaymentsSdkReactNative: RCTEventEmitter {
 
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
+            // TODO: add support to custom prompts. For now only default is supported.
             guard let presentedViewController = RCTPresentedViewController() else {
                 return reject("NO_PRESENTED_VIEW_CONTROLLER", "Can't present payment view controller.", nil)
             }
@@ -208,59 +209,6 @@ class MobilePaymentsSdkReactNative: RCTEventEmitter {
         }
         paymentHandle = nil
     }
-
-    private func mapPromptParameters(_ promptParameters: [String: Any]) -> Result<PromptParameters, PaymentPromptError> {
-        guard let additionalPaymentsRawArray = promptParameters["additionalMethods"] as? [String],
-                let promptMode = promptParameters["mode"] as? Int else {
-            return .failure(.invalidPromptParameters)
-        }
-        var additionalPayments:AdditionalPaymentMethods
-        if (additionalPaymentsRawArray.contains("ALL")) {
-            additionalPayments = AdditionalPaymentMethods.all
-        } else if (additionalPaymentsRawArray.contains("KEYED")) {
-            additionalPayments = AdditionalPaymentMethods.keyed
-        } else {
-            additionalPayments = AdditionalPaymentMethods.all
-        }
-        let prompt = PromptMode(rawValue: promptMode)!
-        return .success(PromptParameters(mode: prompt, additionalMethods: additionalPayments))
-    }
-
-    private func mapPaymentParameters(_ paymentParameters: [String: Any]) -> Result<PaymentParameters, PaymentParametersError> {
-        // Validating mandatory parameters
-        guard let amountMoney = Money(paymentParameters["amountMoney"] as! [String : Any]) else {
-            return .failure(.missingAmount)
-        }
-        guard let idempotencyKey = paymentParameters["idempotencyKey"] as? String else {
-            return .failure(.missingIdempotencyKey)
-        }
-        let paymentParams = PaymentParameters(idempotencyKey: idempotencyKey, amountMoney: amountMoney)
-        
-        // Optional parameters
-        paymentParams.acceptPartialAuthorization = paymentParameters["acceptPartialAuthorization"] as? Bool ?? false
-        
-        if let fee = paymentParameters["appFeeMoney"] as? [String : Any] {
-            paymentParams.appFeeMoney = Money(fee)
-        }
-        paymentParams.autocomplete = paymentParameters["autocomplete"] as? Bool ?? true
-        paymentParams.customerID = paymentParameters["referenceId"] as? String ?? ""
-        paymentParams.delayAction = DelayAction(rawValue: (paymentParameters["delayAction"] as? Int ?? 0)) ?? DelayAction.cancel
-        
-        if let delayDuration = paymentParameters["delayDuration"] as? Int {
-            paymentParams.delayDuration = TimeInterval(delayDuration)
-        }
-        paymentParams.locationID = paymentParameters["locationID"] as? String ?? ""
-        paymentParams.note = paymentParameters["note"] as? String ?? ""
-        paymentParams.orderID = paymentParameters["orderID"] as? String ?? nil
-        paymentParams.referenceID = paymentParameters["referenceId"] as? String ?? ""
-        paymentParams.teamMemberID = paymentParameters["teamMemberID"] as? String ?? ""
-        
-        if let tipMoney = paymentParameters["tipMoney"] as? [String : Any] {
-            paymentParams.tipMoney = Money(tipMoney)
-        }
-        
-        return .success(paymentParams)
-    }
 }
 
 extension MobilePaymentsSdkReactNative : AuthorizationStateObserver {
@@ -268,32 +216,6 @@ extension MobilePaymentsSdkReactNative : AuthorizationStateObserver {
         if (observingAuthorizationChanges) {
             sendEvent(withName: "AuthorizationStatusChange", body: ["state": authorizationState.mapToString()] )
         }
-    }
-}
-
-extension SquareMobilePaymentsSDK.AuthorizationState {
-    func mapToString() -> String {
-        switch self {
-        case .authorized:
-            return "AUTHORIZED"
-        case .authorizing:
-            return "AUTHORIZING"
-        case .notAuthorized:
-            return "NOT_AUTHORIZED"
-        default:
-            return ""
-        }
-    }
-}
-
-class ReactMapper {
-    class func mapToDictionary(location: Location) -> NSDictionary {
-        return [
-            "id": location.id,
-            "name": location.name,
-            "mcc": location.mcc,
-            "currency": location.currency.currencyCode // TODO: map this to a currency object
-        ]
     }
 }
 
@@ -305,44 +227,48 @@ extension MobilePaymentsSdkReactNative: PaymentManagerDelegate {
 
     func paymentManager(_ paymentManager: PaymentManager, didFail payment: Payment, withError error: Error) {
         let paymentError = PaymentError(rawValue: (error as NSError).code)
+        var errorMessage = "There has been an error taking a payment. Check the request details and try the payment again."
         switch paymentError {
-        case .paymentAlreadyInProgress,
-                .notAuthorized,
-                .timedOut:
-            // These errors surface before the idempotency key is used, so there is no need to delete your idempotency key.
-            print(error)
+        case .deviceTimeDoesNotMatchServerTime:
+            errorMessage = "The local device time is out of sync with the server time, which could lead to inaccurate payment reporting. Check your device's time and attempt your action again."
         case .idempotencyKeyReused:
-            print("Developer error: Idempotency key reused. Check the most recent payments to see their status.")
-            // You should delete your idempotency key, since it's already been used.
+            errorMessage = "The idempotency key used for this payment has already been used. Review previous payments to ensure you are not processing a duplicate payment, and then try again with a new idempotency key."
+        case .invalidPaymentParameters:
+            errorMessage = "The PaymentParameters provided were invalid. Check the request details and try the payment again."
+        case .invalidPaymentSource:
+            errorMessage = "The payment source provided did not match the AlternatePaymentMethod given."
+        case .locationPermissionNeeded:
+            errorMessage = "Location permission has not been granted to your application. Prompt the user for location access and try the payment again."
+        case .merchantNotOptedIntoOfflineProcessing:
+            errorMessage = "The merchant using your application is not a part of the offline payments alpha experience, and cannot take offline payments with the Mobile Payments SDK."
+        case .notAuthorized:
+            errorMessage = "Mobile Payments SDK is not currently authorized with a Square Seller account. Use the AuthorizationManager to authorize a Square account."
+        case .noNetwork:
+            errorMessage = "Mobile Payments SDK could not connect to the network and the payment could not be completed."
+        case .offlineStoredAmountExceeded:
+            errorMessage = "Your application has exceeded the total amount available to be stored on the device. Wait until connection is restored and stored payments have processed before taking more offline payments."
+        case .offlineTransactionAmountExceeded:
+            errorMessage = "Your application is attempting an offline payment that exceeds the limit for a single transaction. Try again with a lower payment amount."
+        case .paymentAlreadyInProgress:
+            errorMessage = "A payment is already in progress. Cancel the current payment, or wait for it to complete, then try the new payment again."
+        case .sandboxUnsupportedForOfflineProcessing:
+            errorMessage = "Your application is attempting to take an offline payment while authorized with a Square Sandbox account. Offline payments are not supported in Sandbox. Reauthorize with a production account to take offline payments."
+        case .timedOut:
+            errorMessage = "Mobile Payments SDK timed out while awaiting a payment. Try the payment again."
+        case .unexpected:
+            errorMessage = "PaymentManager.startPayment was used in an unexpected or unsupported way. Check your local logs and try the payment again."
+        case .unsupportedMode:
+            errorMessage = "The user entered an unsupported mode while a payment was in process (for example, split screen mode is not supported in Mobile Payments SDK). Try the payment again."
         default:
-            print(error)
-            // You should delete your idempotency key, since it's already been used.
+            break
         }
-        startPaymentRejectBlock?("PAYMENT_FAILED", (error as NSError).userInfo.description, nil);
+        
+        startPaymentRejectBlock?("PAYMENT_FAILED", errorMessage, nil);
         paymentHandle = nil
     }
 
     func paymentManager(_ paymentManager: PaymentManager, didCancel payment: Payment) {
-        startPaymentRejectBlock?("PAYMENT_CANCELLED", "PAYMENT_CANCELLED", nil);
+        startPaymentRejectBlock?("PAYMENT_CANCELED", "The payment has been canceled.", nil);
         paymentHandle = nil
     }
-}
-
-extension Money {
-    convenience init?(_ params: [String:Any]) {
-        guard let amountInt = params["amount"] as? UInt,
-              let currencyString = params["currencyCode"] as? String else {
-            return nil
-        }
-        self.init(amount: amountInt, currency: Currency(currencyString))
-    }
-}
-
-enum PaymentParametersError: Error {
-    case missingAmount
-    case missingIdempotencyKey
-}
-
-enum PaymentPromptError: Error {
-    case invalidPromptParameters
 }
