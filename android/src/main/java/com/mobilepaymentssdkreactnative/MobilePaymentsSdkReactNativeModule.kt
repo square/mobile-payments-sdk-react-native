@@ -4,7 +4,6 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.util.Log
-import android.widget.Toast
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
@@ -12,6 +11,7 @@ import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.ReadableMap
 import com.squareup.sdk.mobilepayments.MobilePaymentsSdk
 import com.squareup.sdk.mobilepayments.authorization.AuthorizeErrorCode
+import com.squareup.sdk.mobilepayments.authorization.AuthorizedLocation
 import com.squareup.sdk.mobilepayments.core.Result.Failure
 import com.squareup.sdk.mobilepayments.core.Result.Success
 import com.squareup.sdk.mobilepayments.mockreader.ui.MockReaderUI
@@ -43,12 +43,11 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
     authorizationManager.authorize(accessToken, locationId) { result ->
       when (result) {
         is Success -> {
-          finishWithAuthorizedSuccess(reactContext, result.value)
           promise.resolve("Authorized with token: $accessToken and location: $locationId")
         }
 
-        is Failure<*, *> -> { // Match any Failure type
-          handleAuthorizationFailure(result as Failure<AuthorizeErrorCode, *>, promise)
+        is Failure -> { // Match any Failure type
+          handleAuthorizationFailure(result, promise)
         }
       }
     }
@@ -114,13 +113,26 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
 
   @ReactMethod
   fun showMockReaderUI(promise: Promise) {
-    if (MobilePaymentsSdk.isSandboxEnvironment() &&
-      MobilePaymentsSdk.authorizationManager().authorizationState.isAuthorized) {
-      reactContext.currentActivity?.runOnUiThread {
-        MockReaderUI.show()
-      }
+    if (!MobilePaymentsSdk.isSandboxEnvironment()) {
+      promise.reject(
+        "MOCKREADER_UI_ERROR",
+        "Can't use MockReader UI outside of Sandbox environment"
+      )
+      return
     }
-    promise.resolve("Mock Reader UI shown successfully")
+
+    if (!MobilePaymentsSdk.authorizationManager().authorizationState.isAuthorized) {
+      promise.reject(
+        "MOCKREADER_UI_ERROR",
+        "Can't use MockReader UI when Mobile Payments SDK is not authorized"
+      )
+      return
+    }
+
+    reactContext.currentActivity?.runOnUiThread {
+      MockReaderUI.show()
+      promise.resolve("Mock Reader UI shown successfully")
+    }
   }
 
   @ReactMethod
@@ -186,17 +198,17 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
   }
 
   private fun handleAuthorizationFailure(
-    result: Failure<AuthorizeErrorCode, *>,
+    result: Failure<AuthorizedLocation, AuthorizeErrorCode>,
     promise: Promise
   ) {
     when (result.errorCode) {
       AuthorizeErrorCode.NO_NETWORK -> {
-        showRetryDialog(reactContext, result)
+        showRetryDialog(reactContext)
         Log.d("MobilePayments", "Authorization Failed: $result")
       }
 
       AuthorizeErrorCode.USAGE_ERROR -> {
-        showUsageErrorDialog(reactContext, result)
+        showUsageErrorDialog(reactContext)
         Log.d("MobilePayments", "Authorization Error: $result")
       }
 
@@ -208,7 +220,6 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
 
   private fun showRetryDialog(
     context: Context,
-    result: Failure<AuthorizeErrorCode, *>
   ) {
     if (context is Activity && !context.isFinishing) {
       val builder = AlertDialog.Builder(context)
@@ -224,7 +235,6 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
 
   private fun showUsageErrorDialog(
     context: Context,
-    result: Failure<AuthorizeErrorCode, *>
   ) {
     if (context is Activity && !context.isFinishing) {
       val builder = AlertDialog.Builder(context)
@@ -235,12 +245,5 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
         .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
       builder.create().show()
     }
-  }
-
-  private fun finishWithAuthorizedSuccess(
-    context: Context,
-    value: Any
-  ) {
-    Toast.makeText(context, "Authorization successful: $value", Toast.LENGTH_LONG).show()
   }
 }
