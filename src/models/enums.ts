@@ -96,7 +96,6 @@ export enum PaymentStatus {
 
 export enum PromptMode {
   DEFAULT = 0,
-  CUSTOM = 1,
 }
 
 export enum SourceType {

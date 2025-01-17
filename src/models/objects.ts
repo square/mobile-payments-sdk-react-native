@@ -64,8 +64,10 @@ export type PaymentParameters = {
   note?: String;
   orderId?: String;
   referenceId?: String;
+  statementDescriptionIdentifer?: String;
   teamMemberId?: String;
   tipMoney?: Money;
+  totalMoney?: Money;
 };
 
 export type Card = {
