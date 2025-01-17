@@ -45,7 +45,7 @@ const handleStartPayment = async () => {
     const payment = await startPayment(paymentParameters, promptParameters);
     console.log('Payment successful:', payment);
   } catch (error) {
-    console.log('Payment error:', error);
+    console.log('Payment error:', JSON.stringify(error["userInfo"]));
   }
 };
 

@@ -3,8 +3,10 @@ package com.mobilepaymentssdkreactnative
 import com.facebook.react.bridge.ReadableArray
 import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.bridge.WritableMap
+import com.facebook.react.bridge.WritableNativeArray
 import com.facebook.react.bridge.WritableNativeMap
 import com.squareup.sdk.mobilepayments.authorization.AuthorizedLocation
+import com.squareup.sdk.mobilepayments.core.Result.Failure
 import com.squareup.sdk.mobilepayments.payment.AdditionalPaymentMethod
 import com.squareup.sdk.mobilepayments.payment.AdditionalPaymentMethod.Type
 import com.squareup.sdk.mobilepayments.payment.CurrencyCode
@@ -188,4 +190,18 @@ fun AuthorizedLocation.toLocationMap(): WritableMap {
     putString("name", name)
     putString("mcc", merchantId)
   }
+}
+
+fun <S, C> Failure<S, C>.toErrorMap(): WritableMap = WritableNativeMap().apply {
+  putString("errorCode", errorCode.toString())
+  putString("errorMessage", errorMessage)
+  putArray("details", WritableNativeArray().apply {
+    details.forEach {
+      val detailsString = "ErrorDetails[Category: ${it.category}, Code: ${it.code}, " +
+        "Detail: ${it.detail}, Field: ${it.field}]"
+      pushString(detailsString)
+    }
+  })
+  putString("debugCode", debugCode)
+  putString("debugMessage", debugMessage)
 }

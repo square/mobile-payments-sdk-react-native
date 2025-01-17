@@ -29,6 +29,12 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
     return NAME
   }
 
+  /**
+   * Authorizes the Mobile Payments SDK with the provided access token and location ID.
+   * If the SDK is already authorized, this method will resolve immediately.
+   *
+   * Authorize: https://developer.squareup.com/docs/mobile-payments-sdk/ios/configure-authorize
+   */
   @ReactMethod
   fun authorize(
     accessToken: String,
@@ -38,17 +44,17 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
     val authorizationManager = MobilePaymentsSdk.authorizationManager()
 
     if (authorizationManager.authorizationState.isAuthorized) {
+      promise.resolve("Already authorized, skipping")
       return
     }
+
     authorizationManager.authorize(accessToken, locationId) { result ->
       when (result) {
-        is Success -> {
+        is Success ->
           promise.resolve("Authorized with token: $accessToken and location: $locationId")
-        }
 
-        is Failure -> { // Match any Failure type
-          handleAuthorizationFailure(result, promise)
-        }
+        is Failure ->
+          promise.reject("AUTHENTICATION_ERROR", result.errorMessage)
       }
     }
   }
@@ -173,7 +179,7 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
       ) { result ->
         paymentHandle = null
         when (result) {
-          is Failure -> promise.reject("PAYMENT_FAILED", result.errorMessage)
+          is Failure -> promise.reject("PAYMENT_FAILED", result.toErrorMap())
           is Success -> promise.resolve(result.value.toPaymentMap())
         }
       }
@@ -195,55 +201,5 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
 
   companion object {
     const val NAME = "MobilePaymentsSdkReactNative"
-  }
-
-  private fun handleAuthorizationFailure(
-    result: Failure<AuthorizedLocation, AuthorizeErrorCode>,
-    promise: Promise
-  ) {
-    when (result.errorCode) {
-      AuthorizeErrorCode.NO_NETWORK -> {
-        showRetryDialog(reactContext)
-        Log.d("MobilePayments", "Authorization Failed: $result")
-      }
-
-      AuthorizeErrorCode.USAGE_ERROR -> {
-        showUsageErrorDialog(reactContext)
-        Log.d("MobilePayments", "Authorization Error: $result")
-      }
-
-      else -> {
-        promise.reject("AUTHORIZATION_ERROR", "Authorization failed: ${result.errorCode}")
-      }
-    }
-  }
-
-  private fun showRetryDialog(
-    context: Context,
-  ) {
-    if (context is Activity && !context.isFinishing) {
-      val builder = AlertDialog.Builder(context)
-      builder.setTitle("Network Error")
-        .setMessage("No network connection. Would you like to retry?")
-        .setPositiveButton("Retry") { _, _ ->
-          // Implement retry logic here, if necessary
-        }
-        .setNegativeButton("Cancel") { dialog, _ -> dialog.dismiss() }
-      builder.create().show()
-    }
-  }
-
-  private fun showUsageErrorDialog(
-    context: Context,
-  ) {
-    if (context is Activity && !context.isFinishing) {
-      val builder = AlertDialog.Builder(context)
-      builder.setTitle("Usage Error")
-        .setMessage(
-          "There was an error with the usage of the payment system. Please check your settings."
-        )
-        .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
-      builder.create().show()
-    }
   }
 }
