@@ -51,7 +51,7 @@ class MobilePaymentsSdkReactNative: RCTEventEmitter {
         guard let location = mobilePaymentsSDK.authorizationManager.location else {
             return resolve(nil)
         }
-        resolve(ReactMapper.mapToDictionary(location: location) as Any)
+        resolve(Mappers.mapToDictionary(location: location) as Any)
     }
 
     // Get Authorization State method
