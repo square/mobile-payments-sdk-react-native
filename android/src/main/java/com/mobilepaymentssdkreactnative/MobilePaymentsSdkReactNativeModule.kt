@@ -1,17 +1,16 @@
 package com.mobilepaymentssdkreactnative
 
-import android.app.Activity
-import android.app.AlertDialog
-import android.content.Context
-import android.util.Log
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
+import com.facebook.react.bridge.ReactContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.ReadableMap
+import com.facebook.react.bridge.WritableMap
+import com.facebook.react.bridge.WritableNativeMap
+import com.facebook.react.modules.core.DeviceEventManagerModule
 import com.squareup.sdk.mobilepayments.MobilePaymentsSdk
-import com.squareup.sdk.mobilepayments.authorization.AuthorizeErrorCode
-import com.squareup.sdk.mobilepayments.authorization.AuthorizedLocation
+import com.squareup.sdk.mobilepayments.core.CallbackReference
 import com.squareup.sdk.mobilepayments.core.Result.Failure
 import com.squareup.sdk.mobilepayments.core.Result.Success
 import com.squareup.sdk.mobilepayments.mockreader.ui.MockReaderUI
@@ -24,6 +23,7 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
   ReactContextBaseJavaModule(reactContext) {
 
   private var paymentHandle: PaymentHandle? = null
+  private var authStateCallback: CallbackReference? = null
 
   override fun getName(): String {
     return NAME
@@ -74,12 +74,27 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
   @ReactMethod
   fun getAuthorizationState(promise: Promise) {
     val authorizationManager = MobilePaymentsSdk.authorizationManager()
-    val authorizationState = when {
-      authorizationManager.authorizationState.isAuthorizationInProgress -> "AUTHORIZING"
-      authorizationManager.authorizationState.isAuthorized -> "AUTHORIZED"
-      else -> "NOT_AUTHORIZED"
-    }
+    val authorizationState = authorizationManager.authorizationState.asString()
     promise.resolve(authorizationState)
+  }
+
+  @ReactMethod
+  fun addAuthorizationObserver(promise: Promise) {
+    val authorizationManager = MobilePaymentsSdk.authorizationManager()
+    authStateCallback = authorizationManager.setAuthorizationStateChangedCallback { state ->
+      val event = WritableNativeMap().apply {
+        putString("state", state.asString())
+      }
+      emitEvent(reactContext, "AuthorizationStatusChange", event)
+    }
+    promise.resolve("Authorization State Observer Added")
+  }
+
+  @ReactMethod
+  fun removeAuthorizationObserver(promise: Promise) {
+    authStateCallback?.clear()
+    authStateCallback = null
+    promise.resolve("Authorization State Observer Removed")
   }
 
   @ReactMethod
@@ -197,6 +212,22 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
         promise.reject("PAYMENT_CANCEL_ERROR", "No payment available to cancel.")
     }
     paymentHandle = null
+  }
+
+  private fun emitEvent(reactContext: ReactContext, eventName: String, map: WritableMap) {
+    reactContext
+      .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+      .emit(eventName, map)
+  }
+
+  @ReactMethod
+  fun addListener(type: String?) {
+    // Keep: Required for RN built in Event Emitter Calls.
+  }
+
+  @ReactMethod
+  fun removeListeners(type: Int?) {
+    // Keep: Required for RN built in Event Emitter Calls.
   }
 
   companion object {

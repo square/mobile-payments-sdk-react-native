@@ -5,6 +5,7 @@ import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.bridge.WritableNativeArray
 import com.facebook.react.bridge.WritableNativeMap
+import com.squareup.sdk.mobilepayments.authorization.AuthorizationState
 import com.squareup.sdk.mobilepayments.authorization.AuthorizedLocation
 import com.squareup.sdk.mobilepayments.core.Result.Failure
 import com.squareup.sdk.mobilepayments.payment.AdditionalPaymentMethod
@@ -204,4 +205,10 @@ fun <S, C> Failure<S, C>.toErrorMap(): WritableMap = WritableNativeMap().apply {
   })
   putString("debugCode", debugCode)
   putString("debugMessage", debugMessage)
+}
+
+fun AuthorizationState.asString(): String = when {
+  isAuthorizationInProgress -> "AUTHORIZING"
+  isAuthorized -> "AUTHORIZED"
+  else -> "NOT_AUTHORIZED"
 }
