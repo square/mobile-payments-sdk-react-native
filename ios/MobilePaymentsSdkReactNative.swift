@@ -231,7 +231,7 @@ extension MobilePaymentsSdkReactNative: PaymentManagerDelegate {
 
     func paymentManager(_ paymentManager: PaymentManager, didFail payment: Payment, withError error: Error) {
         let paymentError = PaymentError(rawValue: (error as NSError).code)
-        var errorMessage = "There has been an error taking a payment. Check the request details and try the payment again."
+        let errorMessage: String
         switch paymentError {
         case .deviceTimeDoesNotMatchServerTime:
             errorMessage = "The local device time is out of sync with the server time, which could lead to inaccurate payment reporting. Check your device's time and attempt your action again."
@@ -264,7 +264,7 @@ extension MobilePaymentsSdkReactNative: PaymentManagerDelegate {
         case .unsupportedMode:
             errorMessage = "The user entered an unsupported mode while a payment was in process (for example, split screen mode is not supported in Mobile Payments SDK). Try the payment again."
         default:
-            break
+            errorMessage = "There has been an error taking a payment. Check the request details and try the payment again."
         }
         
         startPaymentRejectBlock?("PAYMENT_FAILED", errorMessage, nil);
