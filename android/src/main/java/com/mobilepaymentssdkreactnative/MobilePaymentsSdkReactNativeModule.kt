@@ -9,11 +9,15 @@ import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
+import com.facebook.react.bridge.WritableNativeMap
 import com.squareup.sdk.mobilepayments.MobilePaymentsSdk
 import com.squareup.sdk.mobilepayments.authorization.AuthorizationState
 import com.squareup.sdk.mobilepayments.authorization.AuthorizeErrorCode
+import com.squareup.sdk.mobilepayments.authorization.AuthorizedLocation
 import com.squareup.sdk.mobilepayments.core.Result
 import com.squareup.sdk.mobilepayments.mockreader.ui.MockReaderUI
+
+typealias AuthorizationFailure = Result.Failure<AuthorizedLocation, AuthorizeErrorCode>
 
 class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicationContext) :
   ReactContextBaseJavaModule(reactContext) {
@@ -26,17 +30,14 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
   fun authorize(accessToken: String, locationId: String, promise: Promise) {
     val authorizationManager = MobilePaymentsSdk.authorizationManager()
 
-    if(authorizationManager.authorizationState.isAuthorized){
-      return
-    }
     authorizationManager.authorize(accessToken, locationId) { result ->
       when (result) {
         is Result.Success -> {
           finishWithAuthorizedSuccess(reactContext, result.value)
           promise.resolve("Authorized with token: $accessToken and location: $locationId")
         }
-        is Result.Failure<*, *> -> { // Match any Failure type
-          handleAuthorizationFailure(result as Result.Failure<AuthorizeErrorCode, *>, promise)
+        is Result.Failure -> { // Match any Failure type
+          handleAuthorizationFailure(result, promise)
         }
       }
     }
@@ -53,14 +54,12 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
   @ReactMethod
   fun getAuthorizedLocation(promise: Promise) {
     val location = MobilePaymentsSdk.authorizationManager().authorizedLocation
-    promise.resolve(MobilePaymentsSdk.authorizationManager().authorizedLocation)
+    promise.resolve(location.toJavascriptMap())
   }
 
   /** Resolves the promise (instantly) with the name of the authorization state. */
   @ReactMethod
   fun getAuthorizationState(promise: Promise) {
-    val state = MobilePaymentsSdk.authorizationManager().authorizationState
-    val name = state.toName()
     promise.resolve(MobilePaymentsSdk.authorizationManager().authorizationState.toName())
   }
 
@@ -76,7 +75,7 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
           }
           is Result.Failure -> {
             // Handle failure
-            promise.reject(result.errorCode.toString(), result.errorMessage ?: "settings screen can't be presented")
+            promise.reject(result.errorCode.toString(), result.errorMessage)
           }
         }
       }
@@ -102,7 +101,7 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
     const val NAME = "MobilePaymentsSdkReactNative"
   }
 
-  private fun handleAuthorizationFailure(result: Result.Failure<AuthorizeErrorCode, *>, promise: Promise) {
+  private fun handleAuthorizationFailure(result: AuthorizationFailure, promise: Promise) {
     when (result.errorCode) {
       AuthorizeErrorCode.NO_NETWORK -> {
         showRetryDialog(reactContext, result)
@@ -118,7 +117,7 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
     }
   }
 
-  private fun showRetryDialog(context: Context, result: Result.Failure<AuthorizeErrorCode, *>) {
+  private fun showRetryDialog(context: Context, result: AuthorizationFailure) {
     if (context is Activity && !context.isFinishing) {
       val builder = AlertDialog.Builder(context)
       builder.setTitle("Network Error")
@@ -131,7 +130,7 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
     }
   }
 
-  private fun showUsageErrorDialog(context: Context, result: Result.Failure<AuthorizeErrorCode, *>) {
+  private fun showUsageErrorDialog(context: Context, result: AuthorizationFailure) {
     if (context is Activity && !context.isFinishing) {
       val builder = AlertDialog.Builder(context)
       builder.setTitle("Usage Error")
@@ -149,5 +148,17 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
     isAuthorized -> "AUTHORIZED"
     isAuthorizationInProgress -> "AUTHORIZING"
     else -> "NOT_AUTHORIZED"
+  }
+
+  private fun AuthorizedLocation?.toJavascriptMap() = when (this) {
+    null -> null
+    else -> WritableNativeMap().apply {
+      putString("id", locationId)
+      putString("name", name)
+      putString("currency", currencyCode.name)
+      putString("merchant", merchantId)
+      putString("business_name", businessName)
+      putBoolean("card_processing_activated", cardProcessingActivated)
+    }
   }
 }

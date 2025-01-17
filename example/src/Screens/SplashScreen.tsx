@@ -78,11 +78,14 @@ export default function SplashScreen({ navigation }) {
 
   const authorizeSDK = async () => {
     try {
-      // Add your own access token and location ID from developer.squareup.com
-      await authorize(
-        'EAAAELA5gqHSTZmbxSNs0E0zTWUOfHdOtbPIqBexx6RQvKGM3RymMPN7riQZcQHd',
-        'iSFE4TN2WCJVK6'
-      );
+      let state = await getAuthorizationState();
+      if (state === 'NOT_AUTHORIZED') {
+        // Add your own access token and location ID from developer.squareup.com
+        await authorize(
+          '-->> replace with your authentication token <<--',
+          '-->> replace with your location id <<--'
+        );
+      }
       let authorizedLocation = await getAuthorizedLocation();
       let authorizationStatus = await getAuthorizationState();
       console.log(
@@ -92,7 +95,7 @@ export default function SplashScreen({ navigation }) {
         'SDK Authorization Status is ' + JSON.stringify(authorizationStatus)
       );
     } catch (error) {
-      Alert.alert('Error Authenticating', error.message);
+      Alert.alert('Error Authenticating', (error as Error).message);
     }
   };
 

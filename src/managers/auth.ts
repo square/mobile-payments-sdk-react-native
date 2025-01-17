@@ -1,9 +1,8 @@
 import MobilePaymentsSdkReactNative from '../base_sdk';
-import { NativeEventEmitter, EmitterSubscription } from 'react-native';
+import { NativeEventEmitter, type EmitterSubscription } from 'react-native';
 import type { Location } from '../models/objects';
 import { AuthorizationState } from '../models/enums';
-export const eventEmitter = new NativeEventEmitter(MobilePaymentsSdkReactNative);
-export const authorizationObserver: EmitterSubscription = null;
+let authorizationObserver: EmitterSubscription | null = null;
 
 export const authorize = (
   accessToken: String,
@@ -35,6 +34,7 @@ const removeAuthorizationObserver = (): Promise<void> => {
 export function observeAuthorizationChanges(callback: (newState: AuthorizationState) => void): EmitterSubscription {
   // Add a listener for the 'authorizationChange' event
   addAuthorizationObserver()
+  const eventEmitter = new NativeEventEmitter(MobilePaymentsSdkReactNative);
   const subscription = eventEmitter.addListener('AuthorizationStatusChange', (event) => {
     callback(AuthorizationState[event.state as keyof typeof AuthorizationState])
   });
@@ -43,6 +43,7 @@ export function observeAuthorizationChanges(callback: (newState: AuthorizationSt
   authorizationObserver = subscription;
   return subscription;
 }
+
 export function stopObservingAuthorizationChanges() {
   if (authorizationObserver !== null) {
     authorizationObserver.remove();
