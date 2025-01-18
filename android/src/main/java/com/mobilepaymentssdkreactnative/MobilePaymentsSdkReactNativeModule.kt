@@ -68,7 +68,7 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
   @ReactMethod
   fun getAuthorizedLocation(promise: Promise) {
     val authorizationManager = MobilePaymentsSdk.authorizationManager()
-    promise.resolve(authorizationManager.location?.toLocationMap())
+    promise.resolve(authorizationManager.authorizedLocation?.toLocationMap())
   }
 
   @ReactMethod
