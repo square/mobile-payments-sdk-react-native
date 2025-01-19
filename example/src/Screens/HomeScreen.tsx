@@ -1,91 +1,129 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  SafeAreaView,
-  TouchableOpacity,
-} from 'react-native';
-import Feather from 'react-native-vector-icons/Feather';
-import { defaultStyles } from '../styles/common';
-import {
-  showSettings,
-  type PaymentParameters,
-  CurrencyCode,
-  type PromptParameters,
-  AdditionalPaymentMethodType,
-  PromptMode,
-  startPayment,
-} from 'mobile-payments-sdk-react-native';
-import { useEffect } from 'react';
-import CustomButton from '../components/CustomButton';
+import { useNavigation } from '@react-navigation/native';
+import { AdditionalPaymentMethodType, CurrencyCode, hideMockReaderUI, PromptMode, showMockReaderUI, showSettings, startPayment, type PaymentParameters, type PromptParameters } from 'mobile-payments-sdk-react-native';
+import React, { useState } from 'react';
+import { View, Text, Image, StyleSheet, SafeAreaView, TouchableOpacity } from 'react-native';
 import uuid from 'react-native-uuid';
+import LoadingButton from '../components/LoadingButton';
+import HeaderButton from '../components/HeaderButton';
 
-const handleStartPayment = async () => {
-  const paymentParameters: PaymentParameters = {
-    amountMoney: { amount: 100, currencyCode: CurrencyCode.USD },
-    appFeeMoney: { amount: 0, currencyCode: CurrencyCode.USD },
-    idempotencyKey: uuid.v4(),
-    note: 'Payment for services',
-    // Other parameters you could add:
-    // autocomplete: true,
-    // delayAction: DelayAction.CANCEL,
-    // tipMoney: { amount: 0, currencyCode: CurrencyCode.USD },
-    // etc
-    // For more information, visit 
-    // iOS: https://developer.squareup.com/docs/mobile-payments-sdk/ios/take-payments#create-payment-parameters
-    // Android: https://developer.squareup.com/docs/mobile-payments-sdk/android/take-payments#create-payment-parameters
+const HomeView = () => {
+  const navigation = useNavigation();
+
+  const [isMockReaderPresented, setMockReaderPresented] = useState(false);
+
+  const dismissMockReader = () => {
+    hideMockReaderUI();
+    setMockReaderPresented(false);
   };
 
-  const promptParameters: PromptParameters = {
-    additionalMethods: [AdditionalPaymentMethodType.ALL],
-    mode: PromptMode.DEFAULT,
+  const presentMockReader = () => {
+    showMockReaderUI();
+    setMockReaderPresented(true);
   };
 
-  try {
-    const payment = await startPayment(paymentParameters, promptParameters);
-    console.log('Payment successful:', payment);
-  } catch (error) {
-    console.log('Payment error:', JSON.stringify(error['userInfo']));
-  }
-};
+  const handleStartPayment = async () => {
+    const paymentParameters: PaymentParameters = {
+      amountMoney: { amount: 100, currencyCode: CurrencyCode.USD },
+      appFeeMoney: { amount: 0, currencyCode: CurrencyCode.USD },
+      idempotencyKey: uuid.v4(),
+      note: 'Payment for services',
+      // Other parameters you could add:
+      // autocomplete: true,
+      // delayAction: DelayAction.CANCEL,
+      // tipMoney: { amount: 0, currencyCode: CurrencyCode.USD },
+      // etc
+      // For more information, visit 
+      // iOS: https://developer.squareup.com/docs/mobile-payments-sdk/ios/take-payments#create-payment-parameters
+      // Android: https://developer.squareup.com/docs/mobile-payments-sdk/android/take-payments#create-payment-parameters
+    };
 
-export function HomeScreen() {
-  useEffect(() => {
-    // If you wish to display mock reader UI, make sure you're initializing the SDK
-    // with a sandbox Application ID.
-    // https://developer.squareup.com/docs/mobile-payments-sdk/ios#3-initialize-the-mobile-payments-sdk
-    // showMockReaderUI();
-  });
+    const promptParameters: PromptParameters = {
+      additionalMethods: [AdditionalPaymentMethodType.ALL],
+      mode: PromptMode.DEFAULT,
+    };
+
+    try {
+      const payment = await startPayment(paymentParameters, promptParameters);
+      console.log('Payment successful:', payment);
+    } catch (error) {
+      console.log('Payment error:', JSON.stringify(error['userInfo']));
+    }
+  };
 
   return (
-    <SafeAreaView style={defaultStyles.pageContainer}>
-      <View style={defaultStyles.pageContainer}>
-        <View style={styles.iconContainer}>
-          <TouchableOpacity onPress={showSettings}>
-            <Feather name="settings" size={30} color="black" />
-          </TouchableOpacity>
-        </View>
-        <View style={defaultStyles.descriptionContainer}>
-          <Text style={defaultStyles.title}>Authorize Reader SDK.</Text>
-          <Text style={defaultStyles.subtitle}>
-            Generate an authorization code
-            {'\n'}
-            in the Reader SDK tab
-            {'\n'}
-            of the Developer Portal.
-          </Text>
-        </View>
-        <CustomButton title="Start Payment" onPress={handleStartPayment} />
+    <SafeAreaView style={styles.container}>
+      <View style={styles.header}>
+        <HeaderButton title="Settings" onPress={showSettings} />
+        <View style={styles.headerSpacer} />
+        <HeaderButton title="Permissions" onPress={() => navigation.navigate('Permissions')} />
       </View>
+      <View style={styles.content}>
+        <Image source={require('../assets/donut.png')} style={styles.donutImage} />
+        <Text style={styles.title}>Donut Counter</Text>
+        <LoadingButton
+          isLoading={false}
+          isButtonStateActive={true}
+          handleActiveState={null}
+          handleInactiveState={() => handleStartPayment} 
+          activeButtonLabel='Buy for $1' 
+          inactiveButtonLabel=''
+          />
+      </View>
+        <TouchableOpacity style={styles.mockButton}
+          onPress={() => {
+            if (isMockReaderPresented) {
+              dismissMockReader();
+            } else {
+              presentMockReader();
+            }
+          }}
+        ><Text style={styles.mockReaderText}>{isMockReaderPresented ? 'Hide Mock Reader' : 'Show Mock Reader'}</Text>
+        </TouchableOpacity>
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
-  iconContainer: {
-    position: 'absolute',
-    top: 0,
-    right: 10,
-    zIndex: 1,
+  container: {
+    flex: 1,
+    padding: 16,
+    backgroundColor: 'white',
+  },
+  header: {
+    flexDirection: 'row',
+    marginBottom: 50,
+    paddingLeft: 16,
+    paddingRight: 16
+  },
+  headerSpacer: {
+    flex: 4,
+  },
+  content: {
+    alignItems: 'center',
+    flex: 9,
+    paddingLeft: 16,
+    paddingRight: 16,
+  },
+  donutImage: {
+    width: 248,
+    height: 248,
+    marginBottom: 50,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: 'black',
+    marginBottom: 32,
+  },
+  mockButton: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  mockReaderText: {
+    color: '#007BFF',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
+
+export default HomeView;
