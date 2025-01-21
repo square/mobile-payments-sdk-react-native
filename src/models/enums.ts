@@ -5,14 +5,14 @@ export enum AccountType {
 }
 
 export enum AdditionalPaymentMethodType {
-  ALL = "ALL",
-  KEYED = "KEYED",
+  ALL = 'ALL',
+  KEYED = 'KEYED',
 }
 
 export enum AuthorizationState {
-  AUTHORIZED = "AUTHORIZED",
-  AUTHORIZING = "AUTHORIZING",
-  NOT_AUTHORIZED = "NOT_AUTHORIZING",
+  AUTHORIZED = 'AUTHORIZED',
+  AUTHORIZING = 'AUTHORIZING',
+  NOT_AUTHORIZED = 'NOT_AUTHORIZING',
 }
 
 export enum CardBrand {
@@ -59,12 +59,12 @@ export enum CardInsertionStatus {
 }
 
 export enum CurrencyCode {
-  AUD = "AUD",
-  CAD = "CAD",
-  EUR = "EUR",
-  GBP = "GBP",
-  JPY = "JPY",
-  USD = "USD",
+  AUD = 'AUD',
+  CAD = 'CAD',
+  EUR = 'EUR',
+  GBP = 'GBP',
+  JPY = 'JPY',
+  USD = 'USD',
 }
 
 export enum DelayAction {

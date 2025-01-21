@@ -1,5 +1,5 @@
-import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
-import BouncyCheckbox from "react-native-bouncy-checkbox";
+import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
+import BouncyCheckbox from 'react-native-bouncy-checkbox';
 
 const PermissionRow = ({ title, description, isGranted, onRequest }) => (
   <View style={styles.permissionRow}>
@@ -15,7 +15,9 @@ const PermissionRow = ({ title, description, isGranted, onRequest }) => (
         fillColor="gray"
         unFillColor="#FFFFFF"
         innerIconStyle={{ borderWidth: 2 }}
-        onPress={(isChecked: boolean) => { onRequest(); }}
+        onPress={(isChecked: boolean) => {
+          onRequest();
+        }}
       />
     </TouchableOpacity>
   </View>

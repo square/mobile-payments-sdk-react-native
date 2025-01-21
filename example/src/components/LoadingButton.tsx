@@ -1,17 +1,33 @@
-import { TouchableOpacity, Text, ActivityIndicator, StyleSheet } from 'react-native';
+import {
+  TouchableOpacity,
+  Text,
+  ActivityIndicator,
+  StyleSheet,
+} from 'react-native';
 
-const LoadingButton = ({ isLoading, isActive, handleOnPress, activeLabel, inactiveLabel='' }) => {
-  console.log(isActive ? activeLabel : inactiveLabel)
+const LoadingButton = ({
+  isLoading,
+  isActive,
+  handleOnPress,
+  activeLabel,
+  inactiveLabel = '',
+}) => {
+  console.log(isActive ? activeLabel : inactiveLabel);
   return (
     <TouchableOpacity
-      style={[styles.loadingButtonActive, isActive ? styles.loadingButtonActive : styles.loadingButtonInactive ]}
+      style={[
+        styles.loadingButtonActive,
+        isActive ? styles.loadingButtonActive : styles.loadingButtonInactive,
+      ]}
       onPress={handleOnPress}
       disabled={isLoading}
     >
       {isLoading ? (
         <ActivityIndicator color="#000" />
       ) : (
-        <Text style={styles.loadingButtonText}>{isActive ? activeLabel : inactiveLabel }</Text>
+        <Text style={isActive ? styles.loadingButtonText : styles.loadingButtonTextInactive}>
+          {isActive ? activeLabel : inactiveLabel}
+        </Text>
       )}
     </TouchableOpacity>
   );
@@ -28,13 +44,18 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   loadingButtonInactive: {
-    backgroundColor: '#000',
-    opacity: 0.5,
+    backgroundColor: '#d6d6d6',
+    opacity: 1,
   },
   loadingButtonText: {
     color: 'white',
     fontSize: 18,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+  },
+  loadingButtonTextInactive: {
+    color: '#006AFF',
+    fontSize: 18,
+    fontWeight: 'bold',
   },
 });
 
