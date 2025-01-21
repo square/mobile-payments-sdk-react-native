@@ -82,8 +82,8 @@ export enum EntryMethod {
 }
 
 export enum Environment {
-  PRODUCTION,
-  SANDBOX,
+  PRODUCTION = 'PRODUCTION',
+  SANDBOX = 'SANDBOX',
 }
 
 export enum PaymentStatus {

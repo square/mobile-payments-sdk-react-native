@@ -2,7 +2,7 @@
 
 @interface RCT_EXTERN_MODULE(MobilePaymentsSdkReactNative, NSObject)
 
-RCT_EXTERN_METHOD(authorize:(NSString *)accessToken 
+RCT_EXTERN_METHOD(authorize:(NSString *)accessToken
                   locationId:(NSString *)locationId
                   withResolver:(RCTPromiseResolveBlock)resolve
                   withRejecter:(RCTPromiseRejectBlock)reject)
@@ -36,6 +36,12 @@ RCT_EXTERN_METHOD(startPayment:(NSDictionary *)paymentParameters
                   withRejecter:(RCTPromiseRejectBlock)reject)
 
 RCT_EXTERN_METHOD(cancelPayment:(RCTPromiseResolveBlock)resolve
+                  withRejecter:(RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(getEnvironment:(RCTPromiseResolveBlock)resolve
+                  withRejecter:(RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(getSDKVersion:(RCTPromiseResolveBlock)resolve
                   withRejecter:(RCTPromiseRejectBlock)reject)
 
 + (BOOL)requiresMainQueueSetup

@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
   permissionRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingBottom: 15,
+    paddingBottom: 5,
   },
   permissionTitle: {
     fontSize: 18,
@@ -42,16 +42,16 @@ const styles = StyleSheet.create({
     opacity: 0.55,
   },
   spacer: {
-    flex: 1,
+    flex: 0.3,
   },
   iconContainer: {
-    paddingLeft: 16,
+    paddingLeft: 8,
     flex: 1,
   },
   textContainer: {
     flex: 5,
     justifyContent: 'center',
-    paddingTop: 16,
+    paddingTop: 6,
   },
 });
 
