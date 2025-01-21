@@ -40,8 +40,10 @@ class MobilePaymentsSdkReactNative: RCTEventEmitter {
     // Deauthorize
     @objc(deauthorize:withRejecter:)
     func deauthorize(resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
-        mobilePaymentsSDK.authorizationManager.deauthorize {
-            resolve("Square Mobile Payments SDK successfully deauthorized.")
+        DispatchQueue.main.async { [weak self] in
+            self?.mobilePaymentsSDK.authorizationManager.deauthorize {
+                resolve("Square Mobile Payments SDK successfully deauthorized.")
+            }
         }
     }
 
