@@ -33,9 +33,13 @@ const HomeView = () => {
     setMockReaderPresented(false);
   };
 
-  const presentMockReader = () => {
-    showMockReaderUI();
-    setMockReaderPresented(true);
+  const presentMockReader = async () => {
+    try {
+      const result = await showMockReaderUI();
+      setMockReaderPresented(true);
+    } catch (error) {
+      console.log('Mock Reader UI error:', error);
+    }
   };
 
   const handleStartPayment = async () => {
