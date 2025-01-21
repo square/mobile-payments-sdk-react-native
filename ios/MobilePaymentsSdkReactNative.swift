@@ -10,7 +10,7 @@ class MobilePaymentsSdkReactNative: RCTEventEmitter {
     private let mobilePaymentsSDK =  MobilePaymentsSDK.shared
     private var observingAuthorizationChanges = false
     private var authorizationObservers: NSHashTable<AnyObject> = .weakObjects()
-    
+
     private var startPaymentResolveBlock: RCTPromiseResolveBlock?
     private var startPaymentRejectBlock: RCTPromiseRejectBlock?
     private var paymentHandle: PaymentHandle?
@@ -76,7 +76,7 @@ class MobilePaymentsSdkReactNative: RCTEventEmitter {
             resolve("Authorization State Observer Added")
         }
     }
-    
+
     @objc(removeAuthorizationObserver:withRejecter:)
     func removeAuthorizationObserver(resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         DispatchQueue.main.async { [weak self] in
@@ -91,7 +91,7 @@ class MobilePaymentsSdkReactNative: RCTEventEmitter {
             resolve("Authorization State Observer Removed")
         }
     }
-    
+
     /// Settings: https://developer.squareup.com/docs/mobile-payments-sdk/ios/pair-manage-readers#settings-manager
     @objc(showSettings:withRejecter:)
     func showSettings(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
@@ -121,6 +121,23 @@ class MobilePaymentsSdkReactNative: RCTEventEmitter {
         }
     }
 
+    @objc(getEnvironment:withRejecter:)
+    func getEnvironment(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+        switch(mobilePaymentsSDK.settingsManager.sdkSettings.environment) {
+        case .production:
+            return resolve("PRODUCTION")
+        case .sandbox:
+            return resolve("SANDBOX")
+        default:
+            reject("UNKNOWN_ENVIRONMENT", "Unknown environment found.", nil)
+        }
+    }
+
+    @objc(getSDKVersion:withRejecter:)
+    func getSDKVersion(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+        return resolve(mobilePaymentsSDK.settingsManager.sdkSettings.version)
+    }
+
     /// Mock Readers, available only in Sandbox: https://developer.squareup.com/docs/mobile-payments-sdk/ios#mock-readers
     private lazy var mockReaderUI: MockReaderUI? = {
         guard mobilePaymentsSDK.settingsManager.sdkSettings.environment == .sandbox else {
@@ -133,7 +150,7 @@ class MobilePaymentsSdkReactNative: RCTEventEmitter {
             return nil
         }
     }()
-    
+
     @objc(showMockReaderUI:withRejecter:)
     func showMockReaderUI(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         DispatchQueue.main.async { [weak self] in
@@ -151,21 +168,21 @@ class MobilePaymentsSdkReactNative: RCTEventEmitter {
             }
 
             if let mockReaderUI = self.mockReaderUI {
-                mockReaderUI.dismiss() 
+                mockReaderUI.dismiss()
                 resolve("Mock Reader UI hidden successfully")
             } else {
                 reject("HIDE_MOCK_READER_UI_ERROR", "Mock Reader UI is not presented", nil)
             }
         }
     }
-    
+
     /// Start Payment: https://developer.squareup.com/docs/mobile-payments-sdk/ios/take-payments
     @objc(startPayment:promptParameters:withResolver:withRejecter:)
     func startPayment(_ paymentParameters: [String: Any], promptParameters: [String: Any], resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         // Keeping a reference for the resolvers so the protocol can propagate the results
         self.startPaymentResolveBlock = resolve
         self.startPaymentRejectBlock = reject
-        
+
         let params: PaymentParameters
         let paymentResult = Mappers.mapPaymentParameters(paymentParameters)
         switch paymentResult {
@@ -174,7 +191,7 @@ class MobilePaymentsSdkReactNative: RCTEventEmitter {
         case .failure(let error):
             return reject("INVALID_PAYMENT_PARAMETERS", error.localizedDescription, nil)
         }
-        
+
         let promptParams:PromptParameters
         let promptResult = Mappers.mapPromptParameters(promptParameters)
         switch promptResult {
@@ -198,7 +215,7 @@ class MobilePaymentsSdkReactNative: RCTEventEmitter {
             )
         }
     }
-    
+
     @objc(cancelPayment:withRejecter:)
     func cancelPayment(resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         guard let handle = paymentHandle else {
@@ -268,7 +285,7 @@ extension MobilePaymentsSdkReactNative: PaymentManagerDelegate {
         default:
             errorMessage = "There has been an error taking a payment. Check the request details and try the payment again."
         }
-        
+
         startPaymentRejectBlock?("PAYMENT_FAILED", errorMessage, nil);
         paymentHandle = nil
     }
