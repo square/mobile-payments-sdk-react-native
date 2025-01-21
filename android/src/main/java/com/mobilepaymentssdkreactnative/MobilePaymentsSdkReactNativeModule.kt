@@ -158,7 +158,9 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
 
   @ReactMethod
   fun hideMockReaderUI() {
-    MockReaderUI.hide()
+    reactContext.currentActivity?.runOnUiThread {
+      MockReaderUI.hide()
+    }
   }
 
   @ReactMethod
