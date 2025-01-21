@@ -32,7 +32,7 @@ const HomeView = () => {
       // delayAction: DelayAction.CANCEL,
       // tipMoney: { amount: 0, currencyCode: CurrencyCode.USD },
       // etc
-      // For more information, visit 
+      // For more information, visit
       // iOS: https://developer.squareup.com/docs/mobile-payments-sdk/ios/take-payments#create-payment-parameters
       // Android: https://developer.squareup.com/docs/mobile-payments-sdk/android/take-payments#create-payment-parameters
     };
@@ -61,11 +61,11 @@ const HomeView = () => {
         <Image source={require('../assets/donut.png')} style={styles.donutImage} />
         <Text style={styles.title}>Donut Counter</Text>
         <LoadingButton
-          isLoading={false}
-          isActive={true}
-          handleOnPress={() => handleStartPayment} 
+          isLoading={ false }
+          isActive={ true }
+          handleOnPress={ () => handleStartPayment() }
           activeLabel='Buy for $1'
-          />
+        />
       </View>
         <TouchableOpacity style={styles.mockButton}
           onPress={() => {

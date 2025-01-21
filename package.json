@@ -184,5 +184,8 @@
     "type": "module-legacy",
     "languages": "kotlin-swift",
     "version": "0.41.2"
+  },
+  "dependencies": {
+    "uuid": "^11.0.5"
   }
 }
