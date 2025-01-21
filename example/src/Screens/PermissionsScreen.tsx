@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 import { checkMultiple, PERMISSIONS, request, requestMultiple, RESULTS } from 'react-native-permissions';
 import LoadingButton from '../components/LoadingButton';
 
-export const requestBluetooth = () => { 
+export const requestBluetooth = () => {
   requestMultiple(
     Platform.select({
       android: [PERMISSIONS.ANDROID.BLUETOOTH_CONNECT,
@@ -42,26 +42,26 @@ const requestMicrophone = () => {
 
 const checkPermissions = (setMicPermission, setLocationPermission, setBluetoothPermission) => {
   const permissions = Platform.select({
-    android: [PERMISSIONS.ANDROID.BLUETOOTH_CONNECT, 
-      PERMISSIONS.ANDROID.BLUETOOTH_SCAN, 
-      PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION, 
+    android: [PERMISSIONS.ANDROID.BLUETOOTH_CONNECT,
+      PERMISSIONS.ANDROID.BLUETOOTH_SCAN,
+      PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
       PERMISSIONS.ANDROID.RECORD_AUDIO],
-    ios: [PERMISSIONS.IOS.BLUETOOTH_PERIPHERAL, 
-      PERMISSIONS.IOS.LOCATION_WHEN_IN_USE, 
-      PERMISSIONS.IOS.LOCATION_ALWAYS, 
+    ios: [PERMISSIONS.IOS.BLUETOOTH_PERIPHERAL,
+      PERMISSIONS.IOS.LOCATION_WHEN_IN_USE,
+      PERMISSIONS.IOS.LOCATION_ALWAYS,
       PERMISSIONS.IOS.MICROPHONE]
   })
   checkMultiple(permissions).then((statuses) => {
-    if (statuses[PERMISSIONS.ANDROID.RECORD_AUDIO] === RESULTS.GRANTED 
+    if (statuses[PERMISSIONS.ANDROID.RECORD_AUDIO] === RESULTS.GRANTED
       || statuses[PERMISSIONS.IOS.MICROPHONE] === RESULTS.GRANTED) {
       setMicPermission(true)
     }
-    if (statuses[PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION] === RESULTS.GRANTED 
-      || statuses[PERMISSIONS.IOS.LOCATION_WHEN_IN_USE] === RESULTS.GRANTED 
+    if (statuses[PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION] === RESULTS.GRANTED
+      || statuses[PERMISSIONS.IOS.LOCATION_WHEN_IN_USE] === RESULTS.GRANTED
       || statuses[PERMISSIONS.IOS.LOCATION_ALWAYS] === RESULTS.GRANTED) {
       setLocationPermission(true)
     }
-    if ((statuses[PERMISSIONS.ANDROID.BLUETOOTH_SCAN] === RESULTS.GRANTED 
+    if ((statuses[PERMISSIONS.ANDROID.BLUETOOTH_SCAN] === RESULTS.GRANTED
         && statuses[PERMISSIONS.ANDROID.BLUETOOTH_CONNECT] === RESULTS.GRANTED)
       || statuses[PERMISSIONS.IOS.BLUETOOTH_PERIPHERAL] === RESULTS.GRANTED) {
       setBluetoothPermission(true)
@@ -86,7 +86,7 @@ const PermissionsView = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isAuthorized, setIsAuthorized] = useState(false);
   const navigation = useNavigation();
-  
+
 
   const handleAuthorize = async () => {
     setIsLoading(true);
@@ -118,7 +118,7 @@ const PermissionsView = () => {
     // First we fetch the current Authorization state to set the button to the correct state
     const fetchAuthorizationState = async () => {
       let authorizationState = await getAuthorizationState();
-      console.log('is authorized is currently ' + authorizationState)
+      console.log('permission screen is authorized is currently ' + authorizationState)
       if (authorizationState === AuthorizationState.AUTHORIZED) {
         setIsAuthorized(true);
       }
@@ -161,7 +161,7 @@ const PermissionsView = () => {
           isActive={!isAuthorized}
           handleOnPress={isAuthorized ? handleDeauthorize : handleAuthorize}
           activeLabel='Authorize'
-          inactiveLabel='Deauthorize' 
+          inactiveLabel='Deauthorize'
           />
         <Text style={styles.statusText}>{isAuthorized ? 'Authorized' : 'Not Authorized'}</Text>
       </ScrollView>
