@@ -65,10 +65,22 @@ const requestMicrophone = () => {
   });
 };
 
+const requestReadPhoneState = () => {
+  request(
+    Platform.select({
+      android: PERMISSIONS.ANDROID.READ_PHONE_STATE,
+      ios: PERMISSIONS.IOS.READ_PHONE_STATE,
+    })
+  ).then((status) => {
+    console.log(status);
+  });
+};
+
 const checkPermissions = (
   setMicPermission,
   setLocationPermission,
-  setBluetoothPermission
+  setBluetoothPermission,
+  setReadPhoneStateGranted
 ) => {
   const permissions = Platform.select({
     android: [
@@ -76,6 +88,7 @@ const checkPermissions = (
       PERMISSIONS.ANDROID.BLUETOOTH_SCAN,
       PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
       PERMISSIONS.ANDROID.RECORD_AUDIO,
+      PERMISSIONS.ANDROID.READ_PHONE_STATE,
     ],
     ios: [
       PERMISSIONS.IOS.BLUETOOTH_PERIPHERAL,
@@ -105,6 +118,12 @@ const checkPermissions = (
     ) {
       setBluetoothPermission(true);
     }
+    if (
+      statuses[PERMISSIONS.ANDROID.READ_PHONE_STATE] === RESULTS.GRANTED ||
+      Platform.OS === 'ios' // This permission is not available on iOS
+    ) {
+      setReadPhoneStateGranted(true);
+    }
   });
 };
 
@@ -118,12 +137,15 @@ const observeAuthChanges = async (setIsAuthorized) => {
 };
 
 const PermissionsView = () => {
+  const isIos = Platform.OS === 'ios';
   const [microphonePermissionGranted, setMicrophonePermissionGranted] =
     useState(false);
   const [locationPermissionGranted, setLocationPermissionGranted] =
     useState(false);
   const [bluetoothPermissionGranted, setBluetoothPermissionGranted] =
     useState(false);
+  const [readPhoneStateGranted, setReadPhoneStateGranted] =
+    useState(isIos);
   const [isLoading, setIsLoading] = useState(false);
   const [isAuthorized, setIsAuthorized] = useState(false);
   const navigation = useNavigation();
@@ -174,7 +196,8 @@ const PermissionsView = () => {
     checkPermissions(
       setMicrophonePermissionGranted,
       setLocationPermissionGranted,
-      setBluetoothPermissionGranted
+      setBluetoothPermissionGranted,
+      setReadPhoneStateGranted
     );
     return () => {
       // Remember to remove your observer once the component has been removed from the DOM
@@ -207,6 +230,14 @@ const PermissionsView = () => {
           isGranted={microphonePermissionGranted}
           onRequest={requestMicrophone}
         />
+        {Platform.OS === 'android' && (
+          <PermissionRow
+            title={STRINGS.readPhoneStateTitle}
+            description={STRINGS.readPhoneStateDescription}
+            isGranted={readPhoneStateGranted}
+            onRequest={requestReadPhoneState}
+          />
+        )}
         <LoadingButton
           isLoading={isLoading}
           isActive={!isAuthorized}
@@ -267,6 +298,9 @@ const STRINGS = {
   microphoneTitle: 'Microphone',
   microphoneDescription:
     'Square Reader for magstripe uses the microphone to communicate payment card data to your device. You should ask for this permission if you are using a magstripe reader.',
+  readPhoneStateTitle: 'Read Phone State',
+  readPhoneStateDescription:
+    'Square needs phone access in order to uniquely identify the devices associated with your account and ensure that unauthorized devices are not able to act on your behalf.',
 };
 
 export default PermissionsView;
