@@ -69,7 +69,7 @@ const requestReadPhoneState = () => {
   request(
     Platform.select({
       android: PERMISSIONS.ANDROID.READ_PHONE_STATE,
-      ios: PERMISSIONS.IOS.READ_PHONE_STATE,
+      ios: undefined,
     })
   ).then((status) => {
     console.log(status);
