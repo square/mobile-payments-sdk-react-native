@@ -152,10 +152,19 @@ class MobilePaymentsSdkReactNative: RCTEventEmitter {
     }()
 
     @objc(showMockReaderUI:withRejecter:)
-    func showMockReaderUI(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+    func showMockReaderUI(resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            try? self.mockReaderUI?.present()
+            if let mockReaderUI = self.mockReaderUI {
+                do {
+                    try mockReaderUI.present()
+                    resolve("Mock Reader presented successfully.")
+                } catch {
+                    reject("MOCK_READER_ERROR", "Can't show mock reader. Error: \(error.localizedDescription).", nil)
+                }
+            } else {
+                reject("MOCK_READER_ERROR", "Can't show mock reader. Check your environment.", nil)
+            }
         }
     }
 
