@@ -69,10 +69,7 @@ const checkPermissions = (setMicPermission, setLocationPermission, setBluetoothP
   });
 };
 
-const handleDeauthorize = async () => {
-  await deauthorize();
-  console.log('Deauthorization successful. The app is no longer authorized.');
-}
+
 
 const observeAuthChanges = async () => {
   observeAuthorizationChanges((newStatus) => {
@@ -83,16 +80,16 @@ const observeAuthChanges = async () => {
 }
 
 const PermissionsView = () => {
-  const [authorizationState, setAuthorizationState] = useState(AuthorizationState.NOT_AUTHORIZED);
   const [microphonePermissionGranted, setMicrophonePermissionGranted] = useState(false);
   const [locationPermissionGranted, setLocationPermissionGranted] = useState(false);
   const [bluetoothPermissionGranted, setBluetoothPermissionGranted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isAuthorized, setIsAuthorized] = useState(false);
   const navigation = useNavigation();
-  const isAuthorized = authorizationState === AuthorizationState.AUTHORIZED;
+  
 
-  const handleAuthorize = async (setAuthorizationState) => {
-    setIsLoading(true)
+  const handleAuthorize = async () => {
+    setIsLoading(true);
     try {
       // Add your own access token and location ID from developer.squareup.com
       let auth = await authorize(
@@ -101,16 +98,33 @@ const PermissionsView = () => {
       );
       let authorizedLocation = await getAuthorizedLocation();
       let authorizationState = await getAuthorizationState();
-      setAuthorizationState(authorizationState);
+      setIsAuthorized(true);
       console.log('SDK Authorized with location ' + JSON.stringify(authorizedLocation));
       console.log('SDK Authorization Status is ' + JSON.stringify(authorizationState));
     } catch (error) {
+      setIsAuthorized(false);
       Alert.alert('Error Authenticating', error.message)
     }
-    setIsLoading(false)
+    setIsLoading(false);
   };
 
+  const handleDeauthorize = async () => {
+    await deauthorize();
+    setIsAuthorized(false);
+    console.log('Deauthorization successful. The app is no longer authorized.');
+  }
+
   useEffect(() => {
+    // First we fetch the current Authorization state to set the button to the correct state
+    const fetchAuthorizationState = async () => {
+      let authorizationState = await getAuthorizationState();
+      console.log('is authorized is currently ' + authorizationState)
+      if (authorizationState === AuthorizationState.AUTHORIZED) {
+        setIsAuthorized(true);
+      }
+    }
+    fetchAuthorizationState();
+    // It's recommended you observe authorization changes while using the SDK
     observeAuthChanges();
     checkPermissions(setMicrophonePermissionGranted, setLocationPermissionGranted, setBluetoothPermissionGranted);
     return () => {
@@ -144,11 +158,10 @@ const PermissionsView = () => {
           onRequest={requestMicrophone} />
         <LoadingButton
           isLoading={isLoading}
-          isButtonStateActive={!isAuthorized}
-          handleActiveState={handleDeauthorize}
-          handleInactiveState={() => handleAuthorize(setAuthorizationState)} 
-          activeButtonLabel='Authorize'
-          inactiveButtonLabel='Deauthorize' 
+          isActive={!isAuthorized}
+          handleOnPress={isAuthorized ? handleDeauthorize : handleAuthorize}
+          activeLabel='Authorize'
+          inactiveLabel='Deauthorize' 
           />
         <Text style={styles.statusText}>{isAuthorized ? 'Authorized' : 'Not Authorized'}</Text>
       </ScrollView>

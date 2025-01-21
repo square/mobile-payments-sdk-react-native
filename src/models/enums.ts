@@ -10,9 +10,9 @@ export enum AdditionalPaymentMethodType {
 }
 
 export enum AuthorizationState {
-  AUTHORIZED,
-  AUTHORIZING,
-  NOT_AUTHORIZED,
+  AUTHORIZED = "AUTHORIZED",
+  AUTHORIZING = "AUTHORIZING",
+  NOT_AUTHORIZED = "NOT_AUTHORIZING",
 }
 
 export enum CardBrand {
