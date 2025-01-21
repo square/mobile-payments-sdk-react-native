@@ -108,10 +108,11 @@ const checkPermissions = (
   });
 };
 
-const observeAuthChanges = async () => {
+const observeAuthChanges = async (setIsAuthorized) => {
   observeAuthorizationChanges((newStatus) => {
     if (newStatus === AuthorizationState.NOT_AUTHORIZED) {
       // You can handle deauthorization here calling, for instance, your own authorization method.
+      setIsAuthorized(false);
     }
   });
 };
@@ -153,7 +154,6 @@ const PermissionsView = () => {
 
   const handleDeauthorize = async () => {
     await deauthorize();
-    setIsAuthorized(false);
     console.log('Deauthorization successful. The app is no longer authorized.');
   };
 
@@ -164,11 +164,13 @@ const PermissionsView = () => {
       console.log('is authorized is currently ' + authorizationState);
       if (authorizationState === AuthorizationState.AUTHORIZED) {
         setIsAuthorized(true);
+      } else if (authorizationState === AuthorizationState.NOT_AUTHORIZED) {
+        setIsAuthorized(false);
       }
     };
     fetchAuthorizationState();
     // It's recommended you observe authorization changes while using the SDK
-    observeAuthChanges();
+    observeAuthChanges(setIsAuthorized);
     checkPermissions(
       setMicrophonePermissionGranted,
       setLocationPermissionGranted,
