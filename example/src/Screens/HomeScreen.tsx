@@ -1,7 +1,24 @@
 import { useNavigation } from '@react-navigation/native';
-import { AdditionalPaymentMethodType, CurrencyCode, hideMockReaderUI, PromptMode, showMockReaderUI, showSettings, startPayment, type PaymentParameters, type PromptParameters } from 'mobile-payments-sdk-react-native';
+import {
+  AdditionalPaymentMethodType,
+  CurrencyCode,
+  hideMockReaderUI,
+  PromptMode,
+  showMockReaderUI,
+  showSettings,
+  startPayment,
+  type PaymentParameters,
+  type PromptParameters,
+} from 'mobile-payments-sdk-react-native';
 import React, { useState } from 'react';
-import { View, Text, Image, StyleSheet, SafeAreaView, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  SafeAreaView,
+  TouchableOpacity,
+} from 'react-native';
 import uuid from 'react-native-uuid';
 import LoadingButton from '../components/LoadingButton';
 import HeaderButton from '../components/HeaderButton';
@@ -46,7 +63,7 @@ const HomeView = () => {
       const payment = await startPayment(paymentParameters, promptParameters);
       console.log('Payment successful:', payment);
     } catch (error) {
-      console.log('Payment error:', JSON.stringify(error['userInfo']));
+      console.log('Payment error:', JSON.stringify(error.userInfo));
     }
   };
 
@@ -55,28 +72,38 @@ const HomeView = () => {
       <View style={styles.header}>
         <HeaderButton title="Settings" onPress={showSettings} />
         <View style={styles.headerSpacer} />
-        <HeaderButton title="Permissions" onPress={() => navigation.navigate('Permissions')} />
-      </View>
-      <View style={styles.content}>
-        <Image source={require('../assets/donut.png')} style={styles.donutImage} />
-        <Text style={styles.title}>Donut Counter</Text>
-        <LoadingButton
-          isLoading={ false }
-          isActive={ true }
-          handleOnPress={ () => handleStartPayment() }
-          activeLabel='Buy for $1'
+        <HeaderButton
+          title="Permissions"
+          onPress={() => navigation.navigate('Permissions')}
         />
       </View>
-        <TouchableOpacity style={styles.mockButton}
-          onPress={() => {
-            if (isMockReaderPresented) {
-              dismissMockReader();
-            } else {
-              presentMockReader();
-            }
-          }}
-        ><Text style={styles.mockReaderText}>{isMockReaderPresented ? 'Hide Mock Reader' : 'Show Mock Reader'}</Text>
-        </TouchableOpacity>
+      <View style={styles.content}>
+        <Image
+          source={require('../assets/donut.png')}
+          style={styles.donutImage}
+        />
+        <Text style={styles.title}>Donut Counter</Text>
+        <LoadingButton
+          isLoading={false}
+          isActive={true}
+          handleOnPress={() => handleStartPayment()}
+          activeLabel="Buy for $1"
+        />
+      </View>
+      <TouchableOpacity
+        style={styles.mockButton}
+        onPress={() => {
+          if (isMockReaderPresented) {
+            dismissMockReader();
+          } else {
+            presentMockReader();
+          }
+        }}
+      >
+        <Text style={styles.mockReaderText}>
+          {isMockReaderPresented ? 'Hide Mock Reader' : 'Show Mock Reader'}
+        </Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };
@@ -91,7 +118,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginBottom: 50,
     paddingLeft: 16,
-    paddingRight: 16
+    paddingRight: 16,
   },
   headerSpacer: {
     flex: 4,

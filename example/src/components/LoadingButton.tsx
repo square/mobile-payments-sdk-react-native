@@ -1,17 +1,33 @@
-import { TouchableOpacity, Text, ActivityIndicator, StyleSheet } from 'react-native';
+import {
+  TouchableOpacity,
+  Text,
+  ActivityIndicator,
+  StyleSheet,
+} from 'react-native';
 
-const LoadingButton = ({ isLoading, isActive, handleOnPress, activeLabel, inactiveLabel='' }) => {
-  console.log(isActive ? activeLabel : inactiveLabel)
+const LoadingButton = ({
+  isLoading,
+  isActive,
+  handleOnPress,
+  activeLabel,
+  inactiveLabel = '',
+}) => {
+  console.log(isActive ? activeLabel : inactiveLabel);
   return (
     <TouchableOpacity
-      style={[styles.loadingButtonActive, isActive ? styles.loadingButtonActive : styles.loadingButtonInactive ]}
+      style={[
+        styles.loadingButtonActive,
+        isActive ? styles.loadingButtonActive : styles.loadingButtonInactive,
+      ]}
       onPress={handleOnPress}
       disabled={isLoading}
     >
       {isLoading ? (
         <ActivityIndicator color="#000" />
       ) : (
-        <Text style={styles.loadingButtonText}>{isActive ? activeLabel : inactiveLabel }</Text>
+        <Text style={styles.loadingButtonText}>
+          {isActive ? activeLabel : inactiveLabel}
+        </Text>
       )}
     </TouchableOpacity>
   );
@@ -34,7 +50,7 @@ const styles = StyleSheet.create({
   loadingButtonText: {
     color: 'white',
     fontSize: 18,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
 });
 

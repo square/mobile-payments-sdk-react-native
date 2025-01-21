@@ -1,11 +1,8 @@
-import { StyleSheet, Text, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 
 const HeaderButton = ({ onPress, title }) => {
-  return ( 
-    <TouchableOpacity
-      style={styles.headerButton}
-      onPress={onPress}
-    >
+  return (
+    <TouchableOpacity style={styles.headerButton} onPress={onPress}>
       <Text style={styles.buttonText}>{title}</Text>
     </TouchableOpacity>
   );
