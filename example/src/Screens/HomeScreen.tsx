@@ -62,11 +62,9 @@ const HomeView = () => {
         <Text style={styles.title}>Donut Counter</Text>
         <LoadingButton
           isLoading={false}
-          isButtonStateActive={true}
-          handleActiveState={null}
-          handleInactiveState={() => handleStartPayment} 
-          activeButtonLabel='Buy for $1' 
-          inactiveButtonLabel=''
+          isActive={true}
+          handleOnPress={() => handleStartPayment} 
+          activeLabel='Buy for $1'
           />
       </View>
         <TouchableOpacity style={styles.mockButton}
