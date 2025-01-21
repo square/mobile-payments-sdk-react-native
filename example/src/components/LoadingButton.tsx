@@ -25,7 +25,7 @@ const LoadingButton = ({
       {isLoading ? (
         <ActivityIndicator color="#000" />
       ) : (
-        <Text style={styles.loadingButtonText}>
+        <Text style={isActive ? styles.loadingButtonText : styles.loadingButtonTextInactive}>
           {isActive ? activeLabel : inactiveLabel}
         </Text>
       )}
@@ -44,11 +44,16 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   loadingButtonInactive: {
-    backgroundColor: '#000',
-    opacity: 0.5,
+    backgroundColor: '#d6d6d6',
+    opacity: 1,
   },
   loadingButtonText: {
     color: 'white',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  loadingButtonTextInactive: {
+    color: '#006AFF',
     fontSize: 18,
     fontWeight: 'bold',
   },

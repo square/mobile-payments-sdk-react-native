@@ -209,11 +209,11 @@ const PermissionsView = () => {
           isLoading={isLoading}
           isActive={!isAuthorized}
           handleOnPress={isAuthorized ? handleDeauthorize : handleAuthorize}
-          activeLabel="Authorize"
-          inactiveLabel="Deauthorize"
+          activeLabel="Sign in"
+          inactiveLabel="Sign out"
         />
-        <Text style={styles.statusText}>
-          {isAuthorized ? 'Authorized' : 'Not Authorized'}
+        <Text style={isAuthorized ? styles.statusText : styles.statusTextInactive}>
+          {isAuthorized ? 'This device is Authorized' : 'Device not Authorized'}
         </Text>
       </ScrollView>
     </SafeAreaView>
@@ -245,7 +245,13 @@ const styles = StyleSheet.create({
   },
   statusText: {
     fontSize: 14,
-    color: '#333',
+    color: '#007D2A',
+    fontWeight: 'bold',
+  },
+  statusTextInactive: {
+    fontSize: 14,
+    color: '#945C25',
+    fontWeight: 'bold',
   },
 });
 
