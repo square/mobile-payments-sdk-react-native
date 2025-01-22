@@ -96,7 +96,7 @@ export type CardInputMethods = {
 };
 
 export type PromptParameters = {
-  additionalMethods: [AdditionalPaymentMethodType];
+  additionalMethods: AdditionalPaymentMethodType[];
   mode: PromptMode;
 };
 
@@ -151,5 +151,5 @@ export type ReaderInfo = {
   name: String;
   serialNumber?: String;
   state: ReaderState;
-  supportedInputMethods: [CardInputMethods];
+  supportedInputMethods: CardInputMethods[];
 };
