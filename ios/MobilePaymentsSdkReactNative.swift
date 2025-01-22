@@ -94,29 +94,15 @@ class MobilePaymentsSdkReactNative: RCTEventEmitter {
 
     /// Settings: https://developer.squareup.com/docs/mobile-payments-sdk/ios/pair-manage-readers#settings-manager
     @objc(showSettings:withRejecter:)
-    func showSettings(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+    func showSettings(resolve: RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
           DispatchQueue.main.async { [weak self] in
             // Get the active scene
             guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
                   let rootViewController = windowScene.windows.first?.rootViewController else {
-                print("No window scene or root view controller found.")
-                return
+                return reject("SETTINGS_SCREEN_ERROR", "No window scene or root view controller found.", nil)
             }
-
-            // Check if a view controller is currently presented
-            if let presentedViewController = rootViewController.presentedViewController {
-                // Optionally dismiss the currently presented view controller
-                presentedViewController.dismiss(animated: false) {
-                    // Present the settings screen after dismissing
-                    self?.mobilePaymentsSDK.settingsManager.presentSettings(with: rootViewController) { _ in
-                        print("Settings screen closed.")
-                    }
-                }
-            } else {
-                // No view controller presented, so present the settings screen directly
-                self?.mobilePaymentsSDK.settingsManager.presentSettings(with: rootViewController) { _ in
-                    print("Settings screen closed.")
-                }
+            self?.mobilePaymentsSDK.settingsManager.presentSettings(with: rootViewController) { _ in
+                return reject("SETTINGS_SCREEN_ERROR", "Can't present settings screen. It's already been displayed. Dismiss the current settings screen first.", nil)
             }
         }
     }
