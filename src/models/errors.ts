@@ -77,7 +77,7 @@ export type ErrorDetails = {
 
 // Corresponds to the Failure object in the SDK
 // Android: https://square.github.io/mobile-payments-sdk-android/-mobile%20-payments%20-s-d-k%20-android%20-technical%20-reference/com.squareup.sdk.mobilepayments.core/-result/-failure/index.html
-// iOS:
+// iOS: https://developer.apple.com/documentation/foundation/nserror
 export type Failure = {
   debugMessage: String;
   debugCode: String;
