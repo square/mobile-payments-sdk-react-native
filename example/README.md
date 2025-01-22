@@ -10,11 +10,12 @@ Donut Counter is a sample application for building with the [Square Mobile Payme
 
 | Reference                        | Sample App Project Location                   |
 | -------------------------------- | ----------------------------------------- |
-| ⚡️ Initializing the SDK          | [DonutCounter/DonutCounterApp.swift](./DonutCounter/DonutCounter/DonutCounterApp.swift#L15) |
-| 🔒 Authorizing the SDK           | [DonutCounter/Screens/Permissions/PermissionsView.swift](./DonutCounter/DonutCounter/Screens/Permissions/PermissionsView.swift#L192-L207) |
-| 💰 Taking a Payment              | [DonutCounter/Screens/Home/HomeView.swift](./DonutCounter/DonutCounter/Screens/Home/HomeView.swift#L155-L182) |
-| ⚙️ Presenting Settings Screen    | [DonutCounter/Screens/Home/HomeView.swift](./DonutCounter/DonutCounter/Screens/Home/HomeView.swift#L128-L136) |
-| 💳 Presenting MockReaderUI       | [DonutCounter/Screens/Home/HomeView.swift](./DonutCounter/DonutCounter/Screens/Home/HomeView.swift#L210-L228) |
+| ⚡️ Initializing the SDK (iOS)         | [ios/MobilePaymentsSdkReactNativeExample/AppDelegate.mm](./ios/MobilePaymentsSdkReactNativeExample/AppDelegate.mm#L9) |
+| ⚡️ Initializing the SDK (Android)         | [android/app/src/main/java/mobilepaymentssdkreactnative/example/MainApplication.kt](./android/app/src/main/java/mobilepaymentssdkreactnative/example/MainApplication.kt#L37) |
+| 🔒 Authorizing the SDK           | [src/Screens/PermissionsScreen.tsx](./src/Screens/PermissionsScreen.tsx#L157-L159) |
+| 💰 Taking a Payment              | [src/Screens/HomeScreen.tsx](./src/Screens/HomeScreen.tsx#L45-L72) |
+| ⚙️ Presenting Settings Screen    | [src/Screens/HomeScreen.tsx](./src/Screens/HomeScreen.tsx#L77) |
+| 💳 Presenting MockReaderUI       | [src/Screens/HomeScreen.tsx](./src/Screens/HomeScreen.tsx#L36-L43) |
 
 # Get Started
 
@@ -45,7 +46,9 @@ On the application's Credentials page, toggle the environment you'd like to use 
 Click "Locations" in the left navigation and make note of the Default Test Account's **Location ID** as well. These values will be used in the next step.
 
 ## 3. Configure the SDK
-In the **REPLACE THIS** [Config.swift](./Shared/Config.swift) **REPLACE THIS** file, populate the values for Square application id, access token, and location id you obtained from the previous step.
+* For iOS: Replace your Square Application ID in [Config.m](./ios/MobilePaymentsSdkReactNativeExample/Config.m#L14).
+* For Android: Replace your Square Application Id in [MainApplication.kt](./android/app/src/main/java/mobilepaymentssdkreactnative/example/MainApplication.kt#L37).
+* Then, for both platforms: Replace your Access Token and Location ID in [PermissionsScreen.tsx](src/Screens/PermissionsScreen.tsx#L158-L159)
 
 ## 4. Run the app
 1. Make sure you're in the root folder of the repository.
