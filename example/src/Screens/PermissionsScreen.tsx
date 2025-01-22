@@ -169,6 +169,9 @@ const PermissionsView = () => {
       );
     } catch (error) {
       setIsAuthorized(false);
+      console.log(
+       'Authorization error: ', JSON.stringify(error)
+      );
       Alert.alert('Error Authenticating', error.message);
     }
     setIsLoading(false);

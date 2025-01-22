@@ -37,6 +37,8 @@
 	<string>This app requires access to Bluetooth for device connectivity.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>This app requires access to your location to confirm payments.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>This app requires access to your location to confirm payments.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>This app requires access to your microphone to receive data from magstripe readers.</string>
 	<key>NSPhoneUsageDescription</key>
