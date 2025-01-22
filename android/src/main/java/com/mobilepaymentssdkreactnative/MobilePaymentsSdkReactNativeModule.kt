@@ -54,7 +54,7 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
           promise.resolve("Authorized with token: $accessToken and location: $locationId")
 
         is Failure ->
-          promise.reject("AUTHENTICATION_ERROR", result.errorMessage)
+          promise.reject("AUTHENTICATION_ERROR", result.errorMessage, result.toErrorMap())
       }
     }
   }
@@ -103,18 +103,8 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
       val settingsManager = MobilePaymentsSdk.settingsManager()
       settingsManager.showSettings { result ->
         when (result) {
-          is Success -> {
-            // Ensure that the value can be resolved correctly
-            promise.resolve("Settings closed successfully")
-          }
-
-          is Failure -> {
-            // Handle failure
-            promise.reject(
-              result.errorCode.toString(),
-              result.errorMessage
-            )
-          }
+          is Success -> promise.resolve("Settings closed successfully")
+          is Failure -> promise.reject("SETTINGS_ERROR", result.errorMessage, result.toErrorMap())
         }
       }
     }
@@ -173,14 +163,14 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
     val parsedPaymentParameters = try {
       paymentParameters.readPaymentParameters()
     } catch (e: IllegalArgumentException) {
-      promise.reject("INVALID_PAYMENT_PARAMETERS", e.message)
+      promise.reject("INVALID_PAYMENT_PARAMETERS", e.message, e)
       return
     }
 
     val parsedPromptParameters = try {
       promptParameters.readPromptParameters()
     } catch (e: IllegalArgumentException) {
-      promise.reject("INVALID_PAYMENT_PROMPT", e.message)
+      promise.reject("INVALID_PAYMENT_PROMPT", e.message, e)
       return
     }
 
@@ -196,8 +186,8 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
       ) { result ->
         paymentHandle = null
         when (result) {
-          is Failure -> promise.reject("PAYMENT_FAILED", result.toErrorMap())
           is Success -> promise.resolve(result.value.toPaymentMap())
+          is Failure -> promise.reject("PAYMENT_FAILED", result.errorMessage, result.toErrorMap())
         }
       }
     }

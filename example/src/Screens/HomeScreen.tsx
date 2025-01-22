@@ -7,6 +7,7 @@ import {
   showMockReaderUI,
   showSettings,
   startPayment,
+  mapUserInfoToFailure,
   type PaymentParameters,
   type PromptParameters,
 } from 'mobile-payments-sdk-react-native';
@@ -67,7 +68,9 @@ const HomeView = () => {
       const payment = await startPayment(paymentParameters, promptParameters);
       console.log('Payment successful:', payment);
     } catch (error) {
-      console.log('Payment error:', JSON.stringify(error.userInfo));
+      // convert the error.userInfo into a Failure object
+      const failure: Failure = mapUserInfoToFailure(error.userInfo);
+      console.log('Payment error:', JSON.stringify(failure));
     }
   };
 

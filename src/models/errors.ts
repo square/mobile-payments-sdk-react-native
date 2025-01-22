@@ -65,3 +65,63 @@ export enum ReaderPairingError {
   TIMED_OUT,
   UPDATE_REQUIRED,
 }
+
+// Corresponds to the ErrorDetails inside the Failure object in the SDK
+// Android: https://square.github.io/mobile-payments-sdk-android/-mobile%20-payments%20-s-d-k%20-android%20-technical%20-reference/com.squareup.sdk.mobilepayments.core/-error-details/index.html
+export type ErrorDetails = {
+  category: String;
+  code: String;
+  detail: String;
+  field: String;
+};
+
+// Corresponds to the Failure object in the SDK
+// Android: https://square.github.io/mobile-payments-sdk-android/-mobile%20-payments%20-s-d-k%20-android%20-technical%20-reference/com.squareup.sdk.mobilepayments.core/-result/-failure/index.html
+// iOS:
+export type Failure = {
+  debugMessage: String;
+  debugCode: String;
+  details: [ErrorDetails];
+  errorMessage: String;
+  errorCode: String;
+};
+
+// Convenience function to map the error.userInfo object to a Failure object
+// For example
+// ```
+//   try {
+//     const payment = await startPayment(paymentParameters, promptParameters);
+//     ...
+//   } catch (error) {
+//     const failure: Failure = mapUserInfoToFailure(error.userInfo);
+//     console.log('Payment error:', JSON.stringify(failure));
+//   }
+// ```
+export const mapUserInfoToFailure = (userInfo: any): Failure => {
+  if (userInfo == null) {
+    return {
+      debugMessage: '',
+      debugCode: '',
+      details: [],
+      errorMessage: '',
+      errorCode: '',
+    };
+  }
+  let details: ErrorDetails[] = [];
+  if (Array.isArray(userInfo.details)) {
+    // check if details is an array
+    details = userInfo.details.map((detail: any) => ({
+      category: detail.category,
+      code: detail.code,
+      detail: detail.detail,
+      field: detail.field,
+    }));
+  }
+  return {
+    debugMessage: userInfo.debugMessage ? userInfo.debugMessage : '',
+    debugCode: userInfo.debugCode ? userInfo.debugCode : '',
+    details: details,
+    errorMessage: userInfo.errorMessage ? userInfo.errorMessage : '',
+    errorCode: userInfo.errorCode ? userInfo.errorCode : '',
+  };
+};
