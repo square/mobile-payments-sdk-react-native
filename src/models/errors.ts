@@ -81,7 +81,7 @@ export type ErrorDetails = {
 export type Failure = {
   debugMessage: String;
   debugCode: String;
-  details: [ErrorDetails];
+  details: ErrorDetails[];
   errorMessage: String;
   errorCode: String;
 };
