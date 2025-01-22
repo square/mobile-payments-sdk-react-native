@@ -30,8 +30,8 @@ class MobilePaymentsSdkReactNative: RCTEventEmitter {
             withAccessToken: accessToken,
             locationID: locationId) { error in
                 if let authError = error {
-                    // TODO: unwrap error
-                    return reject("AUTHENTICATION_ERROR", authError.localizedDescription, nil)
+                    let anError = authError as NSError
+                    return reject("AUTHENTICATION_ERROR", authError.localizedDescription, anError.reactNativeError)
                 }
                 return resolve("Authorized with token: \(accessToken) and location: \(locationId)")
             }
@@ -160,7 +160,8 @@ class MobilePaymentsSdkReactNative: RCTEventEmitter {
                     try mockReaderUI.present()
                     resolve("Mock Reader presented successfully.")
                 } catch {
-                    reject("MOCK_READER_ERROR", "Can't show mock reader. Error: \(error.localizedDescription).", nil)
+                    let anError = error as NSError
+                    reject("MOCK_READER_ERROR", "Can't show mock reader. Error: \(error.localizedDescription).", anError.reactNativeError)
                 }
             } else {
                 reject("MOCK_READER_ERROR", "Can't show mock reader. Check your environment.", nil)
@@ -294,8 +295,7 @@ extension MobilePaymentsSdkReactNative: PaymentManagerDelegate {
         default:
             errorMessage = "There has been an error taking a payment. Check the request details and try the payment again."
         }
-
-        startPaymentRejectBlock?("PAYMENT_FAILED", errorMessage, nil);
+        startPaymentRejectBlock?("PAYMENT_FAILED", errorMessage, (error as NSError).reactNativeError);
         paymentHandle = nil
     }
 
