@@ -2,6 +2,13 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>UISupportedExternalAccessoryProtocols</key>
+	<array>
+		<string>com.squareup.protocol.stand</string>
+		<string>com.squareup.s089</string>
+		<string>com.squareup.s025</string>
+		<string>com.squareup.s020</string>
+	</array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
