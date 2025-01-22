@@ -94,15 +94,17 @@ class MobilePaymentsSdkReactNative: RCTEventEmitter {
 
     /// Settings: https://developer.squareup.com/docs/mobile-payments-sdk/ios/pair-manage-readers#settings-manager
     @objc(showSettings:withRejecter:)
-    func showSettings(resolve: RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+    func showSettings(resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
           DispatchQueue.main.async { [weak self] in
-            // Get the active scene
-            guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-                  let rootViewController = windowScene.windows.first?.rootViewController else {
-                return reject("SETTINGS_SCREEN_ERROR", "No window scene or root view controller found.", nil)
-            }
-            self?.mobilePaymentsSDK.settingsManager.presentSettings(with: rootViewController) { _ in
-                return reject("SETTINGS_SCREEN_ERROR", "Can't present settings screen. It's already been displayed. Dismiss the current settings screen first.", nil)
+                guard let presentedViewController = RCTPresentedViewController() else {
+                    return reject("SETTINGS_SCREEN_ERROR", "No window scene or root view controller found.", nil)
+                }
+            self?.mobilePaymentsSDK.settingsManager.presentSettings(with: presentedViewController) { error in
+                if (error != nil) {
+                    let anError = error as? NSError
+                    return reject("SETTINGS_SCREEN_ERROR", "Can't present settings screen. It's already been displayed. Dismiss the current settings screen first.", anError?.reactNativeError)
+                }
+                return resolve("Settings screen presented successfully.")
             }
         }
     }
