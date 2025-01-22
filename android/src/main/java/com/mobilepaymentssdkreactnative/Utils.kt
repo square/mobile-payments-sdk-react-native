@@ -198,9 +198,12 @@ fun <S, C> Failure<S, C>.toErrorMap(): WritableMap = WritableNativeMap().apply {
   putString("errorMessage", errorMessage)
   putArray("details", WritableNativeArray().apply {
     details.forEach {
-      val detailsString = "ErrorDetails[Category: ${it.category}, Code: ${it.code}, " +
-        "Detail: ${it.detail}, Field: ${it.field}]"
-      pushString(detailsString)
+      pushMap(WritableNativeMap().apply {
+        putString("category", it.category)
+        putString("code", it.code)
+        putString("detail", it.detail)
+        putString("field", it.field)
+      })
     }
   })
   putString("debugCode", debugCode)
