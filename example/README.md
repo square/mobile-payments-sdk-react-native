@@ -1,79 +1,104 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# 🍩 Donut Counter - A Square Mobile Payments SDK Sample App
 
-# Getting Started
+<p align="center">
+<img src="../Images/donut-counter-home.png" width="300"/> <img src="../Images/donut-counter-take-payment.png" width="300"/>
+</p>
 
->**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
+Donut Counter is a sample application for building with the [Square Mobile Payments SDK](https://developer.squareup.com/docs/mobile-payments-sdk) on React Native. The app demonstrates how to install and initialize the SDK in a React Native project, as well as utilizing the APIs and user interfaces provided by the SDK to authorize a merchant and take a payment. To get started, follow the steps below.
 
-## Step 1: Start the Metro Server
+## SDK Quick Reference
 
-First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
+| Reference                        | Sample App Project Location                   |
+| -------------------------------- | ----------------------------------------- |
+| ⚡️ Initializing the SDK          | [DonutCounter/DonutCounterApp.swift](./DonutCounter/DonutCounter/DonutCounterApp.swift#L15) |
+| 🔒 Authorizing the SDK           | [DonutCounter/Screens/Permissions/PermissionsView.swift](./DonutCounter/DonutCounter/Screens/Permissions/PermissionsView.swift#L192-L207) |
+| 💰 Taking a Payment              | [DonutCounter/Screens/Home/HomeView.swift](./DonutCounter/DonutCounter/Screens/Home/HomeView.swift#L155-L182) |
+| ⚙️ Presenting Settings Screen    | [DonutCounter/Screens/Home/HomeView.swift](./DonutCounter/DonutCounter/Screens/Home/HomeView.swift#L128-L136) |
+| 💳 Presenting MockReaderUI       | [DonutCounter/Screens/Home/HomeView.swift](./DonutCounter/DonutCounter/Screens/Home/HomeView.swift#L210-L228) |
 
-To start Metro, run the following command from the _root_ of your React Native project:
+# Get Started
 
-```bash
-# using npm
-npm start
+## 1. Review requirements
 
-# OR using Yarn
-yarn start
-```
+### Assumptions
+The example app makes the following assumptions:
 
-## Step 2: Start your Application
+* You have read the **REPLACE THIS** [Mobile Payments SDK "Build on iOS"](https://developer.squareup.com/docs/mobile-payments-sdk/ios) **REPLACE THIS** documentation. The example app focuses on demonstrating how the Square Mobile Payments SDK works by using all of the provided user interfaces of the SDK.
+* You have a Square account enabled for payment processing. If you have not
+  enabled payment processing on your account (or you are not sure), visit
+  [squareup.com/activate](https://squareup.com/activate).
 
-Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start your _Android_ or _iOS_ app:
+### Prerequisites
 
-### For Android
+* Confirm your environment meets the Square Mobile Payments SDK build requirements listed in the [root README](../README.md) for this repo.
+* Clone this repo (if you have not already):
+  `https://github.com/square/mobile-payments-sdk-react-native`
+* Make sure you've set up your environment for developing in React Native, by visiting the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) guide.
 
-```bash
-# using npm
-npm run android
+## 2. Get application credentials
+In your [Developer Dashboard](https://developer.squareup.com/apps), create an application or open an existing one you would like to use. If this is your first time creating an application with Square, you can review this [Get Started](https://developer.squareup.com/docs/square-get-started) guide for more information.
 
-# OR using Yarn
-yarn android
-```
+On the application's Credentials page, toggle the environment you'd like to use at the top (Production/Sandbox). Sandbox credentials will allow you to take mock payments with a mock reader. Make note of:
+* **Application ID**
+* **Access Token**
 
-### For iOS
+Click "Locations" in the left navigation and make note of the Default Test Account's **Location ID** as well. These values will be used in the next step.
 
-```bash
-# using npm
-npm run ios
+## 3. Configure the SDK
+In the **REPLACE THIS** [Config.swift](./Shared/Config.swift) **REPLACE THIS** file, populate the values for Square application id, access token, and location id you obtained from the previous step.
 
-# OR using Yarn
-yarn ios
-```
+## 4. Run the app
+1. Make sure you're in the root folder of the repository.
+2. Run `yarn`, then `yarn example start`. This will start `Metro`, the JavaScript _bundler_ that ships _with_ React Native.
+3. Once Metro has loaded, select the plaform of your choice: `a` for Android, `i` for iOS.
 
-If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
+You can also run the app for each individual platform by opening `ios/MobilePaymentsSdkReactNativeExample.xcworkspace` in Xcode for iOS; or `android/build.gradle` in Android Studio, for Android.
 
-This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
+## 5. Request required permissions
+On the first install of the application, you will be required to grant various device permissions in order for the SDK to be fully functional.
 
-## Step 3: Modifying your App
+Tap the 'Permissions' button found on the top right of the home view. Tap the empty checkbox next to each permission to grant the specific device permission. The checkbox will update with a checkmark if the proper permission is granted. All permissions must be granted.
 
-Now that you have successfully run the app, let's modify it.
+<img src="../Images/donut-counter-permissions.png" width="250"/>
 
-1. Open `App.tsx` in your text editor of choice and edit some lines.
-2. For **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Developer Menu** (<kbd>Ctrl</kbd> + <kbd>M</kbd> (on Window and Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (on macOS)) to see your changes!
+## 6. Authorize the SDK
+Within the Permissions screen, you will find a `Sign In` button. Tap this button to authorize the sdk with the credentials you provided in Step 3. If an issue occurs during authorization, check the Xcode console for a log with the specific authorization error. You will know the SDK is fully authorized when the button updates to `Sign Out` and the text below the button reads `The device is authorized`.
 
-   For **iOS**: Hit <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in your iOS Simulator to reload the app and see your changes!
+## 7. Pair a reader
+Depending on what environment you are authorized in, the steps for pairing a reader will differ. Follow the steps below according to your current environment.
 
-## Congratulations! :tada:
+### Production
+In a production environment, you are only able to pair actual Square card readers. Mock readers do not work in a production environment.
 
-You've successfully run and modified your React Native App. :partying_face:
+To pair a reader:
+1. Tap the `Settings` button found in the top left corner of the application. This will display the Square provided settings screen allowing you to manage and pair readers.
+2. Tap the "Pair a reader" button.
+3. Follow the instructions on the dialog that present on how to pair your contactless reader to your device.
+4. After a successful pair, you should see the reader available in the `Devices` tab of the settings screen.
+5. The reader is ready to be used for payments once the state updates to `Ready`.
 
-### Now what?
+### Sandbox
+In a sandbox environment, you are only able to add mock readers utilizing the `MockReader` calls. `MockReader` is provided as a part of this repo and has already been added to the DonutCounter app. Please note that `MockReader` is to only be used in debug builds of your application, not in a production application.
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [Introduction to React Native](https://reactnative.dev/docs/getting-started).
+To pair a mock reader:
+1. Once the SDK has been authorized in sandbox, navigate back to the main home view of the app.
+2. On the bottom of the main donut counter app view, tap the button `Show Mock Reader`
+3. A Square-reader-shaped button should appear on the screen. This button can be placed anywhere on the screen by holding down the button and dragging around the screen.
+4. Tapping on the button should reveal a menu to add a mock magstripe or contactless & chip reader.
+5. Tap on the reader type you'd like to connect. You can verify the mock reader has been added correctly in the Settings screen.
 
-# Troubleshooting
+<img src="../Images/donut-counter-home-mock-reader.png" width="250"/>
 
-If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
+## 8. Take a Payment
 
-# Learn More
+To process a payment, follow these steps:
 
-To learn more about React Native, take a look at the following resources:
+1. On the main screen of the application, tap the "Buy for $1" button. This action will present the default payment prompt screen provided by the SDK.
 
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+2. Depending on your environment:
+   - **Production Environment**: Use your paired Square reader to tap, insert, or swipe a payment card.
+   - **Sandbox Environment**: Tap the mock reader button and choose an option to tap, insert, or swipe a mock payment card.
+
+<p align="center">
+<img src="../Images/donut-counter-take-payment.png" width="250"/><img src="../Images/donut-counter-take-payment-mock-reader.png" width="250"/>
+</p>
