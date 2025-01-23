@@ -91,12 +91,12 @@ class Mappers {
     }
 
     class func mapToDictionary(money: MoneyAmount?) -> NSDictionary? {
-        guard let aMoney = money else {
+        guard let money else {
             return nil
         }
         return [
-            "amount": aMoney.amount,
-            "currencyCode": aMoney.currency.currencyCode
+            "amount": money.amount,
+            "currencyCode": money.currency.currencyCode
         ]
     }
 

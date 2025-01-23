@@ -9,6 +9,7 @@ import SquareMobilePaymentsSDK
 
 private let SquareErrorDebugCodeKey = "com.squareup.MobilePaymentsSDK.ErrorDebugCode"
 private let SquareErrorDebugMessageKey = "com.squareup.MobilePaymentsSDK.ErrorDebugMessage"
+private let SquareErrorPaymentDomain = "MobilePaymentsSDKAPI.PaymentError"
 // React Native error keys. These will match Android's so you can implement consistent error handling on RN
 private let ReactNativeErrorDebugCodeKey = "debugCode"
 private let ReactNativeErrorDebugMessageKey = "debugMessage"
@@ -35,5 +36,9 @@ extension NSError {
         newUserInfo[ReactNativeErrorCodeKey] = code
         newUserInfo[ReactNativeErrorDetailsKey] = nil
         return NSError(domain: domain, code: code, userInfo: newUserInfo)
+    }
+
+    class func initSquareError(customMessage: [String: Any]) -> NSError {
+        return NSError(domain: SquareErrorPaymentDomain, code: 0, userInfo: [SquareErrorDebugMessageKey: customMessage])
     }
 }
