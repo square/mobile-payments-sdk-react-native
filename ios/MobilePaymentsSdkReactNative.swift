@@ -242,7 +242,7 @@ extension MobilePaymentsSdkReactNative : AuthorizationStateObserver {
 
 extension MobilePaymentsSdkReactNative: PaymentManagerDelegate {
     func paymentManager(_ paymentManager: PaymentManager, didFinish payment: Payment) {
-        startPaymentResolveBlock?(payment)
+        startPaymentResolveBlock?(Mappers.mapToDictionary(payment: payment))
         paymentHandle = nil
     }
 
