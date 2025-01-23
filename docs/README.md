@@ -43,14 +43,14 @@ For Android, make sure you follow [these steps](https://developer.squareup.com/d
 ## Step 3: Additional Platform Setup
 
 1. For iOS: update your application delegate as follows:
-    ```Objc
+```Objc
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
 	[SQMPMobilePaymentsSDK initializeWithApplicationLaunchOptions:launchOptions squareApplicationID:@"Square Application ID"];
  	...
 	return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }
-    ```
+```
 
 2. For Android: update your `MainApplication.kt` file as follows:
 ```Kotlin
