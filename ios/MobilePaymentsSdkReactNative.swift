@@ -288,7 +288,12 @@ extension MobilePaymentsSdkReactNative: PaymentManagerDelegate {
     }
 
     func paymentManager(_ paymentManager: PaymentManager, didCancel payment: Payment) {
-        startPaymentRejectBlock?("PAYMENT_CANCELED", "The payment has been canceled.", nil);
+        if let paymentDictionary = Mappers.mapToDictionary(payment: payment) as? [String: Any] {
+            let error = NSError.initSquareError(customMessage: paymentDictionary)
+            startPaymentRejectBlock?("PAYMENT_CANCELED", "The payment has been canceled.", error.reactNativeError);
+        } else {
+            startPaymentRejectBlock?("PAYMENT_CANCELED", "The payment has been canceled.", nil);
+        }
         paymentHandle = nil
     }
 }
