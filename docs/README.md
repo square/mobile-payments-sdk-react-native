@@ -29,8 +29,14 @@ npm install mobile-payments-sdk-react-native
 ```
 If you're going to be developing for iOS, make sure you run `pod install` in the `ios` folder of the sample application to install the SDK and all the dependencies. 
 
-For Android, make sure you follow [these steps](https://developer.squareup.com/docs/mobile-payments-sdk/android#1-install-the-sdk-and-dependencies) to add the SDK into the project.
+For Android, you need to configure the SDK version:
+1. Modify your `/android/build.gradle`
+   - Add `squareSdkVersion = "2.0.2"` inside the `ext {...}` block
+   - Add `maven { url 'https://sdk.squareup.com/public/android/' }` inside the `allprojects`'s `repositories {...}` block
+2. Modify your `/android/app/build.gradle`
+   - Add `implementation("com.squareup.sdk:mobile-payments-sdk:$squareSdkVersion")` inside the `dependencies{...}` block
 
+You can also refer to [MPSDK Android Quickstart](https://developer.squareup.com/docs/mobile-payments-sdk/android#1-install-the-sdk-and-dependencies)'s SDK installation section.
 
 ## Step 2: Square Application ID and Access Token
 
