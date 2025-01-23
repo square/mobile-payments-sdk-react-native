@@ -89,6 +89,32 @@ class Mappers {
             "currency": location.currency.currencyCode // TODO: map this to a currency object
         ]
     }
+
+    class func mapToDictionary(money: MoneyAmount?) -> NSDictionary? {
+        guard let aMoney = money else {
+            return nil
+        }
+        return [
+            "amount": aMoney.amount,
+            "currencyCode": aMoney.currency.currencyCode
+        ]
+    }
+
+    class func mapToDictionary(payment: Payment) -> NSDictionary {
+        return [
+            "amountMoney": Mappers.mapToDictionary(money: payment.amountMoney) ?? NSNull(),
+            "appFeeMoney": Mappers.mapToDictionary(money: payment.appFeeMoney) ?? NSNull(),
+            "createdAt": payment.createdAt.ISO8601Format(),
+            "id": payment.id ?? NSNull(),
+            "locationId": payment.locationID ?? NSNull(),
+            "orderId": payment.orderID ?? NSNull(),
+            "referenceId": payment.referenceID ?? NSNull(),
+            "sourceType": payment.sourceType.mapToString(),
+            "tipMoney": Mappers.mapToDictionary(money: payment.tipMoney) ?? NSNull(),
+            "totalMoney": Mappers.mapToDictionary(money: payment.totalMoney) ?? NSNull(),
+            "updatedAt": payment.updatedAt.ISO8601Format(),
+            ]
+    }
 }
 
 extension SquareMobilePaymentsSDK.AuthorizationState {
@@ -102,6 +128,29 @@ extension SquareMobilePaymentsSDK.AuthorizationState {
             return "NOT_AUTHORIZED"
         default:
             return ""
+        }
+    }
+}
+
+extension SquareMobilePaymentsSDK.SourceType {
+    func mapToString() -> String {
+        switch self {
+        case .bankAccount:
+            return "BANK_ACCOUNT"
+        case .card:
+            return "CARD"
+        case .cash:
+            return "CASH"
+        case .external:
+            return "EXTERNAL"
+        case .wallet:
+            return "WALLET"
+        case .squareAccount:
+            return "SQUARE_ACCOUNT"
+        case .unknown:
+            fallthrough
+        @unknown default:
+            return "UNKNOWN"
         }
     }
 }
