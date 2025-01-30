@@ -1,6 +1,6 @@
 # Getting Started with the React Native plug-in for Mobile Payments SDK
 
-This guide walks you through the process of setting up a new React Native project with Mobile Payments SDK. See the [React Native plug-in for Mobile Payments SDK Technical Reference](reference.md) for more detailed information about types and methods.
+This guide walks you through the process of setting up a new React Native project with Mobile Payments SDK. See the [React Native Mobile Payments SDK Technical Reference](REFERENCE.md) for more detailed information about types and methods.
 
 ## Before you start
 
