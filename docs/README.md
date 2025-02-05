@@ -18,7 +18,7 @@ npx create-expo-app@latest
 
 This will create an app with Expo that you can use to integrate with the SDK. For more information about Expo, visit [Expo - Get Started](https://docs.expo.dev/get-started/set-up-your-environment/?mode=development-build) and choose the `Development build` option. This will take you through the steps to run an empty sample application in a real device.
 
-If you don't see the `ios` and `android` folders, you can try running expo in iOS and Android by doing `npx expo run:ios` or `npx expo run:android`.
+If you don't see the `ios` and `android` folders, you can try ejecting expo so these folders are exposed with `npm expo eject`.
 
 
 ## Step 1: Install React Native plugin for Mobile Payments SDK
@@ -27,7 +27,17 @@ Install the Mobile Payments SDK package with `npm`:
 ```sh
 npm install mobile-payments-sdk-react-native
 ```
-If you're going to be developing for iOS, make sure you run `pod install` in the `ios` folder of the sample application to install the SDK and all the dependencies. 
+For iOS:
+1. Make sure you run `pod install` in the `ios` folder of the sample application to install the SDK and all the dependencies.
+2. On your application targets’ `Build Phases` settings tab, click the + icon and choose `New Run Script Phase`. Create a Run Script in which you specify your shell (ex: /bin/sh), and add the following contents to the script area below the shell:
+```
+SETUP_SCRIPT=${BUILT_PRODUCTS_DIR}/${FRAMEWORKS_FOLDER_PATH}"/SquareMobilePaymentsSDK.framework/setup"
+if [ -f "$SETUP_SCRIPT" ]; then
+  "$SETUP_SCRIPT"
+fi
+```
+
+Make sure this build phase is after any `[CP] Embed Pods Frameworks` or `Embed Frameworks` Build Phase.
 
 For Android, you need to configure the SDK version:
 1. Modify your `/android/build.gradle`
@@ -50,6 +60,8 @@ You can also refer to [MPSDK Android Quickstart](https://developer.squareup.com/
 
 1. For iOS: update your application delegate as follows:
 ```Objc
+#import "SquareMobilePaymentsSDK/SquareMobilePaymentsSDK-Swift.h"
+// ...
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
 	[SQMPMobilePaymentsSDK initializeWithApplicationLaunchOptions:launchOptions squareApplicationID:@"Square Application ID"];
