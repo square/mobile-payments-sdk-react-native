@@ -24,7 +24,7 @@ Donut Counter is a sample application for building with the [Square Mobile Payme
 ### Assumptions
 The example app makes the following assumptions:
 
-* You have read the **REPLACE THIS** [Mobile Payments SDK "Build on iOS"](https://developer.squareup.com/docs/mobile-payments-sdk/ios) **REPLACE THIS** documentation. The example app focuses on demonstrating how the Square Mobile Payments SDK works by using all of the provided user interfaces of the SDK.
+* You have read the native documentation in [Mobile Payments SDK "Build on iOS"](https://developer.squareup.com/docs/mobile-payments-sdk/ios), [Mobile Payments SDK "Build on Android"](https://developer.squareup.com/docs/mobile-payments-sdk/android). The example app focuses on demonstrating how the Square Mobile Payments SDK works by using all of the provided user interfaces of the SDK.
 * You have a Square account enabled for payment processing. If you have not
   enabled payment processing on your account (or you are not sure), visit
   [squareup.com/activate](https://squareup.com/activate).
