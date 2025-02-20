@@ -1,5 +1,9 @@
 ## Changelog
 
+### v2025.2.1 Feb 19, 2025
+
+* Address NPM dependency issue
+
 ### v2025.2.0 Feb 19, 2025
 
 * iOS: 
