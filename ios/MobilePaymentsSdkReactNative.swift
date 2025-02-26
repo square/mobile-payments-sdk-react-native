@@ -126,6 +126,38 @@ class MobilePaymentsSdkReactNative: RCTEventEmitter {
         return resolve(mobilePaymentsSDK.settingsManager.sdkSettings.version)
     }
 
+    @objc(linkAppleAccount:withRejecter:)
+    func linkAppleAccount(resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+        DispatchQueue.main.async { [weak self] in
+          self?.mobilePaymentsSDK.readerManager.tapToPaySettings.linkAppleAccount {_ in 
+                resolve("Apple account has been linked.")
+            }
+        }
+    }
+
+    @objc(relinkAppleAccount:withRejecter:)
+    func relinkAppleAccount(resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+        DispatchQueue.main.async { [weak self] in
+          self?.mobilePaymentsSDK.readerManager.tapToPaySettings.relinkAppleAccount {_ in 
+                resolve("Apple account has been re-linked.")
+            }
+        }
+    }
+
+    @objc(isAppleAccountLinked:withRejecter:)
+    func isAppleAccountLinked(resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+        DispatchQueue.main.async { [weak self] in
+            self?.mobilePaymentsSDK.readerManager.tapToPaySettings.isAppleAccountLinked { isLinked, _ in
+                resolve(isLinked)
+            }
+        }
+    }
+
+    @objc(isDeviceCapable:withRejecter:)
+    func isDeviceCapable(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+        return resolve(mobilePaymentsSDK.readerManager.tapToPaySettings.isDeviceCapable)
+    }
+
     /// Mock Readers, available only in Sandbox: https://developer.squareup.com/docs/mobile-payments-sdk/ios#mock-readers
     private lazy var mockReaderUI: MockReaderUI? = {
         guard mobilePaymentsSDK.settingsManager.sdkSettings.environment == .sandbox else {
