@@ -144,8 +144,7 @@ const PermissionsView = () => {
     useState(false);
   const [bluetoothPermissionGranted, setBluetoothPermissionGranted] =
     useState(false);
-  const [readPhoneStateGranted, setReadPhoneStateGranted] =
-    useState(isIos);
+  const [readPhoneStateGranted, setReadPhoneStateGranted] = useState(isIos);
   const [isLoading, setIsLoading] = useState(false);
   const [isAuthorized, setIsAuthorized] = useState(false);
   const navigation = useNavigation();
@@ -158,6 +157,7 @@ const PermissionsView = () => {
         'MOBILE_PAYMENT_SDK_ACCESS_TOKEN',
         'MOBILE_PAYMENT_SDK_LOCATION_ID'
       );
+      console.log(auth);
       let authorizedLocation = await getAuthorizedLocation();
       let authorizationState = await getAuthorizationState();
       setIsAuthorized(true);
@@ -169,9 +169,7 @@ const PermissionsView = () => {
       );
     } catch (error) {
       setIsAuthorized(false);
-      console.log(
-       'Authorization error: ', JSON.stringify(error)
-      );
+      console.log('Authorization error: ', JSON.stringify(error));
       Alert.alert('Error Authenticating', error.message);
     }
     setIsLoading(false);
@@ -206,7 +204,7 @@ const PermissionsView = () => {
       // Remember to remove your observer once the component has been removed from the DOM
       stopObservingAuthorizationChanges();
     };
-  });
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -248,7 +246,9 @@ const PermissionsView = () => {
           activeLabel="Sign in"
           inactiveLabel="Sign out"
         />
-        <Text style={isAuthorized ? styles.statusText : styles.statusTextInactive}>
+        <Text
+          style={isAuthorized ? styles.statusText : styles.statusTextInactive}
+        >
           {isAuthorized ? 'This device is Authorized' : 'Device not Authorized'}
         </Text>
       </ScrollView>

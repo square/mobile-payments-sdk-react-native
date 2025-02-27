@@ -1,3 +1,4 @@
+import { Platform } from 'react-native';
 import MobilePaymentsSdkReactNative from '../base_sdk';
 
 export const startPairing = (): Promise<void> => {
@@ -17,20 +18,36 @@ export const hideMockReaderUI = (): Promise<void> => {
 };
 
 export namespace TapToPaySettings {
-  // iOS-only method
+  const notSupportedError = (): never => {
+    throw new Error('This feature is only available on iOS.');
+  };
+
   export const linkAppleAccount = (): Promise<void> => {
-    return MobilePaymentsSdkReactNative.linkAppleAccount();
+    console.log(Platform.OS);
+    return Platform.select({
+      ios: () => MobilePaymentsSdkReactNative.linkAppleAccount(),
+      android: () => Promise.reject(notSupportedError()),
+    })!();
   };
 
   export const relinkAppleAccount = (): Promise<void> => {
-    return MobilePaymentsSdkReactNative.relinkAppleAccount();
+    return Platform.select({
+      ios: () => MobilePaymentsSdkReactNative.relinkAppleAccount(),
+      android: () => Promise.reject(notSupportedError()),
+    })!();
   };
 
   export const isAppleAccountLinked = (): Promise<Boolean> => {
-    return MobilePaymentsSdkReactNative.isAppleAccountLinked();
+    return Platform.select({
+      ios: () => MobilePaymentsSdkReactNative.isAppleAccountLinked(),
+      android: () => Promise.reject(notSupportedError()),
+    })!();
   };
 
   export const isDeviceCapable = (): Promise<Boolean> => {
-    return MobilePaymentsSdkReactNative.isDeviceCapable();
+    return Platform.select({
+      ios: () => MobilePaymentsSdkReactNative.isDeviceCapable(),
+      android: () => Promise.reject(notSupportedError()),
+    })!();
   };
 }

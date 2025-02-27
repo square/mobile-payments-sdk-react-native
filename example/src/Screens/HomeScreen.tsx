@@ -37,6 +37,7 @@ const HomeView = () => {
   const presentMockReader = async () => {
     try {
       const result = await showMockReaderUI();
+      console.log(result);
       setMockReaderPresented(true);
     } catch (error) {
       console.log('Mock Reader UI error:', error);

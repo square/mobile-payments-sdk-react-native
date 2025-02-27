@@ -14,8 +14,8 @@ const PermissionRow = ({ title, description, isGranted, onRequest }) => (
         size={25}
         fillColor="gray"
         unFillColor="#FFFFFF"
-        innerIconStyle={{ borderWidth: 2 }}
-        onPress={(isChecked: boolean) => {
+        innerIconStyle={styles.permissionCheckBox}
+        onPress={() => {
           onRequest();
         }}
       />
@@ -28,6 +28,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingBottom: 5,
+  },
+  permissionCheckBox: {
+    borderWidth: 2,
   },
   permissionTitle: {
     fontSize: 18,
