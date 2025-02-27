@@ -23,7 +23,6 @@ export namespace TapToPaySettings {
   };
 
   export const linkAppleAccount = (): Promise<void> => {
-    console.log(Platform.OS);
     return Platform.select({
       ios: () => MobilePaymentsSdkReactNative.linkAppleAccount(),
       android: () => Promise.reject(notSupportedError()),
