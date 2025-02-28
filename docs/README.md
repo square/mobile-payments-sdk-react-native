@@ -186,3 +186,55 @@ try {
 hideMockReaderUI();
 ```
 Note that you might get an error if you try to call these methods outside of Sandbox, so you can handle the errors by using a `try/catch` block.
+
+## Tap to Pay Settings on iPhone
+
+For iOS devices, you can manage Tap to Pay settings using the `TapToPaySettings` namespace. The following methods are available:
+
+### Link Apple Account
+
+Before using Tap to Pay on iPhone, you need to link an Apple account:
+
+```typescript
+import { TapToPaySettings } from 'mobile-payments-sdk-react-native';
+
+try {
+  await TapToPaySettings.linkAppleAccount();
+  console.log('Apple account linked successfully');
+} catch (error) {
+  console.error('Failed to link Apple account:', error);
+}
+```
+
+### Relink Apple Account
+
+If the Apple account needs to be relinked, use:
+
+```typescript
+try {
+  await TapToPaySettings.relinkAppleAccount();
+  console.log('Apple account relinked successfully');
+} catch (error) {
+  console.error('Failed to relink Apple account:', error);
+}
+```
+
+### Check if Apple Account is Linked
+
+You can check if an Apple account is already linked:
+
+```typescript
+const isLinked = await TapToPaySettings.isAppleAccountLinked();
+console.log('Apple account linked:', isLinked);
+```
+
+### Check Device Capability
+
+To verify if the device supports Tap to Pay on iPhone:
+
+```typescript
+const isCapable = await TapToPaySettings.isDeviceCapable();
+console.log('Device supports Tap to Pay:', isCapable);
+```
+
+> **Note:** These methods are only available on iOS. Calling them on Android will result in an error.
