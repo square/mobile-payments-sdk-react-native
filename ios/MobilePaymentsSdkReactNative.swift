@@ -126,6 +126,101 @@ class MobilePaymentsSdkReactNative: RCTEventEmitter {
         return resolve(mobilePaymentsSDK.settingsManager.sdkSettings.version)
     }
 
+    func parseTapToPayError(error: NSError, defaultError: String) -> String {
+
+      let tapToPayReaderError = TapToPayReaderError(rawValue: (error).code)
+
+      let errorMessage: String
+      switch tapToPayReaderError {
+      case .alreadyLinked:
+        errorMessage = "Apple Tap to Pay Terms and Conditions have already been accepted."
+      case .banned:
+        errorMessage = "This device is banned from using the Tap To Pay reader."
+      case .linkingFailed:
+        errorMessage = "The Tap To Pay reader could not link/relink using the provided Apple ID."
+      case .linkingCanceled:
+        errorMessage = "User has canceled the linking/relinking operation."
+      case .invalidToken:
+        errorMessage = "The Tap To Pay reader generated an invalid token."
+      case .notAuthorized:
+        errorMessage = "This device must be authorized with a Square account in order to use Tap To Pay."
+      case .notAvailable:
+        errorMessage = "The Tap To Pay reader is not available on this device or device's operating system."
+      case .noNetwork:
+        errorMessage = "The Tap To Pay reader could not connect to the network. Please reconnect to the Internet and try again."
+      case .networkError:
+        errorMessage = "The network responded with an error."
+      case .other:
+        errorMessage = "An error with the Tap To Pay reader has occurred. Please try again."
+      case .passcodeDisabled:
+        errorMessage = "This device does not currently have an active passcode set."
+      case .unexpected:
+        errorMessage = "Mobile Payments SDK encountered an unexpected error. Please try again."
+      case .unsupportedOSVersion:
+        errorMessage = "The device's OS version does not meet the minimum requirement of iOS 16.7 for Tap to Pay on iPhone."
+      case .unsupportedDeviceModel:
+        errorMessage = "This device model is not currently supported to use the Tap To Pay reader."
+      default:
+        errorMessage = defaultError
+      }
+
+      return errorMessage
+
+    }
+
+    @objc(linkAppleAccount:withRejecter:)
+    func linkAppleAccount(resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+        DispatchQueue.main.async { [weak self] in
+
+
+          self?.mobilePaymentsSDK.readerManager.tapToPaySettings.linkAppleAccount {error in
+
+              if (error != nil) {
+                let errorMessage = self?.parseTapToPayError(error: (error! as NSError), defaultError: "There has been an error linking apple account.")
+                reject("LINK_APPLE_ACCOUNT_ERROR", errorMessage, (error as? NSError)?.reactNativeError);
+              } else {
+                resolve("Apple account has been linked.")
+              }
+
+            }
+        }
+    }
+
+    @objc(relinkAppleAccount:withRejecter:)
+    func relinkAppleAccount(resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+        DispatchQueue.main.async { [weak self] in
+          self?.mobilePaymentsSDK.readerManager.tapToPaySettings.relinkAppleAccount {error in
+
+                if (error != nil) {
+                  let errorMessage = self?.parseTapToPayError(error: (error! as NSError), defaultError: "There has been an error re-linking apple account.")
+                  reject("RE_LINK_APPLE_ACCOUNT_ERROR", errorMessage, (error as? NSError)?.reactNativeError);
+                } else {
+                  resolve("Apple account has been re-linked.")
+                }
+
+            }
+        }
+    }
+
+    @objc(isAppleAccountLinked:withRejecter:)
+    func isAppleAccountLinked(resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+        DispatchQueue.main.async { [weak self] in
+            self?.mobilePaymentsSDK.readerManager.tapToPaySettings.isAppleAccountLinked { isLinked, error in
+                if (error != nil) {
+                  let errorMessage = self?.parseTapToPayError(error: (error! as NSError), defaultError: "There has been an error checking if Apple Account is Linked.")
+                  reject("IS_APPLE_ACCOUNT_LINKED_ERROR", errorMessage, (error as? NSError)?.reactNativeError);
+                } else {
+                  resolve(isLinked)
+                }
+            }
+        }
+    }
+
+    @objc(isDeviceCapable:withRejecter:)
+    func isDeviceCapable(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+        return resolve(mobilePaymentsSDK.readerManager.tapToPaySettings.isDeviceCapable)
+    }
+
     /// Mock Readers, available only in Sandbox: https://developer.squareup.com/docs/mobile-payments-sdk/ios#mock-readers
     private lazy var mockReaderUI: MockReaderUI? = {
         guard mobilePaymentsSDK.settingsManager.sdkSettings.environment == .sandbox else {

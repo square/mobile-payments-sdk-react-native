@@ -9,12 +9,12 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-      <Stack.Screen
+        <Stack.Screen
           name="Home"
           component={HomeView}
           options={{ headerShown: false }}
         />
-      <Stack.Screen
+        <Stack.Screen
           name="Permissions"
           component={PermissionsScreen}
           options={{ headerShown: false }}

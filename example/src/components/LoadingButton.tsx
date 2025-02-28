@@ -25,7 +25,13 @@ const LoadingButton = ({
       {isLoading ? (
         <ActivityIndicator color="#000" />
       ) : (
-        <Text style={isActive ? styles.loadingButtonText : styles.loadingButtonTextInactive}>
+        <Text
+          style={
+            isActive
+              ? styles.loadingButtonText
+              : styles.loadingButtonTextInactive
+          }
+        >
           {isActive ? activeLabel : inactiveLabel}
         </Text>
       )}
