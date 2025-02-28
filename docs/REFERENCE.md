@@ -152,6 +152,17 @@ Method                                                    | Returns             
 [getEnvironment](#getEnvironment) | String | Returns the current environment the SDK was initialized on.
 [getSdkVersion](#getSdkVersion) | String | Returns the current Mobile Payments SDK version.
 
+### TapToPaySettings Namespace
+
+The `TapToPaySettings` namespace provides methods specifically for managing Tap to Pay functionality on iOS devices.
+
+Method                                                    | Returns                       | Description
+--------------------------------------------------------- | --------------------------------- | ---
+[linkAppleAccount](#linkAppleAccount) | Promise<void> | Links the Apple account for Tap to Pay functionality (iOS only).
+[relinkAppleAccount](#relinkAppleAccount) | Promise<void> | Relinks the Apple account if required (iOS only).
+[isAppleAccountLinked](#isAppleAccountLinked) | Promise<Boolean> | Checks if an Apple account is linked for Tap to Pay (iOS only).
+[isDeviceCapable](#isDeviceCapable) | Promise<Boolean> | Checks if the current device is capable of using Tap to Pay (iOS only).
+
 
 ## Method details
 
@@ -177,7 +188,40 @@ Returns the current Mobile Payments SDK version running. Note this is the versio
 * **On failure**: Not applicable.
 
 ---
+### TapToPaySettings Methods
 
+#### linkAppleAccount
+
+Links the Apple account for Tap to Pay functionality. This method is only available on iOS.
+
+* **On success**: completes successfully.
+* **On failure**: throws an error if the operation fails or is attempted on Android.
+
+---
+#### relinkAppleAccount
+
+Relinks the Apple account if required for Tap to Pay functionality. This method is only available on iOS.
+
+* **On success**: completes successfully.
+* **On failure**: throws an error if the operation fails or is attempted on Android.
+
+---
+#### isAppleAccountLinked
+
+Checks if an Apple account is linked for Tap to Pay.
+
+* **On success**: returns `true` if an Apple account is linked, `false` otherwise.
+* **On failure**: throws an error if the operation fails or is attempted on Android.
+
+---
+#### isDeviceCapable
+
+Checks if the current device supports Tap to Pay functionality.
+
+* **On success**: returns `true` if the device is capable, `false` otherwise.
+* **On failure**: throws an error if the operation fails or is attempted on Android.
+
+---
 ## Objects
 
 ### Location
