@@ -1,5 +1,7 @@
 import MobilePaymentsSdkReactNative from '../base_sdk';
 import type {
+  Money,
+  OffLinePayment,
   Payment,
   PaymentParameters,
   PromptParameters,
@@ -19,3 +21,13 @@ export const startPayment = (
 export const cancelPayment = (): Promise<void> => {
   return MobilePaymentsSdkReactNative.cancelPayment();
 };
+
+export namespace OfflinePaymentQueue {
+  export const getPayments = (): Promise<OffLinePayment[]> => {
+    return MobilePaymentsSdkReactNative.getPayments();
+  };
+
+  export const getTotalStoredPaymentAmount = (): Promise<Money> => {
+    return MobilePaymentsSdkReactNative.getTotalStoredPaymentAmount();
+  };
+}

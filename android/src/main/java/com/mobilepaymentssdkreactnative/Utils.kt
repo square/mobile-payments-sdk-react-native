@@ -13,7 +13,10 @@ import com.squareup.sdk.mobilepayments.payment.AdditionalPaymentMethod.Type
 import com.squareup.sdk.mobilepayments.payment.CurrencyCode
 import com.squareup.sdk.mobilepayments.payment.DelayAction
 import com.squareup.sdk.mobilepayments.payment.Money
+import com.squareup.sdk.mobilepayments.payment.CardPaymentDetails
+import com.squareup.sdk.mobilepayments.payment.Card
 import com.squareup.sdk.mobilepayments.payment.Payment
+import com.squareup.sdk.mobilepayments.payment.Payment.OfflineStatus
 import com.squareup.sdk.mobilepayments.payment.Payment.OfflinePayment
 import com.squareup.sdk.mobilepayments.payment.Payment.OnlinePayment
 import com.squareup.sdk.mobilepayments.payment.Payment.SourceType
@@ -160,24 +163,125 @@ private fun SourceType.toEnumInt(): Int = when (this) {
 }
 
 fun Payment.toPaymentMap(): ReadableMap {
-  val id = when (this) {
-    is OfflinePayment -> localId
-    is OnlinePayment -> id
-  }
   return WritableNativeMap().apply {
     putMap("amountMoney", amountMoney.toMoneyMap())
     putMap("appFeeMoney", appFeeMoney.toMoneyMap())
     putString("createdAt", createdAt.toIsoInstantString())
-    putString("id", id)
     putString("locationId", locationId)
     putString("orderId", orderId)
     putString("referenceId", referenceId)
     putInt("sourceType", sourceType.toEnumInt())
     putMap("tipMoney", tipMoney.toMoneyMap())
-    putInt("totalMoney", totalMoney.amount.toInt())
+    putMap("totalMoney", totalMoney.toMoneyMap())
     putString("updatedAt", updatedAt.toIsoInstantString())
+    //cashDetails
+    //externalDetails
+    when (this@toPaymentMap) {
+      is OfflinePayment -> {
+        putString("uploadedAt", uploadedAt?.toIsoInstantString())
+        putString("localId", localId)
+        putString("id", id)
+        putString("status", status.toOfflineStatusString())
+        putMap("cardDetails", cardDetails?.toCardDetailsMap())
+      }
+      is OnlinePayment -> {
+        putString("id", id)
+        /*processingFee
+        status
+        cardDetails
+        customerId
+        note
+        statementDescription
+        teamMemberId
+        capabilities
+        receiptNumber
+        remainingBalance
+        squareAccountDetails
+        digitalWalletDetails*/
+      }
+    }
   }
 }
+
+private fun OfflineStatus.toOfflineStatusString() : String =
+  when (this) {
+    OfflineStatus.QUEUED -> "QUEUED"
+    OfflineStatus.UPLOADED -> "UPLOADED"
+    OfflineStatus.FAILED_TO_UPLOAD -> "FAILED_TO_UPLOAD"
+    OfflineStatus.FAILED_TO_PROCESS -> "FAILED_TO_PROCESS"
+    OfflineStatus.PROCESSED -> "PROCESSED"
+  }
+
+private fun CardPaymentDetails.toCardDetailsMap(): ReadableMap {
+  return WritableNativeMap().apply {
+    putMap("card", card.toCardMap())
+    putString("entryMethod", entryMethod.toEntryString())
+    when (this@toCardDetailsMap) {
+      is CardPaymentDetails.OfflineCardPaymentDetails -> {
+        putString("applicationIdentifier", applicationId)
+        putString("applicationName", applicationName)
+      }
+      is CardPaymentDetails.OnlineCardPaymentDetails -> {
+        putString("applicationIdentifier", applicationId)
+        putString("applicationName", applicationName)
+        //authorizationCode
+        //Status
+      }
+    }
+  }
+}
+
+private fun Card.toCardMap(): ReadableMap {
+  return WritableNativeMap().apply {
+    putString("brand", brand.toBrandString())
+    putString("cardCoBrand", cardCoBrand.toCoBrandString())
+    putString("lastFourDigits", lastFourDigits)
+    putInt("expirationMonth", expirationMonth)
+    putInt("expirationYear", expirationYear)
+    putString("cardholderName", cardholderName)
+    putString("id", id)
+  }
+}
+
+private fun CardPaymentDetails.EntryMethod.toEntryString(): String = 
+  when(this) {
+    CardPaymentDetails.EntryMethod.KEYED -> "KEYED"
+    CardPaymentDetails.EntryMethod.SWIPED -> "SWIPED"
+    CardPaymentDetails.EntryMethod.EMV -> "EMV"
+    CardPaymentDetails.EntryMethod.CONTACTLESS -> "CONTACTLESS"
+    CardPaymentDetails.EntryMethod.ON_FILE -> "ON_FILE"
+  }
+
+private fun Card.Brand.toBrandString(): String =
+  when(this) {
+    Card.Brand.OTHER_BRAND -> "OTHER_BRAND"
+    Card.Brand.VISA -> "VISA"
+    Card.Brand.MASTERCARD -> "MASTERCARD"
+    Card.Brand.AMERICAN_EXPRESS -> "AMERICAN_EXPRESS"
+    Card.Brand.DISCOVER -> "DISCOVER"
+    Card.Brand.DISCOVER_DINERS -> "DISCOVER_DINERS"
+    Card.Brand.EBT -> "EBT"
+    Card.Brand.JCB -> "JCB"
+    Card.Brand.CHINA_UNIONPAY -> "CHINA_UNIONPAY"
+    Card.Brand.SQUARE_GIFT_CARD -> "SQUARE_GIFT_CARD"
+    Card.Brand.ALIPAY -> "ALIPAY"
+    Card.Brand.CASH_APP -> "CASH_APP"
+    Card.Brand.EFTPOS -> "EFTPOS"
+    Card.Brand.FELICA -> "FELICA"
+    Card.Brand.INTERAC -> "INTERAC"
+    Card.Brand.SQUARE_CAPITAL_CARD -> "SQUARE_CAPITAL_CARD"
+    Card.Brand.SUICA -> "SUICA"
+    Card.Brand.ID -> "ID"
+    Card.Brand.QUICPAY -> "QUICPAY"
+  }
+
+private fun Card.CoBrand.toCoBrandString(): String =
+  when(this) {
+    Card.CoBrand.AFTERPAY -> "AFTERPAY"
+    Card.CoBrand.CLEARPAY -> "CLEARPAY"
+    Card.CoBrand.NONE -> "NONE"
+    Card.CoBrand.UNKNOWN -> "UNKNOWN"
+  }
 
 fun Date.toIsoInstantString(): String =
   SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US)

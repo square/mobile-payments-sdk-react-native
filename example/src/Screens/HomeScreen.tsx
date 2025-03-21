@@ -10,6 +10,7 @@ import {
   mapUserInfoToFailure,
   type PaymentParameters,
   type PromptParameters,
+  ProcessingMode,
 } from 'mobile-payments-sdk-react-native';
 import React, { useState } from 'react';
 import {
@@ -46,10 +47,11 @@ const HomeView = () => {
 
   const handleStartPayment = async () => {
     const paymentParameters: PaymentParameters = {
-      amountMoney: { amount: 100, currencyCode: CurrencyCode.USD },
-      appFeeMoney: { amount: 0, currencyCode: CurrencyCode.USD },
+      amountMoney: { amount: 1, currencyCode: CurrencyCode.EUR },
+      appFeeMoney: { amount: 0, currencyCode: CurrencyCode.EUR },
       idempotencyKey: uuid.v4(),
       note: 'Payment for services',
+      processingMode: ProcessingMode.OFFLINE_ONLY
       // Other parameters you could add:
       // autocomplete: true,
       // delayAction: DelayAction.CANCEL,
@@ -111,6 +113,12 @@ const HomeView = () => {
         <Text style={styles.mockReaderText}>
           {isMockReaderPresented ? 'Hide Mock Reader' : 'Show Mock Reader'}
         </Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.mockButton}
+        onPress={() => navigation.navigate('Test')}
+      >
+        <Text style={styles.mockReaderText}>{'Go offline test'}</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
