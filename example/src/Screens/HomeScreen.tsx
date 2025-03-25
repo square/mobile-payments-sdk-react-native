@@ -51,7 +51,7 @@ const HomeView = () => {
       appFeeMoney: { amount: 0, currencyCode: CurrencyCode.EUR },
       idempotencyKey: uuid.v4(),
       note: 'Payment for services',
-      processingMode: ProcessingMode.OFFLINE_ONLY
+      processingMode: ProcessingMode.AUTO_DETECT
       // Other parameters you could add:
       // autocomplete: true,
       // delayAction: DelayAction.CANCEL,
