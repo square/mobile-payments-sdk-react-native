@@ -258,6 +258,17 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
     }
   }
 
+  @ReactMethod
+  fun getReaders(promise: Promise) {
+    val readerManager = MobilePaymentsSdk.readerManager()
+    val readers = readerManager.getReaders()
+    val readerList = Arguments.createArray()
+    readers.forEach {
+      readerList.pushMap(it.toReaderInfoMap())
+    }
+    promise.resolve(readerList)
+  }
+
   private fun emitEvent(reactContext: ReactContext, eventName: String, map: WritableMap) {
     reactContext
       .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)

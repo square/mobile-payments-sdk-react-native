@@ -156,6 +156,7 @@ export enum ReaderModel {
   EMBEDDED,
   MAGSTRIPE,
   STAND,
+  TAP_TO_PAY,
   UNKNOWN,
 }
 

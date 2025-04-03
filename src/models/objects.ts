@@ -143,8 +143,8 @@ export type Payment = {
 
 export type ReaderBatteryStatus = {
   isCharging: Boolean;
-  level: ReaderBatteryLevel;
-  percentage: Number;
+  level?: ReaderBatteryLevel;
+  percent: Number;
 };
 
 export type ReaderConnectionFailureInfo = {
@@ -166,17 +166,20 @@ export type ReaderFirmwareInfo = {
 };
 
 export type ReaderInfo = {
-  batteryStatus: ReaderBatteryStatus;
-  cardInsertionStatus: CardInsertionStatus;
-  connectionInfo: ReaderConnectionInfo;
-  firmwareInfo: ReaderFirmwareInfo;
-  id: Number;
-  isBlinkable: Boolean;
-  isConnectionRetryable: Boolean;
-  isForgettable: Boolean;
+  id: String;
   model: ReaderModel;
-  name: String;
-  serialNumber?: String;
   state: ReaderState;
-  supportedInputMethods: CardInputMethods[];
+  serialNumber?: String;
+  name: String;
+  batteryStatus?: ReaderBatteryStatus;
+  firmwareVersion?: String;
+  firmwarePercent?: Number;
+  supportedCardEntryMethods: CardInputMethods[];
+  isForgettable: Boolean;
+  isBlinkable: Boolean;
+
+  cardInsertionStatus?: CardInsertionStatus;
+  connectionInfo?: ReaderConnectionInfo;
+  firmwareInfo?: ReaderFirmwareInfo;
+  isConnectionRetryable?: Boolean;
 };

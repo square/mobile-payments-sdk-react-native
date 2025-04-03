@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 18,
-    color: '#000000'
+    color: '#000000',
   },
   buttonContainer: {
     backgroundColor: 'white',

@@ -1,5 +1,52 @@
-import { Platform } from 'react-native';
+import {
+  Platform,
+  NativeEventEmitter,
+  type EmitterSubscription,
+} from 'react-native';
 import MobilePaymentsSdkReactNative from '../base_sdk';
+import type { ReaderInfo } from '../models/objects';
+
+export const readerEventEmitter = new NativeEventEmitter(
+  MobilePaymentsSdkReactNative
+);
+export let readerChangesObserver: EmitterSubscription;
+
+export const getReaders = (): Promise<ReaderInfo[]> => {
+  return MobilePaymentsSdkReactNative.getReaders();
+};
+
+export const getReader = (id: string): Promise<ReaderInfo> => {
+  return MobilePaymentsSdkReactNative.getReader(id);
+};
+
+export const forget = (id: string): Promise<void> => {
+  return MobilePaymentsSdkReactNative.forget(id);
+};
+
+export const blink = (id: string): Promise<void> => {
+  return MobilePaymentsSdkReactNative.blink(id);
+};
+
+export const isPairingInProgress = (): Promise<boolean> => {
+  return MobilePaymentsSdkReactNative.isPairingInProgress();
+};
+
+const addReaderChangedCallback = (): Promise<void> => {
+  return MobilePaymentsSdkReactNative.addReaderChangedCallback();
+};
+
+export const setReaderChangedCallback = (
+  callback: () => void
+): EmitterSubscription => {
+  addReaderChangedCallback();
+  const subscription = readerEventEmitter.addListener(
+    'ReaderChanged',
+    (event) => {
+      callback();
+    }
+  );
+  return subscription;
+};
 
 export const startPairing = (): Promise<void> => {
   return MobilePaymentsSdkReactNative.startPairing();

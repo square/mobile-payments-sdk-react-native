@@ -80,7 +80,7 @@ const HomeView = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <HeaderButton title="Settings" onPress={showSettings} />
+        <HeaderButton title="Settings" onPress={() => showSettings()} />
         <View style={styles.headerSpacer} />
         <HeaderButton
           title="Permissions"
@@ -119,6 +119,12 @@ const HomeView = () => {
         onPress={() => navigation.navigate('Test')}
       >
         <Text style={styles.mockReaderText}>{'Go offline test'}</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.mockButton}
+        onPress={() => navigation.navigate('ReaderSettings')}
+      >
+        <Text style={styles.mockReaderText}>{'ReaderSettings'}</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
