@@ -4,7 +4,7 @@ import {
   type EmitterSubscription,
 } from 'react-native';
 import MobilePaymentsSdkReactNative from '../base_sdk';
-import type { ReaderInfo } from '../models/objects';
+import type { ReaderChangedEvent, ReaderInfo } from '../models/objects';
 
 export const readerEventEmitter = new NativeEventEmitter(
   MobilePaymentsSdkReactNative
@@ -15,7 +15,7 @@ export const getReaders = (): Promise<ReaderInfo[]> => {
   return MobilePaymentsSdkReactNative.getReaders();
 };
 
-export const getReader = (id: string): Promise<ReaderInfo> => {
+export const getReader = (id: string): Promise<ReaderInfo | null> => {
   return MobilePaymentsSdkReactNative.getReader(id);
 };
 
@@ -31,21 +31,29 @@ export const isPairingInProgress = (): Promise<boolean> => {
   return MobilePaymentsSdkReactNative.isPairingInProgress();
 };
 
-const addReaderChangedCallback = (): Promise<void> => {
-  return MobilePaymentsSdkReactNative.addReaderChangedCallback();
+const addReaderChangedCallback = (refId: String): Promise<String> => {
+  return MobilePaymentsSdkReactNative.addReaderChangedCallback(refId);
+};
+
+const removeReaderChangedCallback = (refId: String): Promise<void> => {
+  return MobilePaymentsSdkReactNative.removeReaderChangedCallback(refId);
 };
 
 export const setReaderChangedCallback = (
-  callback: () => void
-): EmitterSubscription => {
-  addReaderChangedCallback();
+  callback: (event: ReaderChangedEvent) => void
+): (() => void) => {
+  const refId = generateUUID();
+  addReaderChangedCallback(refId);
   const subscription = readerEventEmitter.addListener(
-    'ReaderChanged',
-    (event) => {
-      callback();
+    `ReaderChanged-${refId}`,
+    (changedEvent) => {
+      callback(changedEvent);
     }
   );
-  return subscription;
+  return () => {
+    subscription.remove();
+    removeReaderChangedCallback(refId);
+  };
 };
 
 export const startPairing = (): Promise<void> => {
@@ -97,3 +105,7 @@ export namespace TapToPaySettings {
     })!();
   };
 }
+
+const generateUUID = (): String => {
+  return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
+};

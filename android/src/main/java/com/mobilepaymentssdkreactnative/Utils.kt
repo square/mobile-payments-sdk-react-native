@@ -8,6 +8,7 @@ import com.facebook.react.bridge.WritableNativeMap
 import com.squareup.sdk.mobilepayments.authorization.AuthorizationState
 import com.squareup.sdk.mobilepayments.authorization.AuthorizedLocation
 import com.squareup.sdk.mobilepayments.cardreader.CardEntryMethod
+import com.squareup.sdk.mobilepayments.cardreader.ReaderChangedEvent
 import com.squareup.sdk.mobilepayments.cardreader.ReaderInfo
 import com.squareup.sdk.mobilepayments.core.Result.Failure
 import com.squareup.sdk.mobilepayments.payment.AdditionalPaymentMethod
@@ -373,5 +374,25 @@ fun ReaderInfo.State.toStateString(): String {
     is ReaderInfo.State.Disconnected ->"DISCONNECTED"
     is ReaderInfo.State.FailedToConnect->"FAILED_TO_CONNECT"
     is ReaderInfo.State.UpdatingFirmware ->"UPDATING_FIRMWARE"
+  }
+}
+
+fun ReaderChangedEvent.toChangedEventMap(): WritableMap {
+  return WritableNativeMap().apply {
+    putString("cange", change.toChangeString())
+    putMap("reader", reader.toReaderInfoMap())
+    putString("readerState", readerState.toStateString())
+    putString("readerSerialNumber", readerSerialNumber)
+  }
+}
+
+fun ReaderChangedEvent.Change.toChangeString(): String {
+  return when(this) {
+    ReaderChangedEvent.Change.ADDED -> "ADDED"
+    ReaderChangedEvent.Change.CHANGED_STATE -> "CHANGED_STATE"
+    ReaderChangedEvent.Change.BATTERY_THRESHOLD -> "BATTERY_THRESHOLD"
+    ReaderChangedEvent.Change.BATTERY_CHARGING -> "BATTERY_CHARGING"
+    ReaderChangedEvent.Change.FIRMWARE_PROGRESS -> "FIRMWARE_PROGRESS"
+    ReaderChangedEvent.Change.REMOVED -> "REMOVED"
   }
 }

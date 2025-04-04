@@ -128,6 +128,13 @@ export enum ReaderChange {
   FIRMWARE_UPDATE_DID_FAIL,
   FIRMWARE_UPDATE_PERCENT_DID_CHANGE,
   STATE_DID_CHANGE,
+  //--android
+  ADDED,
+  CHANGED_STATE,
+  BATTERY_THRESHOLD,
+  BATTERY_CHARGING,
+  FIRMWARE_PROGRESS,
+  REMOVED,
 }
 
 export enum ReaderConnectionFailureRecoverySuggestion {

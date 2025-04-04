@@ -20,11 +20,14 @@ import com.squareup.sdk.mobilepayments.payment.PaymentHandle.CancelResult.CANCEL
 import com.squareup.sdk.mobilepayments.payment.PaymentHandle.CancelResult.NOT_CANCELABLE
 import com.squareup.sdk.mobilepayments.payment.PaymentHandle.CancelResult.NO_PAYMENT_IN_PROGRESS
 
+import android.util.Log
+
 class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicationContext) :
   ReactContextBaseJavaModule(reactContext) {
 
   private var paymentHandle: PaymentHandle? = null
   private var authStateCallback: CallbackReference? = null
+  private var readerChangedCallbacks = mutableMapOf<String, CallbackReference>();
 
   override fun getName(): String {
     return NAME
@@ -268,6 +271,63 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
     }
     promise.resolve(readerList)
   }
+
+  @ReactMethod
+  fun getReader(id: String, promise: Promise) {
+    val readerManager = MobilePaymentsSdk.readerManager()
+    val reader = readerManager.getReader(id)
+    val readerMap = reader?.toReaderInfoMap()
+    promise.resolve(readerMap)
+  }
+
+  @ReactMethod
+  fun forget(id: String, promise: Promise) {
+    val readerManager = MobilePaymentsSdk.readerManager()
+    val reader = readerManager.getReader(id)
+    if (reader != null)
+      readerManager.forget(reader)
+    promise.resolve(null)
+  }
+
+  @ReactMethod
+  fun blink(id: String, promise: Promise) {
+    val readerManager = MobilePaymentsSdk.readerManager()
+    val reader = readerManager.getReader(id)
+    if (reader != null)
+      readerManager.blink(reader)
+    promise.resolve(null)
+  }
+
+  @ReactMethod
+  fun isPairingInProgress(promise: Promise) {
+    val readerManager = MobilePaymentsSdk.readerManager()
+    promise.resolve(readerManager.isPairingInProgress)
+  }
+
+  // setReaderChangedCallback
+  @ReactMethod
+  fun addReaderChangedCallback(refId: String, promise: Promise) {
+    val readerManager = MobilePaymentsSdk.readerManager()
+    val ref = readerManager.setReaderChangedCallback{
+      changeEvent ->
+        emitEvent(reactContext, "ReaderChanged-${refId}", changeEvent.toChangedEventMap())
+    }
+    Log.d("ReaderCallback", "======Callback adedd: ${refId}") //debug
+    readerChangedCallbacks.put(refId, ref)
+    promise.resolve(refId)
+  }
+
+  @ReactMethod
+  fun removeReaderChangedCallback(refId: String, promise: Promise) {
+    val ref = readerChangedCallbacks.get(refId)
+    if (ref != null) {
+      ref.clear()
+      readerChangedCallbacks.remove(refId)
+      Log.d("ReaderCallback", "======Callback deleted: ${refId}")
+    }
+    promise.resolve(null)
+  }
+  // ---
 
   private fun emitEvent(reactContext: ReactContext, eventName: String, map: WritableMap) {
     reactContext

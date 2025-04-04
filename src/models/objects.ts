@@ -11,6 +11,7 @@ import type {
   PaymentStatus,
   PromptMode,
   ReaderBatteryLevel,
+  ReaderChange,
   ReaderConnectionFailureReason,
   ReaderConnectionFailureRecoverySuggestion,
   ReaderConnectionState,
@@ -182,4 +183,11 @@ export type ReaderInfo = {
   connectionInfo?: ReaderConnectionInfo;
   firmwareInfo?: ReaderFirmwareInfo;
   isConnectionRetryable?: Boolean;
+};
+
+export type ReaderChangedEvent = {
+  change: ReaderChange;
+  reader: ReaderInfo;
+  readerState: ReaderState;
+  readerSerialNumber?: String;
 };
