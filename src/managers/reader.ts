@@ -56,8 +56,8 @@ export const setReaderChangedCallback = (
   };
 };
 
-export const startPairing = (): Promise<void> => {
-  return MobilePaymentsSdkReactNative.startPairing();
+export const pairReader = (): Promise<boolean> => {
+  return MobilePaymentsSdkReactNative.pairReader();
 };
 
 export const stopPairing = (): Promise<void> => {

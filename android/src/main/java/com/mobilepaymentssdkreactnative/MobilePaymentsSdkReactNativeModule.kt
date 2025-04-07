@@ -11,6 +11,7 @@ import com.facebook.react.bridge.WritableMap
 import com.facebook.react.bridge.WritableNativeMap
 import com.facebook.react.modules.core.DeviceEventManagerModule
 import com.squareup.sdk.mobilepayments.MobilePaymentsSdk
+import com.squareup.sdk.mobilepayments.cardreader.PairingHandle
 import com.squareup.sdk.mobilepayments.core.CallbackReference
 import com.squareup.sdk.mobilepayments.core.Result.Failure
 import com.squareup.sdk.mobilepayments.core.Result.Success
@@ -28,6 +29,7 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
   private var paymentHandle: PaymentHandle? = null
   private var authStateCallback: CallbackReference? = null
   private var readerChangedCallbacks = mutableMapOf<String, CallbackReference>();
+  private var pairingHandler: PairingHandle? = null
 
   override fun getName(): String {
     return NAME
@@ -312,7 +314,6 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
       changeEvent ->
         emitEvent(reactContext, "ReaderChanged-${refId}", changeEvent.toChangedEventMap())
     }
-    Log.d("ReaderCallback", "======Callback adedd: ${refId}") //debug
     readerChangedCallbacks.put(refId, ref)
     promise.resolve(refId)
   }
@@ -323,7 +324,38 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
     if (ref != null) {
       ref.clear()
       readerChangedCallbacks.remove(refId)
-      Log.d("ReaderCallback", "======Callback deleted: ${refId}")
+    }
+    promise.resolve(null)
+  }
+  // ---
+
+  // pairReader
+  @ReactMethod
+  private fun pairReader(promise: Promise) {
+    if(pairingHandler != null) {
+      promise.reject("PAIRING_IN_PROGRESS", "A pairing is already in progress")
+    }
+    val readerManager = MobilePaymentsSdk.readerManager()
+    pairingHandler = readerManager.pairReader {
+      result ->
+        when(result) {
+          is Success -> {
+            pairingHandler = null;
+            promise.resolve(result.value)
+          }
+          is Failure -> {
+            pairingHandler = null;
+            promise.reject("PAIRING_ERROR", result.errorMessage, result.toErrorMap())
+          }
+        }
+    }
+  }
+
+  @ReactMethod
+  private fun stopPairing(promise: Promise) {
+    if(pairingHandler != null) {
+      pairingHandler?.stop()
+      pairingHandler = null;
     }
     promise.resolve(null)
   }
