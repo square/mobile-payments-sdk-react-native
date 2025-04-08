@@ -14,6 +14,7 @@ import {
 } from 'react-native';
 import {
   getReaders,
+  isPairingInProgress,
   pairReader,
   setReaderChangedCallback,
   stopPairing,
@@ -29,6 +30,11 @@ const ReaderSettingsScreen = () => {
   const [inProgress, setInProgress] = useState(false);
   const [visible, setVisible] = useState(false);
   const translateY = useRef(new Animated.Value(height)).current;
+
+  const pairingInProgress = async () => {
+    const isParing = await isPairingInProgress();
+    return isParing;
+  };
 
   const openSheet = () => {
     setInProgress(true);
@@ -89,7 +95,9 @@ const ReaderSettingsScreen = () => {
   //on unmount stop pairing
   useEffect(() => {
     return () => {
-      stopPairing();
+      pairingInProgress().then((isPairing) => {
+        if (isPairing) stopPairing();
+      });
     };
   }, []);
 

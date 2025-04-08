@@ -15,9 +15,11 @@ class MobilePaymentsSdkReactNative: RCTEventEmitter {
     private var startPaymentRejectBlock: RCTPromiseRejectBlock?
     private var paymentHandle: PaymentHandle?
 
+    private var readersObservers: [String: ReaderObserver] = [:]
+
     /// We use notifications to propagate authorization status changes and reader changes
     override func supportedEvents() -> [String]! {
-        return ["AuthorizationStatusChange"]
+        return ["AuthorizationStatusChange", "ReaderChanged"]
     }
 
     /// Authorize: https://developer.squareup.com/docs/mobile-payments-sdk/ios/configure-authorize
@@ -378,6 +380,141 @@ class MobilePaymentsSdkReactNative: RCTEventEmitter {
                 resolve(NSNull())
             }
         }
+    }
+
+
+    @objc(getReaders:withRejecter:)
+    func getReaders(resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+        let readers = mobilePaymentsSDK.readerManager.readers
+        let readerList = readers.map {
+          reader in Mappers.mapToDictionary(reader: reader)
+        }
+        resolve(readerList)
+    }
+
+
+    func findReader(readerId: UInt) -> ReaderInfo? {
+        let readers = mobilePaymentsSDK.readerManager.readers
+        let reader = readers.first(where: { $0.id == readerId })
+        return reader
+    }
+
+    func parseId(readerId: String, reject: RCTPromiseRejectBlock) -> UInt? {
+        guard let id = UInt(readerId) else {
+            reject("INVALID_ID", "ID '\(readerId)' is not valid", nil)
+            return nil
+        }
+        return id
+    }
+
+    @objc(getReader:withResolve:withRejecter:)
+    func getReader(id: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+        guard let readerId = parseId(readerId: id, reject: reject) else {
+            return
+        }
+        guard let reader = findReader(readerId: readerId) else {
+            resolve(NSNull())
+            return
+        }
+        resolve(Mappers.mapToDictionary(reader: reader))
+    }
+
+    @objc(forget:withResolve:withRejecter:)
+    func forget(id: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+        guard let readerId = parseId(readerId: id, reject: reject) else {
+            return
+        }
+        guard let reader = findReader(readerId: readerId) else {
+            resolve(NSNull())
+            return
+        }
+        print("======")
+        print(reader)
+        //TODO: sdk fail unknown
+        //mobilePaymentsSDK.readerManager.forget(reader)
+        resolve(NSNull())
+    }
+
+    @objc(blink:withResolve:withRejecter:)
+    func blink(id: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+        guard let readerId = parseId(readerId: id, reject: reject) else {
+            return
+        }
+        guard let reader = findReader(readerId: readerId) else {
+            resolve(NSNull())
+            return
+        }
+        mobilePaymentsSDK.readerManager.blink(reader)
+        resolve(NSNull())
+    }
+
+    @objc(isPairingInProgress:withRejecter:)
+    func isPairingInProgress(resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+        resolve(mobilePaymentsSDK.readerManager.isPairingInProgress)
+    }
+
+    // setReaderChangedCallback
+    @objc(addReaderChangedCallback:withResolve:withRejecter:)
+    func addReaderChangedCallback(refId: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+      let observer = MobilePaymentsReaderObserver(refId: refId, emitter: self)
+        mobilePaymentsSDK.readerManager.add(observer)
+        readersObservers[refId] = observer
+        resolve(NSNull())
+    }
+
+    @objc(removeReaderChangedCallback:withResolve:withRejecter:)
+    func removeReaderChangedCallback(refId: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+        if let observer = readersObservers[refId] {
+            mobilePaymentsSDK.readerManager.remove(observer)
+            readersObservers.removeValue(forKey: refId)
+            resolve(NSNull())
+        } else {
+            reject("READER_OBSERVER_NOT_FOUND", "No observer found for refId \(refId)", nil)
+        }
+    }
+    // ---
+}
+
+class MobilePaymentsReaderObserver: ReaderObserver {
+    let refId: String
+    let emitter: RCTEventEmitter
+
+    init(refId: String, emitter: RCTEventEmitter) {
+        self.refId = refId
+        self.emitter = emitter
+    }
+
+    func readerDidChange(_ reader: ReaderInfo, change: ReaderChange) {
+        let readerMap = Mappers.mapToDictionary(reader: reader)
+        let body = [
+            "change": change.toName(),
+            "reader": readerMap,
+            "readerState" : readerMap["state"] ?? NSNull(),
+            "readerSerialNumber" : readerMap["serialNumber"] ?? NSNull()
+        ]
+        emitter.sendEvent(withName: "ReaderChanged", body: body)
+    }
+
+    func readerWasAdded(_ reader: ReaderInfo) {
+        let readerMap = Mappers.mapToDictionary(reader: reader)
+        let body = [
+            "change": "ADDED",
+            "reader": readerMap,
+            "readerState" : readerMap["state"],
+            "readerSerialNumber" : readerMap["serialNumber"] ?? NSNull()
+        ]
+        emitter.sendEvent(withName: "ReaderChanged", body: body)
+    }
+
+    func readerWasRemoved(_ reader: ReaderInfo) {
+        let readerMap = Mappers.mapToDictionary(reader: reader)
+        let body = [
+            "change": "REMOVED",
+            "reader": readerMap,
+            "readerState" : readerMap["state"],
+            "readerSerialNumber" : readerMap["serialNumber"] ?? NSNull()
+        ]
+        emitter.sendEvent(withName: "ReaderChanged", body: body)
     }
 }
 

@@ -45,7 +45,11 @@ export const setReaderChangedCallback = (
   const refId = generateUUID();
   addReaderChangedCallback(refId);
   const subscription = readerEventEmitter.addListener(
-    `ReaderChanged-${refId}`,
+    //FIXME: use only ReaderChanged, the refId only to map thw listeners in native code
+    Platform.select({
+      ios: 'ReaderChanged', //ios React Emitter not support dynamic
+      android: `ReaderChanged-${refId}`,
+    }) ?? 'ReaderChanged',
     (changedEvent) => {
       callback(changedEvent);
     }

@@ -2,6 +2,7 @@ import type {
   AdditionalPaymentMethodType,
   CardBrand,
   CardCoBrand,
+  CardEntryMethod,
   CardInsertionStatus,
   CardPaymentStatus,
   CurrencyCode,
@@ -117,12 +118,6 @@ export type OfflineCardPaymentDetails = {
   entryMethod: EntryMethod;
 };
 
-export type CardInputMethods = {
-  chip: Boolean;
-  contactless: Boolean;
-  swipe: Boolean;
-};
-
 export type PromptParameters = {
   additionalMethods: AdditionalPaymentMethodType[];
   mode: PromptMode;
@@ -156,12 +151,12 @@ export type ReaderConnectionFailureInfo = {
 };
 
 export type ReaderConnectionInfo = {
-  failureInfo: ReaderConnectionFailureInfo;
+  failureInfo?: ReaderConnectionFailureInfo;
   state: ReaderConnectionState;
 };
 
 export type ReaderFirmwareInfo = {
-  failureReason: String;
+  failureReason?: String;
   updatePercentage: Number;
   version: String;
 };
@@ -175,7 +170,7 @@ export type ReaderInfo = {
   batteryStatus?: ReaderBatteryStatus;
   firmwareVersion?: String;
   firmwarePercent?: Number;
-  supportedCardEntryMethods: CardInputMethods[];
+  supportedCardEntryMethods: CardEntryMethod[];
   isForgettable: Boolean;
   isBlinkable: Boolean;
 
