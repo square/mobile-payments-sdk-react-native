@@ -16,6 +16,9 @@ class MobilePaymentsSdkReactNative: RCTEventEmitter {
     private var paymentHandle: PaymentHandle?
 
     private var readersObservers: [String: ReaderObserver] = [:]
+    private var pairingResolveBlock: RCTPromiseResolveBlock?
+    private var pairingRejectBlock: RCTPromiseRejectBlock?
+    private var pairingHandler: PairingHandle?
 
     /// We use notifications to propagate authorization status changes and reader changes
     override func supportedEvents() -> [String]! {
@@ -428,11 +431,11 @@ class MobilePaymentsSdkReactNative: RCTEventEmitter {
             resolve(NSNull())
             return
         }
-        print("======")
-        print(reader)
-        //TODO: sdk fail unknown
-        //mobilePaymentsSDK.readerManager.forget(reader)
-        resolve(NSNull())
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            self.mobilePaymentsSDK.readerManager.forget(reader)
+            resolve(NSNull())
+        }
     }
 
     @objc(blink:withResolve:withRejecter:)
@@ -467,10 +470,30 @@ class MobilePaymentsSdkReactNative: RCTEventEmitter {
         if let observer = readersObservers[refId] {
             mobilePaymentsSDK.readerManager.remove(observer)
             readersObservers.removeValue(forKey: refId)
-            resolve(NSNull())
-        } else {
-            reject("READER_OBSERVER_NOT_FOUND", "No observer found for refId \(refId)", nil)
         }
+        resolve(NSNull())
+    }
+    // ---
+
+    // pairReader
+    @objc(pairReader:withRejecter:)
+    func pairReader(resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+        if pairingHandler != nil || pairingRejectBlock != nil || pairingResolveBlock != nil {
+            reject("PAIRING_IN_PROGRESS", "A pairing is already in progress", nil)
+            return
+        }
+        pairingRejectBlock = reject
+        pairingResolveBlock = resolve
+        pairingHandler = mobilePaymentsSDK.readerManager.startPairing(with: self)
+    }
+
+    @objc(stopPairing:withRejecter:)
+    func stopPairing(resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+        pairingHandler?.stop()
+        pairingHandler = nil;
+        pairingRejectBlock = nil
+        pairingResolveBlock = nil
+        resolve(NSNull())
     }
     // ---
 }
@@ -489,7 +512,7 @@ class MobilePaymentsReaderObserver: ReaderObserver {
         let body = [
             "change": change.toName(),
             "reader": readerMap,
-            "readerState" : readerMap["state"] ?? NSNull(),
+            "readerState" : readerMap["state"],
             "readerSerialNumber" : readerMap["serialNumber"] ?? NSNull()
         ]
         emitter.sendEvent(withName: "ReaderChanged", body: body)
@@ -515,6 +538,24 @@ class MobilePaymentsReaderObserver: ReaderObserver {
             "readerSerialNumber" : readerMap["serialNumber"] ?? NSNull()
         ]
         emitter.sendEvent(withName: "ReaderChanged", body: body)
+    }
+}
+
+extension MobilePaymentsSdkReactNative: ReaderPairingDelegate {
+    func readerPairingDidBegin() {}
+
+    func readerPairingDidFail(with error: Error) {
+        pairingRejectBlock?("PAIRING_ERROR", error.localizedDescription, error)
+        pairingHandler = nil;
+        pairingRejectBlock = nil
+        pairingResolveBlock = nil
+    }
+
+    func readerPairingDidSucceed() {
+        pairingResolveBlock?(true)
+        pairingHandler = nil;
+        pairingRejectBlock = nil
+        pairingResolveBlock = nil
     }
 }
 

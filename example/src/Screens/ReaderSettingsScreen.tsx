@@ -83,8 +83,9 @@ const ReaderSettingsScreen = () => {
   }, []);
 
   useEffect(() => {
-    const sus = setReaderChangedCallback((_) => {
+    const sus = setReaderChangedCallback((change) => {
       //update list in any change for test
+      console.log(change.change);
       getReaders()
         .then((rs) => setReaders(rs))
         .catch((e) => console.error(e));
@@ -204,7 +205,7 @@ const styles = StyleSheet.create({
     padding: 20,
     justifyContent: 'space-between',
   },
-  sheetText: { fontSize: 18 },
+  sheetText: { fontSize: 18, color: 'black' },
   closeText: { color: 'red', marginTop: 20, textAlign: 'right' },
 });
 
