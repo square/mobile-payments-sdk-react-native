@@ -7,6 +7,9 @@ import com.facebook.react.bridge.WritableNativeArray
 import com.facebook.react.bridge.WritableNativeMap
 import com.squareup.sdk.mobilepayments.authorization.AuthorizationState
 import com.squareup.sdk.mobilepayments.authorization.AuthorizedLocation
+import com.squareup.sdk.mobilepayments.cardreader.CardEntryMethod
+import com.squareup.sdk.mobilepayments.cardreader.ReaderChangedEvent
+import com.squareup.sdk.mobilepayments.cardreader.ReaderInfo
 import com.squareup.sdk.mobilepayments.core.Result.Failure
 import com.squareup.sdk.mobilepayments.payment.AdditionalPaymentMethod
 import com.squareup.sdk.mobilepayments.payment.AdditionalPaymentMethod.Type
@@ -243,7 +246,7 @@ private fun Card.toCardMap(): ReadableMap {
   }
 }
 
-private fun CardPaymentDetails.EntryMethod.toEntryString(): String = 
+private fun CardPaymentDetails.EntryMethod.toEntryString(): String =
   when(this) {
     CardPaymentDetails.EntryMethod.KEYED -> "KEYED"
     CardPaymentDetails.EntryMethod.SWIPED -> "SWIPED"
@@ -318,4 +321,78 @@ fun AuthorizationState.asString(): String = when {
   isAuthorizationInProgress -> "AUTHORIZING"
   isAuthorized -> "AUTHORIZED"
   else -> "NOT_AUTHORIZED"
+}
+
+fun ReaderInfo.toReaderInfoMap(): WritableMap {
+  return WritableNativeMap().apply {
+    putString("id", id)
+    putString("model", model.toModelString())
+    putString("state", state.toStateString())
+    putString("serialNumber", serialNumber)
+    putString("name", name)
+    putMap("batteryStatus", batteryStatus?.toBatteryStatusMap())
+    putString("firmwareVersion", firmwareVersion)
+    putInt("firmwarePercent", firmwarePercent ?: 0)
+    putArray("supportedCardEntryMethods", WritableNativeArray().apply {
+      supportedCardEntryMethods.forEach {
+        pushString(it.toEntryMethodString())
+      }
+    })
+    putBoolean("isForgettable", isForgettable)
+    putBoolean("isBlinkable", isBlinkable)
+  }
+}
+
+fun CardEntryMethod.toEntryMethodString(): String {
+  return when(this) {
+    CardEntryMethod.EMV -> "EMV"
+    CardEntryMethod.SWIPED -> "SWIPED"
+    CardEntryMethod.CONTACTLESS -> "CONTACTLESS"
+  }
+}
+
+fun ReaderInfo.BatteryStatus.toBatteryStatusMap(): WritableMap {
+  return WritableNativeMap().apply {
+    putBoolean("isCharging", isCharging)
+    putInt("percent", percent)
+  }
+}
+
+fun ReaderInfo.Model.toModelString(): String {
+  return when(this) {
+    ReaderInfo.Model.MAGSTRIPE -> "MAGSTRIPE"
+    ReaderInfo.Model.CONTACTLESS_AND_CHIP -> "CONTACTLESS_AND_CHIP"
+    ReaderInfo.Model.TAP_TO_PAY -> "TAP_TO_PAY"
+  }
+}
+
+fun ReaderInfo.State.toStateString(): String {
+  return when(this) {
+    is ReaderInfo.State.Ready ->"READY"
+    is ReaderInfo.State.Disabled ->"DISABLE"
+    is ReaderInfo.State.Connecting ->"CONNECTING"
+    is ReaderInfo.State.Disconnected ->"DISCONNECTED"
+    is ReaderInfo.State.FailedToConnect->"FAILED_TO_CONNECT"
+    is ReaderInfo.State.UpdatingFirmware ->"UPDATING_FIRMWARE"
+  }
+}
+
+fun ReaderChangedEvent.toChangedEventMap(): WritableMap {
+  return WritableNativeMap().apply {
+    putString("cange", change.toChangeString())
+    putMap("reader", reader.toReaderInfoMap())
+    putString("readerState", readerState.toStateString())
+    putString("readerSerialNumber", readerSerialNumber)
+  }
+}
+
+fun ReaderChangedEvent.Change.toChangeString(): String {
+  return when(this) {
+    ReaderChangedEvent.Change.ADDED -> "ADDED"
+    ReaderChangedEvent.Change.CHANGED_STATE -> "CHANGED_STATE"
+    ReaderChangedEvent.Change.BATTERY_THRESHOLD -> "BATTERY_THRESHOLD"
+    ReaderChangedEvent.Change.BATTERY_CHARGING -> "BATTERY_CHARGING"
+    ReaderChangedEvent.Change.FIRMWARE_PROGRESS -> "FIRMWARE_PROGRESS"
+    ReaderChangedEvent.Change.REMOVED -> "REMOVED"
+  }
 }

@@ -80,7 +80,7 @@ class Mappers {
 
         return .success(paymentParams)
     }
-    
+
     class func mapToDictionary(location: Location) -> NSDictionary {
         return [
             "id": location.id,
@@ -114,6 +114,24 @@ class Mappers {
             "totalMoney": Mappers.mapToDictionary(money: payment.totalMoney) ?? NSNull(),
             "updatedAt": payment.updatedAt.ISO8601Format(),
             ]
+    }
+
+    static func mapToDictionary(reader: ReaderInfo) -> NSDictionary {
+        return [
+            "batteryStatus" : reader.batteryStatus?.toMap() ?? NSNull(),
+            "cardInsertionStatus": reader.cardInsertionStatus.toName(),
+            "connectionInfo": reader.connectionInfo.toMap(),
+            "firmwareInfo" : reader.firmwareInfo?.toMap() ?? NSNull(),
+            "id": String(reader.id),
+            "isBlinkable" : reader.isBlinkable,
+            "isConnectionRetryable" : reader.isConnectionRetryable,
+            "isForgettable" : reader.isForgettable,
+            "model": reader.model.toName(),
+            "name" : reader.name,
+            "serialNumber" : reader.serialNumber ?? NSNull(),
+            "state" : reader.state.toName(),
+            "supportedCardEntryMethods" : reader.supportedInputMethods.toList()
+        ]
     }
 }
 
