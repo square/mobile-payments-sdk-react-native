@@ -118,6 +118,12 @@ export type OfflineCardPaymentDetails = {
   entryMethod: EntryMethod;
 };
 
+export type CardInputMethods = {
+  chip: Boolean;
+  contactless: Boolean;
+  swipe: Boolean;
+};
+
 export type PromptParameters = {
   additionalMethods: AdditionalPaymentMethodType[];
   mode: PromptMode;
