@@ -325,6 +325,60 @@ class MobilePaymentsSdkReactNative: RCTEventEmitter {
             paymentHandle = nil
         }
     }
+
+    @objc(isOfflineProcessingAllowed:withRejecter:)
+    func isOfflineProcessingAllowed(resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+        let paymentSettings = mobilePaymentsSDK.settingsManager.paymentSettings
+        resolve(paymentSettings.isOfflineProcessingAllowed)
+    }
+
+    @objc(getOfflineTotalStoredAmountLimit:withRejecter:)
+    func getOfflineTotalStoredAmountLimit(resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+        let paymentSettings = mobilePaymentsSDK.settingsManager.paymentSettings
+        if let limit = paymentSettings.offlineTotalStoredAmountLimit {
+            resolve(Mappers.mapToDictionary(money: limit))
+        } else {
+            resolve(NSNull())
+        }
+    }
+
+    @objc(getOfflineTransactionAmountLimit:withRejecter:)
+    func getOfflineTransactionAmountLimit(resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+        let paymentSettings = mobilePaymentsSDK.settingsManager.paymentSettings
+        if let limit = paymentSettings.offlineTransactionAmountLimit {
+            resolve(Mappers.mapToDictionary(money: limit))
+        } else {
+            resolve(NSNull())
+        }
+    }
+
+    @objc(getPayments:withRejecter:)
+    func getPayments(resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+        let offlinePaymentQueue = mobilePaymentsSDK.paymentManager.offlinePaymentQueue
+        offlinePaymentQueue.getPayments { payments, error in
+            if let error = error {
+                reject("GET_OFFLINE_PAYMENTS_FAILED", error.localizedDescription, error)
+            } else {
+                let paymentsArray = payments.map { Mappers.mapToDictionary(payment: $0) }
+                resolve(paymentsArray)
+            }
+        }
+    }
+
+    @objc(getTotalStoredPaymentAmount:withRejecter:)
+    func getTotalStoredPaymentAmount(resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+        let offlinePaymentQueue = mobilePaymentsSDK.paymentManager.offlinePaymentQueue
+        offlinePaymentQueue.getTotalStoredPaymentsAmount { moneyAmount, error in
+            if let error = error {
+                reject("GET_TOTAL_STORED_PAYMENTS_FAILED", error.localizedDescription, error)
+            } else if let moneyAmount = moneyAmount {
+                resolve(Mappers.mapToDictionary(money: moneyAmount))
+            } else {
+                //NEVER: if money is nil there was an error, so the error if will occur
+                resolve(NSNull())
+            }
+        }
+    }
 }
 
 extension MobilePaymentsSdkReactNative : AuthorizationStateObserver {

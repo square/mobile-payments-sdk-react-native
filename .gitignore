@@ -85,3 +85,6 @@ android/generated
 # Ignoring the pods folder. Make sure you run pod install
 ios/Pods/
 *.xcworkspacedata
+
+# Local properties (*.example are non-local illustations, however)
+example/android/app/app.properties

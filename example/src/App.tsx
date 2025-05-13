@@ -3,6 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import HomeView from './Screens/HomeScreen';
 import PermissionsScreen from './Screens/PermissionsScreen';
 import { StatusBar } from 'react-native';
+import TestScreen from './Screens/TestScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -22,6 +23,7 @@ export default function App() {
             component={PermissionsScreen}
             options={{ headerShown: false }}
           />
+          <Stack.Screen name="Test" component={TestScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </>

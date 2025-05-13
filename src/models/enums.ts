@@ -188,17 +188,17 @@ export enum OfflinePaymentQueueError {
   UNSUPPORTED_SANDBOX_ENVIRONMENT,
 }
 
-export enum OfflineStatus {
-  FAILED_TO_PROCESS,
-  FAILED_TO_UPLOAD,
-  PROCESSED,
+export enum OfflinePaymentStatus {
   QUEUED,
-  UNKNOWN,
   UPLOADED,
+  FAILED_TO_UPLOAD,
+  FAILED_TO_PROCESS,
+  PROCESSED,
+  UNKNOWN,
 }
 
 export enum ProcessingMode {
-  AUTO_DETECT,
-  OFFLINE_ONLY,
-  ONLINE_ONLY,
+  AUTO_DETECT = 0,
+  OFFLINE_ONLY = 1,
+  ONLINE_ONLY = 2,
 }

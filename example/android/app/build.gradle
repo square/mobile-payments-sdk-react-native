@@ -2,6 +2,15 @@ apply plugin: "com.android.application"
 apply plugin: "org.jetbrains.kotlin.android"
 apply plugin: "com.facebook.react"
 
+/* Load custom properties for the app, if any */
+Properties localProperties = new Properties()
+if (project.file("app.properties").exists()) {
+  localProperties.load(project.file('app.properties').newDataInputStream())
+  project.logger.warn("FKA3: localProps has " + localProperties["APP_ID"])
+} else {
+  throw new GradleException("Please create app.properties with APP_ID, LOCATION_ID, and ACCESS_TOKEN")
+}
+
 /**
  * This is the configuration block to customize your React Native Android app.
  * By default you don't need to apply any configuration, just uncomment the lines you need.
@@ -84,6 +93,9 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
+        buildConfigField "String", "APP_ID", localProperties["APP_ID"]
+        buildConfigField "String", "LOCATION_ID", localProperties["LOCATION_ID"]
+        buildConfigField "String", "ACCESS_TOKEN", localProperties["ACCESS_TOKEN"]
     }
     signingConfigs {
         debug {
