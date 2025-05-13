@@ -1,5 +1,6 @@
 package com.mobilepaymentssdkreactnative
 
+import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContext
@@ -204,6 +205,57 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
         promise.reject("PAYMENT_CANCEL_ERROR", "No payment available to cancel.")
     }
     paymentHandle = null
+  }
+
+  @ReactMethod
+  fun isOfflineProcessingAllowed(promise: Promise) {
+    val paymentSettings = MobilePaymentsSdk.settingsManager().getPaymentSettings()
+    promise.resolve(paymentSettings.isOfflineProcessingAllowed)
+  }
+
+  @ReactMethod
+  fun getOfflineTotalStoredAmountLimit(promise: Promise) {
+    val paymentSettings = MobilePaymentsSdk.settingsManager().getPaymentSettings()
+    promise.resolve(paymentSettings.offlineTotalStoredAmountLimit?.toMoneyMap())
+  }
+
+  @ReactMethod
+  fun getOfflineTransactionAmountLimit(promise: Promise) {
+    val paymentSettings = MobilePaymentsSdk.settingsManager().getPaymentSettings()
+    promise.resolve(paymentSettings.offlineTransactionAmountLimit?.toMoneyMap())
+  }
+
+  @ReactMethod
+  fun getPayments(promise: Promise) {
+    val offlinePaymentQueue = MobilePaymentsSdk.paymentManager().getOfflinePaymentQueue()
+    offlinePaymentQueue.getPayments { result ->
+      when (result) {
+        is Success -> {
+          val paymentList = Arguments.createArray()
+          result.value.forEach { payment ->
+            paymentList.pushMap(payment.toPaymentMap())
+          }
+          promise.resolve(paymentList)
+        }
+        is Failure -> {
+          promise.reject("GET_OFFLINE_PAYMENTS_FAILED", result.errorMessage, result.toErrorMap())
+        }
+      }
+    }
+  }
+
+  @ReactMethod
+  fun getTotalStoredPaymentAmount(promise: Promise) {
+    val offlinePaymentQueue = MobilePaymentsSdk.paymentManager().getOfflinePaymentQueue()
+    val result = offlinePaymentQueue.getTotalStoredPaymentAmount()
+    when (result) {
+      is Success -> {
+        promise.resolve(result.value.toMoneyMap())
+      }
+      is Failure -> {
+        promise.reject("GET_TOTAL_STORED_PAYMENTS_FAILED", result.errorMessage, result.toErrorMap())
+      }
+    }
   }
 
   private fun emitEvent(reactContext: ReactContext, eventName: String, map: WritableMap) {

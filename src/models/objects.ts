@@ -7,6 +7,7 @@ import type {
   CurrencyCode,
   DelayAction,
   EntryMethod,
+  OfflinePaymentStatus,
   PaymentStatus,
   PromptMode,
   ReaderBatteryLevel,
@@ -47,6 +48,24 @@ export type OnlinePayment = {
   updatedAt: Date;
 };
 
+export type OffLinePayment = {
+  amountMoney: Money;
+  appFeeMoney: Money;
+  cardDetails: OfflineCardPaymentDetails;
+  createdAt: Date;
+  id: String;
+  localId: String;
+  locationId: String;
+  orderId: String;
+  referenceId: String;
+  status: OfflinePaymentStatus;
+  sourceType: SourceType;
+  tipMoney: Money;
+  totalMoney: Money;
+  updatedAt: Date;
+  uploadedAt: Date;
+};
+
 export type PaymentParameters = {
   // Required
   amountMoney: Money;
@@ -61,6 +80,7 @@ export type PaymentParameters = {
   delayAction?: DelayAction;
   delayDuration?: Number;
   locationId?: String;
+  processingMode?: Number;
   note?: String;
   orderId?: String;
   referenceId?: String;
@@ -87,6 +107,13 @@ export type CardPaymentDetails = {
   card: Card;
   entryMethod: EntryMethod;
   status: CardPaymentStatus;
+};
+
+export type OfflineCardPaymentDetails = {
+  applicationIdentifier: String;
+  applicationName: String;
+  card: Card;
+  entryMethod: EntryMethod;
 };
 
 export type CardInputMethods = {

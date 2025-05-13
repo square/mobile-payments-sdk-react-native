@@ -249,3 +249,62 @@ console.log('Device supports Tap to Pay:', isCapable);
 ```
 
 > **Note:** These methods are only available on iOS. Calling them on Android will result in an error.
+
+## 📡 Offline Payments (Beta)
+
+The Mobile Payments SDK supports taking payments offline. This is currently in **Beta** and requires seller onboarding.
+
+### 🔧 New Methods
+
+You can manage offline payments using the following methods in the `PaymentSettings` and `OfflinePaymentQueue` namespaces.
+
+#### PaymentSettings
+
+```ts
+import { PaymentSettings } from 'mobile-payments-sdk-react-native';
+
+const isAllowed = await PaymentSettings.isOfflineProcessingAllowed();
+
+const totalLimit = await PaymentSettings.getOfflineTotalStoredAmountLimit();
+
+const transactionLimit = await PaymentSettings.getOfflineTransactionAmountLimit();
+```
+
+- `isOfflineProcessingAllowed()` – Checks if the current seller can take offline payments.
+- `getOfflineTotalStoredAmountLimit()` – Gets the max total value of offline payments that can be stored.
+- `getOfflineTransactionAmountLimit()` – Gets the max amount per offline transaction.
+
+#### OfflinePaymentQueue
+
+```ts
+import { OfflinePaymentQueue } from 'mobile-payments-sdk-react-native';
+
+const pendingPayments = await OfflinePaymentQueue.getPayments();
+
+const totalStoredAmount = await OfflinePaymentQueue.getTotalStoredPaymentAmount();
+```
+
+- `getPayments()` – Returns a list of offline payments currently stored.
+- `getTotalStoredPaymentAmount()` – Returns the total value of stored offline payments.
+
+---
+
+### 🧾 Seller Onboarding
+
+> Offline Payments support is **Beta-only** and requires seller opt-in.
+
+To onboard a seller:
+
+1. Send an email to: **developerbetas@squareup.com**  
+2. Include the following:
+   - The seller's **business name**
+   - The seller's **email address** (owner/admin of their Square account)
+   - Your **application ID**
+
+Square will contact the seller and provide an onboarding form. Once completed, Square will notify you when the seller is ready to process offline payments.
+
+> ℹ️ You can always check whether offline payments are allowed by calling `PaymentSettings.isOfflineProcessingAllowed()`.
+
+If you try to process an offline payment for a seller who hasn’t been onboarded, the SDK will return a **USAGE_ERROR**.
+
+For more, visit the [Square Android Offline Payments docs](https://developer.squareup.com/docs/mobile-payments-sdk/android/offline-payments#seller-onboarding).
