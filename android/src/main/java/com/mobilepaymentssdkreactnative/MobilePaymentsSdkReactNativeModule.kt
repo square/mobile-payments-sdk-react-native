@@ -312,7 +312,7 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
     val readerManager = MobilePaymentsSdk.readerManager()
     val ref = readerManager.setReaderChangedCallback{
       changeEvent ->
-        emitEvent(reactContext, "ReaderChanged-${refId}", changeEvent.toChangedEventMap())
+        emitEvent(reactContext, "ReaderChanged", changeEvent.toChangedEventMap())
     }
     readerChangedCallbacks.put(refId, ref)
     promise.resolve(refId)

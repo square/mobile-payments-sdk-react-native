@@ -42,21 +42,15 @@ const removeReaderChangedCallback = (refId: String): Promise<void> => {
 export const setReaderChangedCallback = (
   callback: (event: ReaderChangedEvent) => void
 ): (() => void) => {
-  const refId = generateUUID();
-  addReaderChangedCallback(refId);
   const subscription = readerEventEmitter.addListener(
-    //FIXME: use only ReaderChanged, the refId only to map thw listeners in native code
-    Platform.select({
-      ios: 'ReaderChanged', //ios React Emitter not support dynamic
-      android: `ReaderChanged-${refId}`,
-    }) ?? 'ReaderChanged',
+    'ReaderChanged',
     (changedEvent) => {
       callback(changedEvent);
     }
   );
   return () => {
     subscription.remove();
-    removeReaderChangedCallback(refId);
+    removeReaderChangedCallback('ReaderChanged');
   };
 };
 
