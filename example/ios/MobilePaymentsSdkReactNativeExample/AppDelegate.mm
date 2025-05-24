@@ -6,7 +6,8 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-  [SQMPMobilePaymentsSDK initializeWithApplicationLaunchOptions:launchOptions squareApplicationID:[Config applicationID]];
+  NSString *APP_ID = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"APP_ID"];
+  [SQMPMobilePaymentsSDK initializeWithApplicationLaunchOptions:launchOptions squareApplicationID: APP_ID];
  
 
   self.moduleName = @"MobilePaymentsSdkReactNativeExample";

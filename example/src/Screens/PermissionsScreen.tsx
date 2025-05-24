@@ -28,6 +28,8 @@ import {
   RESULTS,
 } from 'react-native-permissions';
 import LoadingButton from '../components/LoadingButton';
+import BuildConfig from 'react-native-build-config';
+
 
 export const requestBluetooth = () => {
   requestMultiple(
@@ -154,8 +156,8 @@ const PermissionsView = () => {
     try {
       // Add your own access token and location ID from developer.squareup.com
       let auth = await authorize(
-        'MOBILE_PAYMENT_SDK_ACCESS_TOKEN',
-        'MOBILE_PAYMENT_SDK_LOCATION_ID'
+        BuildConfig.ACCESS_TOKEN,
+        BuildConfig.LOCATION_ID
       );
       console.log(auth);
       let authorizedLocation = await getAuthorizedLocation();

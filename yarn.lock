@@ -9751,6 +9751,7 @@ __metadata:
     react: 18.3.1
     react-native: 0.75.3
     react-native-bouncy-checkbox: ^4.1.2
+    react-native-build-config: ^0.3.2
     react-native-builder-bob: ^0.30.2
     react-native-permissions: ^3.6.1
     react-native-safe-area-context: ^4.11.0
@@ -10941,6 +10942,13 @@ __metadata:
   dependencies:
     "@freakycoder/react-native-bounceable": ^1.0.3
   checksum: d197e60db0ee7909f62be963b36ca5e1fd7cc164367e00a43c57d11382dba3b8d728fcb20d805a4768c168167107135ec88559bc239553926947c9386f82b71f
+  languageName: node
+  linkType: hard
+
+"react-native-build-config@npm:^0.3.2":
+  version: 0.3.2
+  resolution: "react-native-build-config@npm:0.3.2"
+  checksum: d2095580be7e6662c968bce5d64cc6524b7f34380999756fb9d4ad24a34e3566b203f93e9bc63bd1e0213d28e1e76dae0c0f39b0b65c55528a876e96dd6c5810
   languageName: node
   linkType: hard
 
