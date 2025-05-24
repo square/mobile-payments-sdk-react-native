@@ -187,9 +187,5 @@
     "type": "module-legacy",
     "languages": "kotlin-swift",
     "version": "0.41.2"
-  },
-  "dependencies": {
-    "react-native-buildconfig": "^1.0.5",
-    "react-native-uuid": "^2.0.3"
   }
 }
