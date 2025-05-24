@@ -21,7 +21,6 @@ import com.squareup.sdk.mobilepayments.payment.PaymentHandle.CancelResult.CANCEL
 import com.squareup.sdk.mobilepayments.payment.PaymentHandle.CancelResult.NOT_CANCELABLE
 import com.squareup.sdk.mobilepayments.payment.PaymentHandle.CancelResult.NO_PAYMENT_IN_PROGRESS
 
-import android.util.Log
 
 class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicationContext) :
   ReactContextBaseJavaModule(reactContext) {
