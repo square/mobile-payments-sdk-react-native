@@ -42,15 +42,20 @@ const removeReaderChangedCallback = (refId: String): Promise<void> => {
 export const setReaderChangedCallback = (
   callback: (event: ReaderChangedEvent) => void
 ): (() => void) => {
+  const refId = generateUUID();
+  addReaderChangedCallback(refId);
   const subscription = readerEventEmitter.addListener(
-    'ReaderChanged',
+    Platform.select({
+      ios: 'ReaderChanged', //ios React Emitter not support dynamic
+      android: `ReaderChanged-${refId}`,
+    }) ?? 'ReaderChanged',
     (changedEvent) => {
       callback(changedEvent);
     }
   );
   return () => {
     subscription.remove();
-    removeReaderChangedCallback('ReaderChanged');
+    removeReaderChangedCallback(refId);
   };
 };
 
@@ -103,3 +108,7 @@ export namespace TapToPaySettings {
     })!();
   };
 }
+
+const generateUUID = (): String => {
+  return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
+};
