@@ -68,5 +68,11 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>LOCATION_ID</key>
+	<string>REPLACE ME!</string>
+	<key>ACCESS_TOKEN</key>
+	<string>REPLACE ME!</string>
+	<key>APP_ID</key>
+	<string>REPLACE ME!</string>
 </dict>
 </plist>

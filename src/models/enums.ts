@@ -128,6 +128,13 @@ export enum ReaderChange {
   FIRMWARE_UPDATE_DID_FAIL,
   FIRMWARE_UPDATE_PERCENT_DID_CHANGE,
   STATE_DID_CHANGE,
+  //--android
+  ADDED,
+  CHANGED_STATE,
+  BATTERY_THRESHOLD,
+  BATTERY_CHARGING,
+  FIRMWARE_PROGRESS,
+  REMOVED,
 }
 
 export enum ReaderConnectionFailureRecoverySuggestion {
@@ -135,6 +142,8 @@ export enum ReaderConnectionFailureRecoverySuggestion {
   CONTACT_SUPPORT,
   NO_SUGGESTION,
   RETRY,
+  REVIEW_TAP_TO_PAY_GUIDELINES,
+  ENABLE_PASSCODE_TO_USE_TAP_TO_PAY,
 }
 
 export enum ReaderConnectionState {
@@ -156,6 +165,7 @@ export enum ReaderModel {
   EMBEDDED,
   MAGSTRIPE,
   STAND,
+  TAP_TO_PAY,
   UNKNOWN,
 }
 
@@ -169,6 +179,7 @@ export enum ReaderConnectionFailureReason {
   READER_TIMEOUT,
   REVOKED_BY_DEVICE,
   SERVER_ERROR,
+  TAP_TO_PAY_ERROR,
   UNKNOWN,
 }
 
@@ -179,6 +190,13 @@ export enum ReaderState {
   FAILED_TO_CONNECT,
   READY,
   UPDATING_FIRMWARE,
+}
+
+export enum CardEntryMethod {
+  CHIP,
+  EMV,
+  CONTACTLESS,
+  SWIPED,
 }
 
 // Offline Mode Enums

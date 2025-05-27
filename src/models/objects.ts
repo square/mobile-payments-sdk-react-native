@@ -2,6 +2,7 @@ import type {
   AdditionalPaymentMethodType,
   CardBrand,
   CardCoBrand,
+  CardEntryMethod,
   CardInsertionStatus,
   CardPaymentStatus,
   CurrencyCode,
@@ -11,6 +12,7 @@ import type {
   PaymentStatus,
   PromptMode,
   ReaderBatteryLevel,
+  ReaderChange,
   ReaderConnectionFailureReason,
   ReaderConnectionFailureRecoverySuggestion,
   ReaderConnectionState,
@@ -143,8 +145,8 @@ export type Payment = {
 
 export type ReaderBatteryStatus = {
   isCharging: Boolean;
-  level: ReaderBatteryLevel;
-  percentage: Number;
+  level?: ReaderBatteryLevel;
+  percent: Number;
 };
 
 export type ReaderConnectionFailureInfo = {
@@ -155,28 +157,38 @@ export type ReaderConnectionFailureInfo = {
 };
 
 export type ReaderConnectionInfo = {
-  failureInfo: ReaderConnectionFailureInfo;
+  failureInfo?: ReaderConnectionFailureInfo;
   state: ReaderConnectionState;
 };
 
 export type ReaderFirmwareInfo = {
-  failureReason: String;
+  failureReason?: String;
   updatePercentage: Number;
   version: String;
 };
 
 export type ReaderInfo = {
-  batteryStatus: ReaderBatteryStatus;
-  cardInsertionStatus: CardInsertionStatus;
-  connectionInfo: ReaderConnectionInfo;
-  firmwareInfo: ReaderFirmwareInfo;
-  id: Number;
-  isBlinkable: Boolean;
-  isConnectionRetryable: Boolean;
-  isForgettable: Boolean;
+  id: String;
   model: ReaderModel;
-  name: String;
-  serialNumber?: String;
   state: ReaderState;
-  supportedInputMethods: CardInputMethods[];
+  serialNumber?: String;
+  name: String;
+  batteryStatus?: ReaderBatteryStatus;
+  firmwareVersion?: String;
+  firmwarePercent?: Number;
+  supportedCardEntryMethods: CardEntryMethod[];
+  isForgettable: Boolean;
+  isBlinkable: Boolean;
+
+  cardInsertionStatus?: CardInsertionStatus;
+  connectionInfo?: ReaderConnectionInfo;
+  firmwareInfo?: ReaderFirmwareInfo;
+  isConnectionRetryable?: Boolean;
+};
+
+export type ReaderChangedEvent = {
+  change: ReaderChange;
+  reader: ReaderInfo;
+  readerState: ReaderState;
+  readerSerialNumber?: String;
 };

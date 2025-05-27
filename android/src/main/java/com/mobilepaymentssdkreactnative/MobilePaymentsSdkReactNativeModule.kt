@@ -11,6 +11,7 @@ import com.facebook.react.bridge.WritableMap
 import com.facebook.react.bridge.WritableNativeMap
 import com.facebook.react.modules.core.DeviceEventManagerModule
 import com.squareup.sdk.mobilepayments.MobilePaymentsSdk
+import com.squareup.sdk.mobilepayments.cardreader.PairingHandle
 import com.squareup.sdk.mobilepayments.core.CallbackReference
 import com.squareup.sdk.mobilepayments.core.Result.Failure
 import com.squareup.sdk.mobilepayments.core.Result.Success
@@ -20,11 +21,14 @@ import com.squareup.sdk.mobilepayments.payment.PaymentHandle.CancelResult.CANCEL
 import com.squareup.sdk.mobilepayments.payment.PaymentHandle.CancelResult.NOT_CANCELABLE
 import com.squareup.sdk.mobilepayments.payment.PaymentHandle.CancelResult.NO_PAYMENT_IN_PROGRESS
 
+
 class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicationContext) :
   ReactContextBaseJavaModule(reactContext) {
 
   private var paymentHandle: PaymentHandle? = null
   private var authStateCallback: CallbackReference? = null
+  private var readerChangedCallbacks = mutableMapOf<String, CallbackReference>();
+  private var pairingHandler: PairingHandle? = null
 
   override fun getName(): String {
     return NAME
@@ -257,6 +261,104 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
       }
     }
   }
+
+  @ReactMethod
+  fun getReaders(promise: Promise) {
+    val readerManager = MobilePaymentsSdk.readerManager()
+    val readers = readerManager.getReaders()
+    val readerList = Arguments.createArray()
+    readers.forEach {
+      readerList.pushMap(it.toReaderInfoMap())
+    }
+    promise.resolve(readerList)
+  }
+
+  @ReactMethod
+  fun getReader(id: String, promise: Promise) {
+    val readerManager = MobilePaymentsSdk.readerManager()
+    val reader = readerManager.getReader(id)
+    val readerMap = reader?.toReaderInfoMap()
+    promise.resolve(readerMap)
+  }
+
+  @ReactMethod
+  fun forget(id: String, promise: Promise) {
+    val readerManager = MobilePaymentsSdk.readerManager()
+    val reader = readerManager.getReader(id)
+    if (reader != null)
+      readerManager.forget(reader)
+    promise.resolve(null)
+  }
+
+  @ReactMethod
+  fun blink(id: String, promise: Promise) {
+    val readerManager = MobilePaymentsSdk.readerManager()
+    val reader = readerManager.getReader(id)
+    if (reader != null)
+      readerManager.blink(reader)
+    promise.resolve(null)
+  }
+
+  @ReactMethod
+  fun isPairingInProgress(promise: Promise) {
+    val readerManager = MobilePaymentsSdk.readerManager()
+    promise.resolve(readerManager.isPairingInProgress)
+  }
+
+  // setReaderChangedCallback
+  @ReactMethod
+  fun addReaderChangedCallback(refId: String, promise: Promise) {
+    val readerManager = MobilePaymentsSdk.readerManager()
+    val ref = readerManager.setReaderChangedCallback{
+      changeEvent ->
+        emitEvent(reactContext, "ReaderChanged-${refId}", changeEvent.toChangedEventMap())
+    }
+    readerChangedCallbacks.put(refId, ref)
+    promise.resolve(refId)
+  }
+
+  @ReactMethod
+  fun removeReaderChangedCallback(refId: String, promise: Promise) {
+    val ref = readerChangedCallbacks.get(refId)
+    if (ref != null) {
+      ref.clear()
+      readerChangedCallbacks.remove(refId)
+    }
+    promise.resolve(null)
+  }
+  // ---
+
+  // pairReader
+  @ReactMethod
+  private fun pairReader(promise: Promise) {
+    if(pairingHandler != null) {
+      promise.reject("PAIRING_IN_PROGRESS", "A pairing is already in progress")
+    }
+    val readerManager = MobilePaymentsSdk.readerManager()
+    pairingHandler = readerManager.pairReader {
+      result ->
+        when(result) {
+          is Success -> {
+            pairingHandler = null;
+            promise.resolve(result.value)
+          }
+          is Failure -> {
+            pairingHandler = null;
+            promise.reject("PAIRING_ERROR", result.errorMessage, result.toErrorMap())
+          }
+        }
+    }
+  }
+
+  @ReactMethod
+  private fun stopPairing(promise: Promise) {
+    if(pairingHandler != null) {
+      pairingHandler?.stop()
+      pairingHandler = null;
+    }
+    promise.resolve(null)
+  }
+  // ---
 
   private fun emitEvent(reactContext: ReactContext, eventName: String, map: WritableMap) {
     reactContext
