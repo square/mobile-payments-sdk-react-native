@@ -3,9 +3,6 @@ import { NavigationContainer } from '@react-navigation/native';
 import HomeView from './Screens/HomeScreen';
 import PermissionsScreen from './Screens/PermissionsScreen';
 import { StatusBar } from 'react-native';
-import TestScreen from './Screens/TestScreen';
-import ReaderSettingsScreen from './Screens/ReaderSettingsScreen';
-import ReaderDetailsScreen from './Screens/ReaderDetailsScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -25,9 +22,6 @@ export default function App() {
             component={PermissionsScreen}
             options={{ headerShown: false }}
           />
-          <Stack.Screen name="Test" component={TestScreen} />
-		  <Stack.Screen name="ReaderSettings" component={ReaderSettingsScreen} />
-          <Stack.Screen name="ReaderDetails" component={ReaderDetailsScreen} />
      
         </Stack.Navigator>
       </NavigationContainer>

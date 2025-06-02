@@ -62,7 +62,8 @@ fun ReadableMap.readPaymentParameters(): PaymentParameters {
   val teamMemberId = getString("teamMemberId")
   val tipMoney = convertToMoney(getMap("tipMoney"))
 
-  val builder = PaymentParameters.Builder(amountMoney, idempotencyKey)
+
+  val builder = PaymentParameters.Builder(amountMoney, processingMode)
   acceptPartialAuthorization?.let { builder.acceptPartialAuthorization(it) }
   appFeeMoney?.let { builder.appFeeMoney(it) }
   autocomplete?.let { builder.autocomplete(it) }
@@ -72,11 +73,11 @@ fun ReadableMap.readPaymentParameters(): PaymentParameters {
   locationId?.let { builder.locationId(it) }
   note?.let { builder.note(it) }
   orderId?.let { builder.orderId(it) }
-  processingMode?.let { builder.processingMode(it) }
   referenceId?.let { builder.referenceId(it) }
   statementDescription?.let { builder.statementDescription(it) }
   teamMemberId?.let { builder.teamMemberId(it) }
   tipMoney?.let { builder.tipMoney(it) }
+  idempotencyKey?.let { builder.paymentAttemptId(it) }
 
   return builder.build()
 }
@@ -123,7 +124,7 @@ fun convertToProcessingMode(value: Int?) = when (value) {
   0 -> ProcessingMode.AUTO_DETECT
   1 -> ProcessingMode.OFFLINE_ONLY
   2 -> ProcessingMode.ONLINE_ONLY
-  else -> null
+  else -> ProcessingMode.AUTO_DETECT
 }
 
 fun convertToPromptMode(value: Int?) = when (value) {
@@ -381,7 +382,6 @@ fun ReaderChangedEvent.toChangedEventMap(): WritableMap {
   return WritableNativeMap().apply {
     putString("cange", change.toChangeString())
     putMap("reader", reader.toReaderInfoMap())
-    putString("readerState", readerState.toStateString())
     putString("readerSerialNumber", readerSerialNumber)
   }
 }
