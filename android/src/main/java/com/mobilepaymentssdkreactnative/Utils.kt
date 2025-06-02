@@ -42,9 +42,9 @@ import java.util.TimeZone
 fun ReadableMap.readPaymentParameters(): PaymentParameters {
   // Required fields
   val amountMoney = convertToMoney(getMap("amountMoney"))
-  val idempotencyKey = getString("idempotencyKey")
+  val processingMode = convertToProcessingMode(getIntOrNull("processingMode"))
   requireNotNull(amountMoney) { "Amount money is required" }
-  requireNotNull(idempotencyKey) { "Idempotency key is required" }
+  requireNotNull(processingMode) { "processingMode is required" }
 
   // Optional fields
   val acceptPartialAuthorization = getBooleanOrNull("acceptPartialAuthorization")
@@ -56,12 +56,12 @@ fun ReadableMap.readPaymentParameters(): PaymentParameters {
   val locationId = getString("locationId")
   val note = getString("note")
   val orderId = getString("orderId")
-  val processingMode = convertToProcessingMode(getIntOrNull("processingMode"))
   val referenceId = getString("referenceId")
   val statementDescription = getString("statementDescription")
   val teamMemberId = getString("teamMemberId")
   val tipMoney = convertToMoney(getMap("tipMoney"))
-
+  val idempotencyKey = getString("idempotencyKey")
+  val paymentAttemptId = getString("paymentAttemptId")
 
   val builder = PaymentParameters.Builder(amountMoney, processingMode)
   acceptPartialAuthorization?.let { builder.acceptPartialAuthorization(it) }
@@ -77,7 +77,8 @@ fun ReadableMap.readPaymentParameters(): PaymentParameters {
   statementDescription?.let { builder.statementDescription(it) }
   teamMemberId?.let { builder.teamMemberId(it) }
   tipMoney?.let { builder.tipMoney(it) }
-  idempotencyKey?.let { builder.paymentAttemptId(it) }
+  idempotencyKey?.let { builder.idempotencyKey(it) }
+  paymentAttemptId?.let { builder.paymentAttemptId(it) }
 
   return builder.build()
 }
@@ -329,6 +330,7 @@ fun ReaderInfo.toReaderInfoMap(): WritableMap {
     putString("id", id)
     putString("model", model.toModelString())
     putString("state", state.toStateString())
+    putString("status", status.toStatusString())
     putString("serialNumber", serialNumber)
     putString("name", name)
     putMap("batteryStatus", batteryStatus?.toBatteryStatusMap())
@@ -378,9 +380,20 @@ fun ReaderInfo.State.toStateString(): String {
   }
 }
 
+fun ReaderInfo.Status.toStatusString(): String {
+  return when (this) {
+    is ReaderInfo.Status.Ready -> "READY"
+    is ReaderInfo.Status.ConnectingToDevice -> "CONNECTING_TO_DEVICE"
+    is ReaderInfo.Status.ConnectingToSquare -> "CONNECTING_TO_SQUARE"
+    is ReaderInfo.Status.Faulty -> "FAULTY"
+    is ReaderInfo.Status.ReaderUnavailable -> "READER_UNAVAILABLE_${this.reason.name}"
+  }
+}
+
+
 fun ReaderChangedEvent.toChangedEventMap(): WritableMap {
   return WritableNativeMap().apply {
-    putString("cange", change.toChangeString())
+    putString("change", change.toChangeString())
     putMap("reader", reader.toReaderInfoMap())
     putString("readerSerialNumber", readerSerialNumber)
   }
