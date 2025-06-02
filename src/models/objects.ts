@@ -91,8 +91,8 @@ export type PaymentParameters = {
   teamMemberId?: String;
   tipMoney?: Money;
   totalMoney?: Money;
-  idempotencyKey: String;
-  paymentAttemptId: String;
+  idempotencyKey?: String;
+  paymentAttemptId?: String;
 };
 
 export type Card = {
