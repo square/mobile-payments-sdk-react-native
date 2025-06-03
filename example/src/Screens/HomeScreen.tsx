@@ -114,18 +114,6 @@ const HomeView = () => {
           {isMockReaderPresented ? 'Hide Mock Reader' : 'Show Mock Reader'}
         </Text>
       </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.mockButton}
-        onPress={() => navigation.navigate('Test')}
-      >
-        <Text style={styles.mockReaderText}>{'Go offline test'}</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.mockButton}
-        onPress={() => navigation.navigate('ReaderSettings')}
-      >
-        <Text style={styles.mockReaderText}>{'ReaderSettings'}</Text>
-      </TouchableOpacity>
     </SafeAreaView>
   );
 };

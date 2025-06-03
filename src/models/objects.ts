@@ -16,8 +16,10 @@ import type {
   ReaderConnectionFailureReason,
   ReaderConnectionFailureRecoverySuggestion,
   ReaderConnectionState,
+  ReaderInternalStatus,
   ReaderModel,
   ReaderState,
+  ReaderUnavailableReason,
   SourceType,
 } from './enums';
 
@@ -71,7 +73,7 @@ export type OffLinePayment = {
 export type PaymentParameters = {
   // Required
   amountMoney: Money;
-  idempotencyKey: String;
+  processingMode: Number;
   // Optional. For defaults, check:
   // Android: https://square.github.io/mobile-payments-sdk-android/-mobile%20-payments%20-s-d-k%20-android%20-technical%20-reference/com.squareup.sdk.mobilepayments.payment/-payment-parameters/index.html
   // iOS: https://square.github.io/mobile-payments-sdk-ios/docs/documentation/mobilepaymentssdkapi/paymentparameters/
@@ -82,7 +84,6 @@ export type PaymentParameters = {
   delayAction?: DelayAction;
   delayDuration?: Number;
   locationId?: String;
-  processingMode?: Number;
   note?: String;
   orderId?: String;
   referenceId?: String;
@@ -90,6 +91,8 @@ export type PaymentParameters = {
   teamMemberId?: String;
   tipMoney?: Money;
   totalMoney?: Money;
+  idempotencyKey?: String;
+  paymentAttemptId?: String;
 };
 
 export type Card = {
@@ -167,10 +170,16 @@ export type ReaderFirmwareInfo = {
   version: String;
 };
 
+export type ReaderStatus = {
+  status: ReaderInternalStatus;
+  readerUnavailableReason?: ReaderUnavailableReason;
+};
+
 export type ReaderInfo = {
   id: String;
   model: ReaderModel;
   state: ReaderState;
+  status: ReaderStatus;
   serialNumber?: String;
   name: String;
   batteryStatus?: ReaderBatteryStatus;

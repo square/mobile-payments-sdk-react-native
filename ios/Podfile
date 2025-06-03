@@ -6,7 +6,7 @@ target 'RNMobilePaymentSDK' do
   use_frameworks!
 
   # Pods for RNMobilePaymentSDK
-  pod "SquareMobilePaymentsSDK", "~> 2.1.0"
+  pod "SquareMobilePaymentsSDK", "~> 2.2.2"
   target 'RNMobilePaymentSDKTests' do
     inherit! :search_paths
     # Pods for testing
