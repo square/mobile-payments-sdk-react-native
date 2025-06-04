@@ -7,11 +7,11 @@ PODS:
   - hermes-engine (0.75.3):
     - hermes-engine/Pre-built (= 0.75.3)
   - hermes-engine/Pre-built (0.75.3)
-  - mobile-payments-sdk-react-native (2025.2.2):
+  - mobile-payments-sdk-react-native (2025.6.1):
     - DoubleConversion
     - glog
     - hermes-engine
-    - MockReaderUI (~> 2.1.0)
+    - MockReaderUI (~> 2.2.3)
     - RCT-Folly (= 2024.01.01.00)
     - RCTRequired
     - RCTTypeSafety
@@ -28,9 +28,9 @@ PODS:
     - ReactCodegen
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
-    - SquareMobilePaymentsSDK (~> 2.1.0)
+    - SquareMobilePaymentsSDK (~> 2.2.3)
     - Yoga
-  - MockReaderUI (2.1.0)
+  - MockReaderUI (2.2.3)
   - Permission-BluetoothPeripheral (3.10.1):
     - RNPermissions
   - Permission-LocationAccuracy (3.10.1):
@@ -1581,7 +1581,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - Yoga
   - SocketRocket (0.7.0)
-  - SquareMobilePaymentsSDK (2.1.0)
+  - SquareMobilePaymentsSDK (2.2.3)
   - Yoga (0.0.0)
 
 DEPENDENCIES:
@@ -1823,8 +1823,8 @@ SPEC CHECKSUMS:
   fmt: 4c2741a687cc09f0634a2e2c72a838b99f1ff120
   glog: 69ef571f3de08433d766d614c73a9838a06bf7eb
   hermes-engine: 8d2103d6c0176779aea4e25df6bb1410f9946680
-  mobile-payments-sdk-react-native: 700d715727920468e9cb1af577b94d6b678f14e5
-  MockReaderUI: 141fe6bb56f63d22e375800ee6a5c5da69ffb55a
+  mobile-payments-sdk-react-native: 5b23ebe5ea5fe3e91f64a7fcd596e002db06fdef
+  MockReaderUI: d88d35cb4926b38425c2ba9fa3ef11a4aaf39f21
   Permission-BluetoothPeripheral: 34ab829f159c6cf400c57bac05f5ba1b0af7a86e
   Permission-LocationAccuracy: 30c5421911024b28d8916db5cbd728097da54434
   Permission-LocationAlways: af165dee8a5a5888df6764f9f6ba98b112893709
@@ -1891,9 +1891,9 @@ SPEC CHECKSUMS:
   RNScreens: 35bb8e81aeccf111baa0ea01a54231390dbbcfd9
   RNVectorIcons: 182892e7d1a2f27b52d3c627eca5d2665a22ee28
   SocketRocket: abac6f5de4d4d62d24e11868d7a2f427e0ef940d
-  SquareMobilePaymentsSDK: b437afc89530142af80ed818f4db02e07c47457c
+  SquareMobilePaymentsSDK: 698333088d7200bba3e7991121ba245112390651
   Yoga: 4ef80d96a5534f0e01b3055f17d1e19a9fc61b63
 
-PODFILE CHECKSUM: 439764333dadb7461aea4b653e55d92f832f43a0
+PODFILE CHECKSUM: 81d2f9e3393262e2bc7a99478a8e3a6741f0482e
 
 COCOAPODS: 1.16.2

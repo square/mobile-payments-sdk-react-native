@@ -12,14 +12,13 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		284D5646CA70F0F108B69F7F /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 2D836B28FA8B57D7645367CD /* PrivacyInfo.xcprivacy */; };
-		28E754D50BE8A4007B5AF3C3 /* libPods-MobilePaymentsSdkReactNativeExample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DCACB8F33CDC322A6C60F78 /* libPods-MobilePaymentsSdkReactNativeExample.a */; };
+		51020FEC579777DE4F21EAC5 /* libPods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D30A649CCF0A90BF84256D98 /* libPods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests.a */; };
 		54EC517F2D35EEB00057F107 /* Config.m in Sources */ = {isa = PBXBuildFile; fileRef = 54EC517E2D35EEB00057F107 /* Config.m */; };
+		76609350658068AD83AAC1BE /* libPods-MobilePaymentsSdkReactNativeExample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C2E96D599ED83A7F7AC20C63 /* libPods-MobilePaymentsSdkReactNativeExample.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		A1682D0D2CBE8D470011933F /* libmobile-payments-sdk-react-native.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A1682D0C2CBE8D470011933F /* libmobile-payments-sdk-react-native.a */; };
 		A1682D162CBE90620011933F /* SquareMobilePaymentsSDK.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1682D152CBE90620011933F /* SquareMobilePaymentsSDK.xcframework */; };
 		A1682D172CBE90620011933F /* SquareMobilePaymentsSDK.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A1682D152CBE90620011933F /* SquareMobilePaymentsSDK.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		EAB847EDC876649DB783D7CC /* libPods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A1682D132CBE90530011933F /* libPods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests.a */; };
-		EE29F7BA8B341EE5191ABF15 /* libPods-MobilePaymentsSdkReactNativeExample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A1682D112CBE904B0011933F /* libPods-MobilePaymentsSdkReactNativeExample.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,22 +56,20 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = MobilePaymentsSdkReactNativeExample/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = MobilePaymentsSdkReactNativeExample/main.m; sourceTree = "<group>"; };
 		13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = PrivacyInfo.xcprivacy; path = MobilePaymentsSdkReactNativeExample/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
-		19F6CBCC0A4E27FBF8BF4A61 /* libPods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1DA8265643A6ECAEB8883020 /* Pods-MobilePaymentsSdkReactNativeExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MobilePaymentsSdkReactNativeExample.debug.xcconfig"; path = "Target Support Files/Pods-MobilePaymentsSdkReactNativeExample/Pods-MobilePaymentsSdkReactNativeExample.debug.xcconfig"; sourceTree = "<group>"; };
 		2D836B28FA8B57D7645367CD /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = MobilePaymentsSdkReactNativeExample/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
-		3B4392A12AC88292D35C810B /* Pods-MobilePaymentsSdkReactNativeExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MobilePaymentsSdkReactNativeExample.debug.xcconfig"; path = "Target Support Files/Pods-MobilePaymentsSdkReactNativeExample/Pods-MobilePaymentsSdkReactNativeExample.debug.xcconfig"; sourceTree = "<group>"; };
 		54EC517D2D35EEB00057F107 /* Config.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Config.h; path = MobilePaymentsSdkReactNativeExample/Config.h; sourceTree = "<group>"; };
 		54EC517E2D35EEB00057F107 /* Config.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = Config.m; path = MobilePaymentsSdkReactNativeExample/Config.m; sourceTree = "<group>"; };
-		5709B34CF0A7D63546082F79 /* Pods-MobilePaymentsSdkReactNativeExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MobilePaymentsSdkReactNativeExample.release.xcconfig"; path = "Target Support Files/Pods-MobilePaymentsSdkReactNativeExample/Pods-MobilePaymentsSdkReactNativeExample.release.xcconfig"; sourceTree = "<group>"; };
-		5B7EB9410499542E8C5724F5 /* Pods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests.debug.xcconfig"; path = "Target Support Files/Pods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests/Pods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests.debug.xcconfig"; sourceTree = "<group>"; };
-		5DCACB8F33CDC322A6C60F78 /* libPods-MobilePaymentsSdkReactNativeExample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MobilePaymentsSdkReactNativeExample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5EF6B75290F83F4093F5CD5A /* Pods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests.debug.xcconfig"; path = "Target Support Files/Pods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests/Pods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests.debug.xcconfig"; sourceTree = "<group>"; };
+		65D88241E83508BA54D8AB2E /* Pods-MobilePaymentsSdkReactNativeExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MobilePaymentsSdkReactNativeExample.release.xcconfig"; path = "Target Support Files/Pods-MobilePaymentsSdkReactNativeExample/Pods-MobilePaymentsSdkReactNativeExample.release.xcconfig"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = MobilePaymentsSdkReactNativeExample/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		89C6BE57DB24E9ADA2F236DE /* Pods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests.release.xcconfig"; path = "Target Support Files/Pods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests/Pods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests.release.xcconfig"; sourceTree = "<group>"; };
 		A1682D0C2CBE8D470011933F /* libmobile-payments-sdk-react-native.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = "libmobile-payments-sdk-react-native.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A1682D0F2CBE902C0011933F /* libmobile-payments-sdk-react-native.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = "libmobile-payments-sdk-react-native.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		A1682D112CBE904B0011933F /* libPods-MobilePaymentsSdkReactNativeExample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = "libPods-MobilePaymentsSdkReactNativeExample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		A1682D132CBE90530011933F /* libPods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = "libPods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A1682D152CBE90620011933F /* SquareMobilePaymentsSDK.xcframework */ = {isa = PBXFileReference; expectedSignature = "AppleDeveloperProgram:EYF346PHUG:Block, Inc."; lastKnownFileType = wrapper.xcframework; name = SquareMobilePaymentsSDK.xcframework; path = Pods/SquareMobilePaymentsSDK/SquareMobilePaymentsSDK.xcframework; sourceTree = "<group>"; };
 		A1682D1C2CBE9EC10011933F /* MobilePaymentsSdkReactNativeExample-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MobilePaymentsSdkReactNativeExample-Bridging-Header.h"; sourceTree = "<group>"; };
+		C2E96D599ED83A7F7AC20C63 /* libPods-MobilePaymentsSdkReactNativeExample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MobilePaymentsSdkReactNativeExample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CB786A6E42D2E13AC43FE0C8 /* Pods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests.release.xcconfig"; path = "Target Support Files/Pods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests/Pods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests.release.xcconfig"; sourceTree = "<group>"; };
+		D30A649CCF0A90BF84256D98 /* libPods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -82,7 +79,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A1682D162CBE90620011933F /* SquareMobilePaymentsSDK.xcframework in Frameworks */,
-				EAB847EDC876649DB783D7CC /* libPods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests.a in Frameworks */,
+				51020FEC579777DE4F21EAC5 /* libPods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -91,8 +88,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A1682D0D2CBE8D470011933F /* libmobile-payments-sdk-react-native.a in Frameworks */,
-				28E754D50BE8A4007B5AF3C3 /* libPods-MobilePaymentsSdkReactNativeExample.a in Frameworks */,
-				EE29F7BA8B341EE5191ABF15 /* libPods-MobilePaymentsSdkReactNativeExample.a in Frameworks */,
+				76609350658068AD83AAC1BE /* libPods-MobilePaymentsSdkReactNativeExample.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -138,13 +134,11 @@
 			isa = PBXGroup;
 			children = (
 				A1682D152CBE90620011933F /* SquareMobilePaymentsSDK.xcframework */,
-				A1682D132CBE90530011933F /* libPods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests.a */,
-				A1682D112CBE904B0011933F /* libPods-MobilePaymentsSdkReactNativeExample.a */,
 				A1682D0F2CBE902C0011933F /* libmobile-payments-sdk-react-native.a */,
 				A1682D0C2CBE8D470011933F /* libmobile-payments-sdk-react-native.a */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				5DCACB8F33CDC322A6C60F78 /* libPods-MobilePaymentsSdkReactNativeExample.a */,
-				19F6CBCC0A4E27FBF8BF4A61 /* libPods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests.a */,
+				C2E96D599ED83A7F7AC20C63 /* libPods-MobilePaymentsSdkReactNativeExample.a */,
+				D30A649CCF0A90BF84256D98 /* libPods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -191,10 +185,10 @@
 		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				3B4392A12AC88292D35C810B /* Pods-MobilePaymentsSdkReactNativeExample.debug.xcconfig */,
-				5709B34CF0A7D63546082F79 /* Pods-MobilePaymentsSdkReactNativeExample.release.xcconfig */,
-				5B7EB9410499542E8C5724F5 /* Pods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests.debug.xcconfig */,
-				89C6BE57DB24E9ADA2F236DE /* Pods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests.release.xcconfig */,
+				1DA8265643A6ECAEB8883020 /* Pods-MobilePaymentsSdkReactNativeExample.debug.xcconfig */,
+				65D88241E83508BA54D8AB2E /* Pods-MobilePaymentsSdkReactNativeExample.release.xcconfig */,
+				5EF6B75290F83F4093F5CD5A /* Pods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests.debug.xcconfig */,
+				CB786A6E42D2E13AC43FE0C8 /* Pods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -206,13 +200,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "MobilePaymentsSdkReactNativeExampleTests" */;
 			buildPhases = (
-				A55EABD7B0C7F3A422A6CC61 /* [CP] Check Pods Manifest.lock */,
+				295E2396B706A0A1F6E99588 /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
-				C59DA0FBD6956966B86A3779 /* [CP] Embed Pods Frameworks */,
-				F6A41C54EA430FDDC6A6ED99 /* [CP] Copy Pods Resources */,
 				A1682D182CBE90620011933F /* Embed Frameworks */,
+				C3BDED39F1942673AB42C961 /* [CP] Embed Pods Frameworks */,
+				3C456DE4F4088A22D3774B6E /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -228,14 +222,14 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "MobilePaymentsSdkReactNativeExample" */;
 			buildPhases = (
-				C38B50BA6285516D6DCD4F65 /* [CP] Check Pods Manifest.lock */,
+				86D3416DAA5375E13F94EC7F /* [CP] Check Pods Manifest.lock */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				00EEFC60759A1932668264C0 /* [CP] Embed Pods Frameworks */,
-				E235C05ADACE081382539298 /* [CP] Copy Pods Resources */,
 				A1682D1A2CBE9B6C0011933F /* ShellScript */,
+				F0C06FCD06EEF84EA2F24865 /* [CP] Embed Pods Frameworks */,
+				6946B4FEF2A06271C5A3F199 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -322,41 +316,7 @@
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nWITH_ENVIRONMENT=\"$REACT_NATIVE_PATH/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"$REACT_NATIVE_PATH/scripts/react-native-xcode.sh\"\n\n/bin/sh -c \"$WITH_ENVIRONMENT $REACT_NATIVE_XCODE\"\n";
 		};
-		00EEFC60759A1932668264C0 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-MobilePaymentsSdkReactNativeExample/Pods-MobilePaymentsSdkReactNativeExample-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-MobilePaymentsSdkReactNativeExample/Pods-MobilePaymentsSdkReactNativeExample-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MobilePaymentsSdkReactNativeExample/Pods-MobilePaymentsSdkReactNativeExample-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		A1682D1A2CBE9B6C0011933F /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nFRAMEWORKS=\"${BUILT_PRODUCTS_DIR}/${FRAMEWORKS_FOLDER_PATH}\"\n\"${FRAMEWORKS}/SquareMobilePaymentsSDK.framework/setup\"\n";
-		};
-		A55EABD7B0C7F3A422A6CC61 /* [CP] Check Pods Manifest.lock */ = {
+		295E2396B706A0A1F6E99588 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -378,7 +338,41 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		C38B50BA6285516D6DCD4F65 /* [CP] Check Pods Manifest.lock */ = {
+		3C456DE4F4088A22D3774B6E /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests/Pods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests/Pods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests/Pods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		6946B4FEF2A06271C5A3F199 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-MobilePaymentsSdkReactNativeExample/Pods-MobilePaymentsSdkReactNativeExample-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-MobilePaymentsSdkReactNativeExample/Pods-MobilePaymentsSdkReactNativeExample-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MobilePaymentsSdkReactNativeExample/Pods-MobilePaymentsSdkReactNativeExample-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		86D3416DAA5375E13F94EC7F /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -400,7 +394,24 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		C59DA0FBD6956966B86A3779 /* [CP] Embed Pods Frameworks */ = {
+		A1682D1A2CBE9B6C0011933F /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nFRAMEWORKS=\"${BUILT_PRODUCTS_DIR}/${FRAMEWORKS_FOLDER_PATH}\"\n\"${FRAMEWORKS}/SquareMobilePaymentsSDK.framework/setup\"\n";
+		};
+		C3BDED39F1942673AB42C961 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -417,38 +428,21 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests/Pods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		E235C05ADACE081382539298 /* [CP] Copy Pods Resources */ = {
+		F0C06FCD06EEF84EA2F24865 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-MobilePaymentsSdkReactNativeExample/Pods-MobilePaymentsSdkReactNativeExample-resources-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-MobilePaymentsSdkReactNativeExample/Pods-MobilePaymentsSdkReactNativeExample-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			name = "[CP] Copy Pods Resources";
+			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-MobilePaymentsSdkReactNativeExample/Pods-MobilePaymentsSdkReactNativeExample-resources-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-MobilePaymentsSdkReactNativeExample/Pods-MobilePaymentsSdkReactNativeExample-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MobilePaymentsSdkReactNativeExample/Pods-MobilePaymentsSdkReactNativeExample-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		F6A41C54EA430FDDC6A6ED99 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 12;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests/Pods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests/Pods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests/Pods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MobilePaymentsSdkReactNativeExample/Pods-MobilePaymentsSdkReactNativeExample-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -485,7 +479,7 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5B7EB9410499542E8C5724F5 /* Pods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests.debug.xcconfig */;
+			baseConfigurationReference = 5EF6B75290F83F4093F5CD5A /* Pods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -512,7 +506,7 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 89C6BE57DB24E9ADA2F236DE /* Pods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests.release.xcconfig */;
+			baseConfigurationReference = CB786A6E42D2E13AC43FE0C8 /* Pods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
@@ -536,7 +530,7 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3B4392A12AC88292D35C810B /* Pods-MobilePaymentsSdkReactNativeExample.debug.xcconfig */;
+			baseConfigurationReference = 1DA8265643A6ECAEB8883020 /* Pods-MobilePaymentsSdkReactNativeExample.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -544,7 +538,7 @@
 				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = MobilePaymentsSdkReactNativeExample/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -571,14 +565,14 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5709B34CF0A7D63546082F79 /* Pods-MobilePaymentsSdkReactNativeExample.release.xcconfig */;
+			baseConfigurationReference = 65D88241E83508BA54D8AB2E /* Pods-MobilePaymentsSdkReactNativeExample.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = MobilePaymentsSdkReactNativeExample/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
