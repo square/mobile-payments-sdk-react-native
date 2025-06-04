@@ -1,5 +1,10 @@
 ## Changelog
 
+### v2025.6.1 Jun 4, 2025
+
+* Add Offline payments support.
+* Add Reader Management support.
+
 ### v2025.2.1 Feb 19, 2025
 
 * Address NPM dependency issue
