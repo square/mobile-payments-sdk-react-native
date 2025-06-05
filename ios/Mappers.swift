@@ -34,7 +34,7 @@ class Mappers {
 
         guard let processingModeInt = paymentParameters["processingMode"] as? Int,
               let processingMode = ProcessingMode(rawValue: processingModeInt) else {
-            return .failure(.missingIdempotencyKey)
+            return .failure(.missingProcessingMode)
         }
 
         guard let idempotencyKey = paymentParameters["idempotencyKey"] as? String else {
