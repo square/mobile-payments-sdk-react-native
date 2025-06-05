@@ -1,4 +1,13 @@
 ## Changelog
+### v2025.6.2 Jun 5, 2025
+
+* Bump native iOS SDK version to 2.2.3.
+
+### v2025.6.1 Jun 4, 2025
+
+* Add Offline payments support.
+* Add Reader management support.
+* Bump Android SDK version to 2.3.0.
 
 ### v2025.2.1 Feb 19, 2025
 
