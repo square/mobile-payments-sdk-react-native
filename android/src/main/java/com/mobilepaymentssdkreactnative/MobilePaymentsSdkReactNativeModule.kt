@@ -1,5 +1,6 @@
 package com.mobilepaymentssdkreactnative
 
+import android.app.Application
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
@@ -315,6 +316,19 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
     }
     readerChangedCallbacks.put(refId, ref)
     promise.resolve(refId)
+  }
+
+  @ReactMethod
+  fun initialize(appId: String, promise: Promise) {
+    reactContext.runOnUiQueueThread {
+      try {
+        val application = reactContext.applicationContext as Application
+        MobilePaymentsSdk.initialize(appId, application)
+        promise.resolve("SDK initialized successfully.")
+      } catch (e: Exception) {
+        promise.reject("INIT_ERROR", "Failed to initialize SDK", e)
+      }
+    }
   }
 
   @ReactMethod

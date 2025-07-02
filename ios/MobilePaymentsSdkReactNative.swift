@@ -274,6 +274,19 @@ class MobilePaymentsSdkReactNative: RCTEventEmitter {
         }
     }
 
+    @objc(initialize:withResolver:withRejecter:)
+    func initialize(appId: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+        
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else {
+                reject("INITIALIZE_ERROR", "Failed to hide Mock Reader UI: Self is nil", nil)
+                return
+            }
+            MobilePaymentsSDK.initialize(squareApplicationID: appId);
+            resolve("Initilized successfully.")
+            
+        }
+    }
     /// Start Payment: https://developer.squareup.com/docs/mobile-payments-sdk/ios/take-payments
     @objc(startPayment:promptParameters:withResolver:withRejecter:)
     func startPayment(_ paymentParameters: [String: Any], promptParameters: [String: Any], resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {

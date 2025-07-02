@@ -8,6 +8,10 @@ export const eventEmitter = new NativeEventEmitter(
 export let authorizationObserver: EmitterSubscription;
 
 // Authorization: https://developer.squareup.com/docs/mobile-payments-sdk/ios/configure-authorize
+export const initialize = (appId: String): Promise<String> => {
+  return MobilePaymentsSdkReactNative.initialize(appId);
+};
+
 export const authorize = (
   accessToken: String,
   locationId: String
