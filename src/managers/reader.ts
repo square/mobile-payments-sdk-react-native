@@ -31,11 +31,11 @@ export const isPairingInProgress = (): Promise<boolean> => {
   return MobilePaymentsSdkReactNative.isPairingInProgress();
 };
 
-const addReaderChangedCallback = (refId: String): Promise<String> => {
+const addReaderChangedCallback = (refId: string): Promise<String> => {
   return MobilePaymentsSdkReactNative.addReaderChangedCallback(refId);
 };
 
-const removeReaderChangedCallback = (refId: String): Promise<void> => {
+const removeReaderChangedCallback = (refId: string): Promise<void> => {
   return MobilePaymentsSdkReactNative.removeReaderChangedCallback(refId);
 };
 
@@ -109,6 +109,6 @@ export namespace TapToPaySettings {
   };
 }
 
-const generateUUID = (): String => {
+const generateUUID = (): string => {
   return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
 };

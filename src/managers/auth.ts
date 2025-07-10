@@ -9,8 +9,8 @@ export let authorizationObserver: EmitterSubscription;
 
 // Authorization: https://developer.squareup.com/docs/mobile-payments-sdk/ios/configure-authorize
 export const authorize = (
-  accessToken: String,
-  locationId: String
+  accessToken: string,
+  locationId: string
 ): Promise<String> => {
   return MobilePaymentsSdkReactNative.authorize(accessToken, locationId);
 };
