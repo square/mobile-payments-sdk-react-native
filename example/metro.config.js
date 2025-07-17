@@ -1,18 +1,19 @@
 const path = require('path');
-const { getDefaultConfig } = require('@react-native/metro-config');
-const { getConfig } = require('react-native-builder-bob/metro-config');
+const { getDefaultConfig } = require('@expo/metro-config');
 const pkg = require('../package.json');
 
-const root = path.resolve(__dirname, '..');
+const projectRoot = __dirname;
+const workspaceRoot = path.resolve(projectRoot, '..');
+const pluginSrc = path.resolve(workspaceRoot, 'src');
 
-/**
- * Metro configuration
- * https://facebook.github.io/metro/docs/configuration
- *
- * @type {import('metro-config').MetroConfig}
- */
-module.exports = getConfig(getDefaultConfig(__dirname), {
-  root,
-  pkg,
-  project: __dirname,
-});
+const config = getDefaultConfig(projectRoot);
+
+// Manually extend the config
+config.watchFolders = [workspaceRoot];
+
+config.resolver.extraNodeModules = {
+  ...config.resolver.extraNodeModules,
+  [pkg.name]: pluginSrc,
+};
+
+module.exports = config;
