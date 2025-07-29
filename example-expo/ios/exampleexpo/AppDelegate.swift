@@ -1,7 +1,7 @@
 import Expo
 import React
 import ReactAppDependencyProvider
-
+import SquareMobilePaymentsSDK
 @UIApplicationMain
 public class AppDelegate: ExpoAppDelegate {
   var window: UIWindow?
@@ -17,6 +17,10 @@ public class AppDelegate: ExpoAppDelegate {
     let factory = ExpoReactNativeFactory(delegate: delegate)
     delegate.dependencyProvider = RCTAppDependencyProvider()
 
+    MobilePaymentsSDK.initialize(
+                applicationLaunchOptions: launchOptions,
+                squareApplicationID: "REPLACE ME!"
+            )
     reactNativeDelegate = delegate
     reactNativeFactory = factory
     bindReactNativeFactory(factory)

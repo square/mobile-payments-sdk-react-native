@@ -24,7 +24,7 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = exampleexpo/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = exampleexpo/Info.plist; sourceTree = "<group>"; };
 		AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = exampleexpo/SplashScreen.storyboard; sourceTree = "<group>"; };
-		B45E889818ECEBCE6C923CE9 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = exampleexpo/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		B45E889818ECEBCE6C923CE9 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = exampleexpo/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		BB2F792C24A3F905000567C9 /* Expo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Expo.plist; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		EEEDE14340CCA1775DC01F00 /* libPods-exampleexpo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-exampleexpo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -111,7 +111,6 @@
 				01EF5013F7B78B9795815F9C /* Pods-exampleexpo.debug.xcconfig */,
 				03DEE545484FE0707145DB06 /* Pods-exampleexpo.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -147,6 +146,7 @@
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				800E24972A6A228C8D4807E9 /* [CP] Copy Pods Resources */,
 				59E6C0F8FCB6705AA8343C5C /* [CP] Embed Pods Frameworks */,
+				DB8F14D82E395DA4002826DE /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -247,10 +247,14 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-exampleexpo/Pods-exampleexpo-frameworks.sh",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/MockReaderUI/MockReaderUI.framework/MockReaderUI",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/SquareMobilePaymentsSDK/SquareMobilePaymentsSDK.framework/SquareMobilePaymentsSDK",
 				"${PODS_XCFRAMEWORKS_BUILD_DIR}/hermes-engine/Pre-built/hermes.framework/hermes",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MockReaderUI.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SquareMobilePaymentsSDK.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/hermes.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -289,6 +293,23 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-exampleexpo/Pods-exampleexpo-resources.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		DB8F14D82E395DA4002826DE /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nFRAMEWORKS=\"${BUILT_PRODUCTS_DIR}/${FRAMEWORKS_FOLDER_PATH}\"\n\"${FRAMEWORKS}/SquareMobilePaymentsSDK.framework/setup\"\n";
 		};
 		EDEE22FA605EB46856ABE198 /* [Expo] Configure project */ = {
 			isa = PBXShellScriptBuildPhase;

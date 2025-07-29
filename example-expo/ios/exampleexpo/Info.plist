@@ -70,5 +70,7 @@
     <string>Light</string>
     <key>UIViewControllerBasedStatusBarAppearance</key>
     <false/>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>This app uses your location to improve transaction accuracy.</string>
   </dict>
 </plist>

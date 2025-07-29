@@ -14,7 +14,10 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.square.mobilePaymentsSdkExampleExpo"
+      "bundleIdentifier": "com.square.mobilePaymentsSdkExampleExpo",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "This app uses your location to improve transaction accuracy."
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -26,6 +29,9 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      "react-native-ble-plx"
+    ]
   }
 }
