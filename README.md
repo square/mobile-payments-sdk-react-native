@@ -1,6 +1,8 @@
-# React Native plug-in for Mobile Payments SDK
-# This is an updated version of the mobile payment SDK, the initial one has a bug and i already fixed that
-[![npm version](https://badge.fury.io/js/mobile-payments-sdk-react-native.svg)](https://badge.fury.io/js/mobile-payments-sdk-react-native)
+# React Native plug-in for Mobile Payments SDK Update
+## Disclaimer!!
+This is a **modified fork** of [`mobile-payments-sdk-react-native`](https://github.com/Dayo-Akinyemi/mobile-payments-sdk-react-native) by [Dayo Akinyemi / Square].
+
+  [![npm version](https://badge.fury.io/js/mobile-payments-sdk-react-native.svg)](https://badge.fury.io/js/mobile-payments-sdk-react-native)
 
 Mobile Payments SDK for React Native supports the following SDK versions:
 
