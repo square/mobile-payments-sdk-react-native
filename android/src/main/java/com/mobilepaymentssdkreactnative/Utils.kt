@@ -122,9 +122,9 @@ fun convertToDelayAction(value: Int?) = when (value) {
 }
 
 fun convertToProcessingMode(value: Int?) = when (value) {
-  0 -> ProcessingMode.AUTO_DETECT
+  0 -> ProcessingMode.ONLINE_ONLY
   1 -> ProcessingMode.OFFLINE_ONLY
-  2 -> ProcessingMode.ONLINE_ONLY
+  2 -> ProcessingMode.AUTO_DETECT
   else -> ProcessingMode.AUTO_DETECT
 }
 

@@ -246,7 +246,7 @@ export enum OfflinePaymentStatus {
 }
 
 export enum ProcessingMode {
-  AUTO_DETECT = 0,
+  ONLINE_ONLY = 0,
   OFFLINE_ONLY = 1,
-  ONLINE_ONLY = 2,
+  AUTO_DETECT = 2,
 }
