@@ -43,8 +43,10 @@ fun ReadableMap.readPaymentParameters(): PaymentParameters {
   // Required fields
   val amountMoney = convertToMoney(getMap("amountMoney"))
   val processingMode = convertToProcessingMode(getIntOrNull("processingMode"))
+  val idempotencyKey = getString("idempotencyKey")
   requireNotNull(amountMoney) { "Amount money is required" }
   requireNotNull(processingMode) { "processingMode is required" }
+    requireNotNull(idempotencyKey) { "idempotencyKey is required" }
 
   // Optional fields
   val acceptPartialAuthorization = getBooleanOrNull("acceptPartialAuthorization")
@@ -60,10 +62,9 @@ fun ReadableMap.readPaymentParameters(): PaymentParameters {
   val statementDescription = getString("statementDescription")
   val teamMemberId = getString("teamMemberId")
   val tipMoney = convertToMoney(getMap("tipMoney"))
-  val idempotencyKey = getString("idempotencyKey")
   val paymentAttemptId = getString("paymentAttemptId")
 
-  val builder = PaymentParameters.Builder(amountMoney, processingMode)
+  val builder = PaymentParameters.Builder(amountMoney,idempotencyKey)
   acceptPartialAuthorization?.let { builder.acceptPartialAuthorization(it) }
   appFeeMoney?.let { builder.appFeeMoney(it) }
   autocomplete?.let { builder.autocomplete(it) }
@@ -77,8 +78,6 @@ fun ReadableMap.readPaymentParameters(): PaymentParameters {
   statementDescription?.let { builder.statementDescription(it) }
   teamMemberId?.let { builder.teamMemberId(it) }
   tipMoney?.let { builder.tipMoney(it) }
-  idempotencyKey?.let { builder.idempotencyKey(it) }
-  paymentAttemptId?.let { builder.paymentAttemptId(it) }
 
   return builder.build()
 }
@@ -330,7 +329,6 @@ fun ReaderInfo.toReaderInfoMap(): WritableMap {
     putString("id", id)
     putString("model", model.toModelString())
     putString("state", state.toStateString())
-    putString("status", status.toStatusString())
     putString("serialNumber", serialNumber)
     putString("name", name)
     putMap("batteryStatus", batteryStatus?.toBatteryStatusMap())
@@ -377,16 +375,6 @@ fun ReaderInfo.State.toStateString(): String {
     is ReaderInfo.State.Disconnected ->"DISCONNECTED"
     is ReaderInfo.State.FailedToConnect->"FAILED_TO_CONNECT"
     is ReaderInfo.State.UpdatingFirmware ->"UPDATING_FIRMWARE"
-  }
-}
-
-fun ReaderInfo.Status.toStatusString(): String {
-  return when (this) {
-    is ReaderInfo.Status.Ready -> "READY"
-    is ReaderInfo.Status.ConnectingToDevice -> "CONNECTING_TO_DEVICE"
-    is ReaderInfo.Status.ConnectingToSquare -> "CONNECTING_TO_SQUARE"
-    is ReaderInfo.Status.Faulty -> "FAULTY"
-    is ReaderInfo.Status.ReaderUnavailable -> "READER_UNAVAILABLE_${this.reason.name}"
   }
 }
 

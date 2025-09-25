@@ -1,6 +1,6 @@
 {
-  "name": "mobile-payments-sdk-react-native",
-  "version": "2025.6.1",
+  "name": "square-mobile-payments-sdk-react-native",
+  "version": "2025.7.4",
   "description": "Mobile Payments SDK plug-in for React Native. Enables developers to build secure in-person payment solutions.",
   "source": "./src/index.tsx",
   "main": "./lib/commonjs/index.js",
@@ -41,7 +41,7 @@
     "typecheck": "tsc",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
     "clean": "del-cli android/build example/android/build example/android/app/build example/ios/build lib",
-    "prepare": "bob build",
+    "prepare": "npx bob build",
     "release": "release-it"
   },
   "keywords": [
@@ -54,14 +54,14 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/square/mobile-payments-sdk-react-native.git"
+    "url": "git+https://github.com/Dayo-Akinyemi/mobile-payments-sdk-react-native.git"
   },
-  "author": "Block, Inc <mpx@squareup.com> (https://github.com/square/)",
+  "author": "Ajibola Philip<you@company.com> (https://github.com/DayoAkinyemi)",
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://developer.squareup.com/forums/"
   },
-  "homepage": "https://github.com/square/mobile-payments-sdk-react-native#readme",
+  "homepage": "https://github.com/Dayo-Akinyemi/mobile-payments-sdk-react-native#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
