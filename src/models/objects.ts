@@ -23,14 +23,14 @@ import type {
 } from './enums';
 
 export type Location = {
-  id: String;
-  currencyCode: String;
-  name: String;
-  mcc: String;
+  id: string;
+  currencyCode: string;
+  name: string;
+  mcc: string;
 };
 
 export type Money = {
-  amount?: Number;
+  amount?: number;
   currencyCode: CurrencyCode;
 };
 
@@ -39,12 +39,12 @@ export type OnlinePayment = {
   appFeeMoney: Money;
   cardDetails: CardPaymentDetails;
   createdAt: Date;
-  customerId: String;
-  id: String;
-  locationId: String;
-  note: String;
-  orderId: String;
-  referenceId: String;
+  customerId: string;
+  id: string;
+  locationId: string;
+  note: string;
+  orderId: string;
+  referenceId: string;
   status: PaymentStatus;
   tipMoney: Money;
   totalMoney: Money;
@@ -56,11 +56,11 @@ export type OffLinePayment = {
   appFeeMoney: Money;
   cardDetails: OfflineCardPaymentDetails;
   createdAt: Date;
-  id: String;
-  localId: String;
-  locationId: String;
-  orderId: String;
-  referenceId: String;
+  id: string;
+  localId: string;
+  locationId: string;
+  orderId: string;
+  referenceId: string;
   status: OfflinePaymentStatus;
   sourceType: SourceType;
   tipMoney: Money;
@@ -72,57 +72,57 @@ export type OffLinePayment = {
 export type PaymentParameters = {
   // Required
   amountMoney: Money;
-  processingMode: Number;
+  processingMode: number;
   // Optional. For defaults, check:
   // Android: https://square.github.io/mobile-payments-sdk-android/-mobile%20-payments%20-s-d-k%20-android%20-technical%20-reference/com.squareup.sdk.mobilepayments.payment/-payment-parameters/index.html
   // iOS: https://square.github.io/mobile-payments-sdk-ios/docs/documentation/mobilepaymentssdkapi/paymentparameters/
-  acceptPartialAuthorization?: Boolean;
+  acceptPartialAuthorization?: boolean;
   appFeeMoney?: Money;
-  autocomplete?: Boolean;
-  customerId?: String;
+  autocomplete?: boolean;
+  customerId?: string;
   delayAction?: DelayAction;
-  delayDuration?: Number;
-  locationId?: String;
-  note?: String;
-  orderId?: String;
-  referenceId?: String;
-  statementDescriptionIdentifer?: String;
-  teamMemberId?: String;
+  delayDuration?: number;
+  locationId?: string;
+  note?: string;
+  orderId?: string;
+  referenceId?: string;
+  statementDescriptionIdentifer?: string;
+  teamMemberId?: string;
   tipMoney?: Money;
   totalMoney?: Money;
-  paymentAttemptId?: String;
+  paymentAttemptId?: string;
 };
 
 export type Card = {
   brand: CardBrand;
-  cardholderName: String;
+  cardholderName: string;
   coBrand: CardCoBrand;
-  expirationMonth?: Number;
-  expirationYear?: Number;
-  id: String;
-  lastFourDigits: String;
+  expirationMonth?: number;
+  expirationYear?: number;
+  id: string;
+  lastFourDigits: string;
 };
 
 export type CardPaymentDetails = {
-  applicationIdentifier: String;
-  applicationName: String;
-  authorizationCode: String;
+  applicationIdentifier: string;
+  applicationName: string;
+  authorizationCode: string;
   card: Card;
   entryMethod: EntryMethod;
   status: CardPaymentStatus;
 };
 
 export type OfflineCardPaymentDetails = {
-  applicationIdentifier: String;
-  applicationName: String;
+  applicationIdentifier: string;
+  applicationName: string;
   card: Card;
   entryMethod: EntryMethod;
 };
 
 export type CardInputMethods = {
-  chip: Boolean;
-  contactless: Boolean;
-  swipe: Boolean;
+  chip: boolean;
+  contactless: boolean;
+  swipe: boolean;
 };
 
 export type PromptParameters = {
@@ -134,10 +134,10 @@ export type Payment = {
   amountMoney: Money;
   appFeeMoney: Money;
   createdAt: Date;
-  id: String;
-  locationId: String;
-  orderId: String;
-  referenceId: String;
+  id: string;
+  locationId: string;
+  orderId: string;
+  referenceId: string;
   sourceType: SourceType;
   tipMoney: Money;
   totalMoney: Money;
@@ -145,15 +145,15 @@ export type Payment = {
 };
 
 export type ReaderBatteryStatus = {
-  isCharging: Boolean;
+  isCharging: boolean;
   level?: ReaderBatteryLevel;
-  percent: Number;
+  percent: number;
 };
 
 export type ReaderConnectionFailureInfo = {
   failureReason: ReaderConnectionFailureReason;
-  localizedDescription: String;
-  localizedTitle: String;
+  localizedDescription: string;
+  localizedTitle: string;
   recoverySuggestion: ReaderConnectionFailureRecoverySuggestion;
 };
 
@@ -163,9 +163,9 @@ export type ReaderConnectionInfo = {
 };
 
 export type ReaderFirmwareInfo = {
-  failureReason?: String;
-  updatePercentage: Number;
-  version: String;
+  failureReason?: string;
+  updatePercentage: number;
+  version: string;
 };
 
 export type ReaderStatusInfo = {
@@ -175,28 +175,28 @@ export type ReaderStatusInfo = {
 };
 
 export type ReaderInfo = {
-  id: String;
+  id: string;
   model: ReaderModel;
-  status?: String; //Android-specific direct status
+  status?: string; //Android-specific direct status
   statusInfo?: ReaderStatusInfo; //iOS-specific status info
-  serialNumber?: String;
-  name: String;
+  serialNumber?: string;
+  name: string;
   batteryStatus?: ReaderBatteryStatus;
-  firmwareVersion?: String;
-  firmwarePercent?: Number;
+  firmwareVersion?: string;
+  firmwarePercent?: number;
   supportedCardEntryMethods: CardEntryMethod[];
-  isForgettable: Boolean;
-  isBlinkable: Boolean;
+  isForgettable: boolean;
+  isBlinkable: boolean;
 
   cardInsertionStatus?: CardInsertionStatus;
   connectionInfo?: ReaderConnectionInfo;
   firmwareInfo?: ReaderFirmwareInfo;
-  isConnectionRetryable?: Boolean;
+  isConnectionRetryable?: boolean;
 };
 
 export type ReaderChangedEvent = {
   change: ReaderChange;
   reader: ReaderInfo;
   readerStatusInfo: ReaderStatusInfo;
-  readerSerialNumber?: String;
+  readerSerialNumber?: string;
 };
