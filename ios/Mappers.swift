@@ -37,11 +37,11 @@ class Mappers {
             return .failure(.missingProcessingMode)
         }
 
-        guard let idempotencyKey = paymentParameters["idempotencyKey"] as? String else {
-            return .failure(.missingIdempotencyKey)
+        guard let paymentAttemptId = paymentParameters["paymentAttemptId"] as? String else {
+            return .failure(.missingPaymentAttemptId)
         }
 
-        let paymentParams = PaymentParameters(idempotencyKey: idempotencyKey, amountMoney: amountMoney, processingMode: processingMode)
+        let paymentParams = PaymentParameters(paymentAttemptID: paymentAttemptId, amountMoney: amountMoney, processingMode: processingMode)
 
         // Optional parameters
         if let partialAuth = paymentParameters["acceptPartialAuthorization"] as? Bool {
@@ -106,6 +106,14 @@ class Mappers {
             "currencyCode": money.currency.currencyCode
         ]
     }
+  
+    class func mapToDictionary(readerStatusInfo: ReaderStatusInfo) -> NSDictionary {
+      return [
+        "reason": readerStatusInfo.reason.mapToString(),
+        "status": readerStatusInfo.status.mapToString(),
+        "title": readerStatusInfo.title,
+      ]
+    }
 
     class func mapToDictionary(payment: Payment) -> NSDictionary {
         return [
@@ -127,7 +135,6 @@ class Mappers {
         return [
             "batteryStatus" : reader.batteryStatus?.toMap() ?? NSNull(),
             "cardInsertionStatus": reader.cardInsertionStatus.toName(),
-            "connectionInfo": reader.connectionInfo.toMap(),
             "firmwareInfo" : reader.firmwareInfo?.toMap() ?? NSNull(),
             "id": String(reader.id),
             "isBlinkable" : reader.isBlinkable,
@@ -136,7 +143,7 @@ class Mappers {
             "model": reader.model.toName(),
             "name" : reader.name,
             "serialNumber" : reader.serialNumber ?? NSNull(),
-            "state" : reader.state.toName(),
+            "statusInfo": Mappers.mapToDictionary(readerStatusInfo: reader.statusInfo),
             "supportedCardEntryMethods" : reader.supportedInputMethods.toList()
         ]
     }
@@ -180,9 +187,63 @@ extension SquareMobilePaymentsSDK.SourceType {
     }
 }
 
+extension SquareMobilePaymentsSDK.ReaderStatus {
+    func mapToString() -> String {
+        switch self {
+        case .ready:
+            return "READY"
+        case .connectingToDevice:
+            return "CONNECTING_TO_DEVICE"
+        case .connectingToSquare:
+            return "CONNECTING_TO_SQUARE"
+        case .faulty:
+            return "FAULTY"
+        case .readerUnavailable:
+            return "READER_UNAVAILABLE"
+        @unknown default:
+            return "UNKNOWN"
+        }
+    }
+}
+
+extension SquareMobilePaymentsSDK.ReaderUnavailableReason {
+    func mapToString() -> String {
+        switch self {
+        case .blockingFirmwareUpdate:
+            return "BLOCKING_FIRMWARE_UPDATE"
+        case .bluetoothDisabled:
+            return "BLUETOOTH_DISABLED"
+        case .bluetoothFailure:
+            return "BLUETOOTH_FAILURE"
+        case .internalError:
+            return "INTERNAL_ERROR"
+        case .maxReadersConnected:
+            return "MAX_READERS_CONNECTED"
+        case .none:
+            return "NONE"
+        case .notConnectedToInternet:
+            return "NOT_CONNECTED_TO_INTERNET"
+        case .readerTimeout:
+            return "READER_TIMEOUT"
+        case .revokedByDevice:
+            return "REVOKED_BY_DEVICE"
+        case .secureConnectionNetworkFailure:
+            return "SECURE_CONNECTION_NETWORK_FAILURE"
+        case .secureConnectionToSquareFailure:
+            return "SECURE_CONNECTION_TO_SQUARE_FAILURE"
+        case .tapToPayError:
+            return "TAP_TO_PAY_ERROR"
+        case .tapToPayIsNotLinked:
+            return "TAP_TO_PAY_IS_NOT_LINKED"
+        @unknown default:
+            return "UNKNOWN"
+        }
+    }
+}
+
 enum PaymentParametersError: Error {
     case missingAmount
-    case missingIdempotencyKey
+    case missingPaymentAttemptId
     case missingProcessingMode
 }
 
