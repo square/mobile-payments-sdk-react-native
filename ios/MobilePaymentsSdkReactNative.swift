@@ -512,7 +512,7 @@ class MobilePaymentsReaderObserver: ReaderObserver {
         let body = [
             "change": change.toName(),
             "reader": readerMap,
-            "readerState" : readerMap["state"],
+            "readerStatus" : readerMap["statusInfo"],
             "readerSerialNumber" : readerMap["serialNumber"] ?? NSNull()
         ]
         emitter.sendEvent(withName: "ReaderChanged", body: body)

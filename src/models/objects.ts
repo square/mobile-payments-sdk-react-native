@@ -16,9 +16,8 @@ import type {
   ReaderConnectionFailureReason,
   ReaderConnectionFailureRecoverySuggestion,
   ReaderConnectionState,
-  ReaderInternalStatus,
   ReaderModel,
-  ReaderState,
+  ReaderStatus,
   ReaderUnavailableReason,
   SourceType,
 } from './enums';
@@ -91,7 +90,6 @@ export type PaymentParameters = {
   teamMemberId?: String;
   tipMoney?: Money;
   totalMoney?: Money;
-  idempotencyKey?: String;
   paymentAttemptId?: String;
 };
 
@@ -170,16 +168,17 @@ export type ReaderFirmwareInfo = {
   version: String;
 };
 
-export type ReaderStatus = {
-  status: ReaderInternalStatus;
-  readerUnavailableReason?: ReaderUnavailableReason;
+export type ReaderStatusInfo = {
+  status: ReaderStatus;
+  reason: ReaderUnavailableReason;
+  title: string;
 };
 
 export type ReaderInfo = {
   id: String;
   model: ReaderModel;
-  state: ReaderState;
-  status: ReaderStatus;
+  status?: String; //Android-specific direct status
+  statusInfo?: ReaderStatusInfo; //iOS-specific status info
   serialNumber?: String;
   name: String;
   batteryStatus?: ReaderBatteryStatus;
@@ -198,6 +197,6 @@ export type ReaderInfo = {
 export type ReaderChangedEvent = {
   change: ReaderChange;
   reader: ReaderInfo;
-  readerState: ReaderState;
+  readerStatusInfo: ReaderStatusInfo;
   readerSerialNumber?: String;
 };
