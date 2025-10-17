@@ -69,21 +69,21 @@ export enum ReaderPairingError {
 // Corresponds to the ErrorDetails inside the Failure object in the SDK
 // Android: https://square.github.io/mobile-payments-sdk-android/-mobile%20-payments%20-s-d-k%20-android%20-technical%20-reference/com.squareup.sdk.mobilepayments.core/-error-details/index.html
 export type ErrorDetails = {
-  category: String;
-  code: String;
-  detail: String;
-  field: String;
+  category: string;
+  code: string;
+  detail: string;
+  field: string;
 };
 
 // Corresponds to the Failure object in the SDK
 // Android: https://square.github.io/mobile-payments-sdk-android/-mobile%20-payments%20-s-d-k%20-android%20-technical%20-reference/com.squareup.sdk.mobilepayments.core/-result/-failure/index.html
 // iOS: https://developer.apple.com/documentation/foundation/nserror
 export type Failure = {
-  debugMessage: String;
-  debugCode: String;
+  debugMessage: string;
+  debugCode: string;
   details: ErrorDetails[];
-  errorMessage: String;
-  errorCode: String;
+  errorMessage: string;
+  errorCode: string;
 };
 
 // Convenience function to map the error.userInfo object to a Failure object
