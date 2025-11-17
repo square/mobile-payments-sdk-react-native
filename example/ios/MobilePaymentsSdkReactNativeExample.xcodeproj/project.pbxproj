@@ -227,8 +227,8 @@
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				A1682D1A2CBE9B6C0011933F /* ShellScript */,
 				F0C06FCD06EEF84EA2F24865 /* [CP] Embed Pods Frameworks */,
+				A1682D1A2CBE9B6C0011933F /* ShellScript */,
 				6946B4FEF2A06271C5A3F199 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
@@ -266,9 +266,6 @@
 				Base,
 			);
 			mainGroup = 83CBB9F61A601CBA00E9B192;
-			packageReferences = (
-				A1682D192CBE92880011933F /* XCRemoteSwiftPackageReference "mobile-payments-sdk-ios" */,
-			);
 			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -782,17 +779,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		A1682D192CBE92880011933F /* XCRemoteSwiftPackageReference "mobile-payments-sdk-ios" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/square/mobile-payments-sdk-ios";
-			requirement = {
-				branch = main;
-				kind = branch;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
 	};
 	rootObject = 83CBB9F71A601CBA00E9B192 /* Project object */;
 }

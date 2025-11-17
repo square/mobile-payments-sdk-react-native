@@ -49,9 +49,10 @@ const HomeView = () => {
     const paymentParameters: PaymentParameters = {
       amountMoney: { amount: 1, currencyCode: CurrencyCode.EUR },
       appFeeMoney: { amount: 0, currencyCode: CurrencyCode.EUR },
+      allowCardSurcharge: false,
       paymentAttemptId: uuid.v4(),
       note: 'Payment for services',
-      processingMode: ProcessingMode.ONLINE_ONLY
+      processingMode: ProcessingMode.ONLINE_ONLY,
       // Other parameters you could add:
       // autocomplete: true,
       // delayAction: DelayAction.CANCEL,

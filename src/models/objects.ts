@@ -74,6 +74,7 @@ export type PaymentParameters = {
   // Required
   amountMoney: Money;
   processingMode: Number;
+  allowCardSurcharge?: Boolean; //required for Android
   // Optional. For defaults, check:
   // Android: https://square.github.io/mobile-payments-sdk-android/-mobile%20-payments%20-s-d-k%20-android%20-technical%20-reference/com.squareup.sdk.mobilepayments.payment/-payment-parameters/index.html
   // iOS: https://square.github.io/mobile-payments-sdk-ios/docs/documentation/mobilepaymentssdkapi/paymentparameters/
