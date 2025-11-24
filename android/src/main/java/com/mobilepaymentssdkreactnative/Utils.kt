@@ -45,6 +45,7 @@ fun ReadableMap.readPaymentParameters(): PaymentParameters {
   val processingMode = convertToProcessingMode(getIntOrNull("processingMode"))
   requireNotNull(amountMoney) { "Amount money is required" }
   requireNotNull(processingMode) { "processingMode is required" }
+  val allowCardSurcharge = getBooleanOrNull("allowCardSurcharge") ?: false
 
   // Optional fields
   val acceptPartialAuthorization = getBooleanOrNull("acceptPartialAuthorization")
@@ -63,7 +64,7 @@ fun ReadableMap.readPaymentParameters(): PaymentParameters {
   val idempotencyKey = getString("idempotencyKey")
   val paymentAttemptId = getString("paymentAttemptId")
 
-  val builder = PaymentParameters.Builder(amountMoney, processingMode)
+  val builder = PaymentParameters.Builder(amountMoney, processingMode, allowCardSurcharge)
   acceptPartialAuthorization?.let { builder.acceptPartialAuthorization(it) }
   appFeeMoney?.let { builder.appFeeMoney(it) }
   autocomplete?.let { builder.autocomplete(it) }
