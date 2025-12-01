@@ -1,5 +1,9 @@
 ## Changelog
 
+### v2025.12.1 Dec 1, 2025
+
+* Upgrade native sdks: iOS(2.3.1), Android(2.3.4)
+
 ### v2025.2.1 Feb 19, 2025
 
 * Address NPM dependency issue
