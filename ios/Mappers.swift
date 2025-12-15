@@ -109,7 +109,7 @@ class Mappers {
             "id": location.id,
             "name": location.name,
             "mcc": location.mcc,
-            "currency": location.currency.currencyCode // TODO: map this to a currency object
+            "currency": location.currency.toName()
         ]
     }
 
@@ -119,7 +119,7 @@ class Mappers {
         }
         return [
             "amount": money.amount,
-            "currencyCode": money.currency.currencyCode
+            "currencyCode": money.currency.toName()
         ]
     }
 
@@ -143,7 +143,6 @@ class Mappers {
         return [
             "batteryStatus" : reader.batteryStatus?.toMap() ?? NSNull(),
             "cardInsertionStatus": reader.cardInsertionStatus.toName(),
-            "connectionInfo": reader.connectionInfo.toMap(),
             "firmwareInfo" : reader.firmwareInfo?.toMap() ?? NSNull(),
             "id": String(reader.id),
             "isBlinkable" : reader.isBlinkable,
@@ -152,11 +151,73 @@ class Mappers {
             "model": reader.model.toName(),
             "name" : reader.name,
             "serialNumber" : reader.serialNumber ?? NSNull(),
-            "state" : reader.state.toName(),
-            "supportedCardEntryMethods" : reader.supportedInputMethods.toList()
+            "supportedCardEntryMethods" : reader.supportedInputMethods.toList(),
+            "status": reader.statusInfo.toMap()
         ]
     }
 }
+
+extension ReaderStatusInfo {
+  func toMap() -> NSDictionary {
+    return [
+      "status" : status.toName(),
+      "readerUnavailableReason" : unavailableReasonInfo?.reason.toName() ?? NSNull(),
+    ]
+  }
+}
+
+extension ReaderStatus {
+    func toName() -> String {
+        return switch self {
+        case .connectingToDevice:
+            "CONNECTING_TO_DEVICE"
+        case .connectingToSquare:
+            "CONNECTING_TO_SQUARE"
+        case .readerUnavailable :
+            "READER_UNAVAILABLE"
+        case .faulty:
+            "FAULTY"
+        case .ready:
+            "READY"
+        default :
+          "UNKNOWN"
+        }
+    }
+}
+
+extension ReaderUnavailableReason {
+    func toName() -> String {
+        return switch self {
+        case .internalError:
+            "INTERNAL_ERROR"
+        case .bluetoothDisabled:
+            "BLUETOOTH_DISABLED"
+        case .bluetoothFailure:
+            "BLUETOOTH_FAILURE"
+        case .secureConnectionToSquareFailure:
+            "SECURE_CONNECTION_TO_SQUARE_FAILURE"
+        case .secureConnectionNetworkFailure:
+            "SECURE_CONNECTION_NETWORK_FAILURE"
+        case .blockingFirmwareUpdate:
+            "BLOCKING_UPDATE"
+        case .maxReadersConnected:
+            "MAX_READERS_CONNECTED"
+        case .notConnectedToInternet
+            : "NOT_CONNECTED_TO_INTERNET"
+        case .readerTimeout:
+            "READER_TIMEOUT"
+        case .revokedByDevice:
+            "REVOKED_BY_DEVICE"
+        case .tapToPayError:
+            "TAP_TO_PAY_ERROR"
+        case .tapToPayIsNotLinked:
+            "TAP_TO_PAY_IS_NOT_LINKED"
+        default:
+            "UNKNOWN"
+        }
+    }
+}
+
 
 extension SquareMobilePaymentsSDK.AuthorizationState {
     func mapToString() -> String {

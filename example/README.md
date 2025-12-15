@@ -12,10 +12,10 @@ Donut Counter is a sample application for building with the [Square Mobile Payme
 | -------------------------------- | ----------------------------------------- |
 | ⚡️ Initializing the SDK (iOS)         | [ios/MobilePaymentsSdkReactNativeExample/AppDelegate.mm](./ios/MobilePaymentsSdkReactNativeExample/AppDelegate.mm#L9) |
 | ⚡️ Initializing the SDK (Android)         | [android/app/src/main/java/mobilepaymentssdkreactnative/example/MainApplication.kt](./android/app/src/main/java/mobilepaymentssdkreactnative/example/MainApplication.kt#L37) |
-| 🔒 Authorizing the SDK           | [src/Screens/PermissionsScreen.tsx](./src/Screens/PermissionsScreen.tsx#L157-L159) |
-| 💰 Taking a Payment              | [src/Screens/HomeScreen.tsx](./src/Screens/HomeScreen.tsx#L45-L72) |
-| ⚙️ Presenting Settings Screen    | [src/Screens/HomeScreen.tsx](./src/Screens/HomeScreen.tsx#L77) |
-| 💳 Presenting MockReaderUI       | [src/Screens/HomeScreen.tsx](./src/Screens/HomeScreen.tsx#L36-L43) |
+| 🔒 Authorizing the SDK           | [src/Screens/PermissionsScreen.tsx](./src/Screens/PermissionsScreen.tsx#L154) |
+| 💰 Taking a Payment              | [src/Screens/HomeScreen.tsx](./src/Screens/HomeScreen.tsx#L52) |
+| ⚙️ Presenting Settings Screen    | [src/Screens/HomeScreen.tsx](./src/Screens/HomeScreen.tsx#L95) |
+| 💳 Presenting MockReaderUI       | [src/Screens/HomeScreen.tsx](./src/Screens/HomeScreen.tsx#L42) |
 
 # Get Started
 
@@ -46,9 +46,8 @@ On the application's Credentials page, toggle the environment you'd like to use 
 Click "Locations" in the left navigation and make note of the Default Test Account's **Location ID** as well. These values will be used in the next step.
 
 ## 3. Configure the SDK
-* For iOS: Replace your Square Application ID in [Config.m](./ios/MobilePaymentsSdkReactNativeExample/Config.m#L14).
-* For Android: Replace your Square Application Id in [MainApplication.kt](./android/app/src/main/java/mobilepaymentssdkreactnative/example/MainApplication.kt#L37).
-* Then, for both platforms: Replace your Access Token and Location ID in [PermissionsScreen.tsx](src/Screens/PermissionsScreen.tsx#L158-L159)
+* For iOS: Replace your Square Credentials in [Info.plist](./ios/MobilePaymentsSdkReactNativeExample/Info.plist#L75).
+* For Android: Replace your Square Credentials in [app.properties](./android/app/app.properties). You must create the app.properties file using this example [app.properties.example](./android/app/app.properties.example)
 
 ## 4. Run the app
 1. Make sure you're in the root folder of the repository.

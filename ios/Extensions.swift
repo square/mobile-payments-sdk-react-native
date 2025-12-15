@@ -272,3 +272,71 @@ extension ReaderChange {
         }
     }
 }
+
+extension DelayAction {
+    func getInt() -> Int {
+        switch self {
+        case .cancel: return 0
+        case .complete: return 1
+        default: return 0
+        }
+    }
+}
+
+extension ProcessingMode {
+  func getInt() -> Int {
+        switch self {
+        case .onlineOnly: return 0
+        case .offlineOnly: return 1
+        case .autoDetect: return 2
+        default : return 2
+        }
+    }
+}
+
+extension Currency {
+  func toName() -> String {
+    switch self {
+    case .AUD: return "AUD"
+    case .CAD: return "CAD"
+    case .EUR: return "EUR"
+    case .GBP: return "GBP"
+    case .JPY: return "JPY"
+    case .USD: return "USD"
+    default: return "unknown"
+    }
+  }
+}
+
+
+extension MoneyAmount {
+  func toMap() -> [String: Any?] {
+    return [
+      "amount": Int(self.amount),
+      "currencyCode": self.currency.toName()
+    ]
+  }
+}
+
+extension PaymentParameters {
+  func toMap() -> [String :Any?] {
+        return [
+            "acceptPartialAuthorization": acceptPartialAuthorization,
+            "amountMoney": amountMoney.toMap(),
+            "appFeeMoney": appFeeMoney?.toMap(),
+            "autocomplete": autocomplete,
+            "customerId" : customerID,
+            "delayAction" : delayAction.getInt(),
+            "delayDuration" : delayDuration,
+            "processingMode" : processingMode.getInt(),
+            "allowCardSurcharge" : allowCardSurcharge,
+            "paymentAttemptId" : paymentAttemptID,
+            "locationId": locationID,
+            "note" : note,
+            "orderId" : orderID,
+            "referenceId" : referenceID,
+            "teamMemberId": teamMemberID,
+            "tipMoney" : tipMoney?.toMap()
+        ]
+    }
+}

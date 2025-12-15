@@ -6,28 +6,32 @@ import {
   PromptMode,
   showMockReaderUI,
   showSettings,
-  startPayment,
-  mapUserInfoToFailure,
   type PaymentParameters,
   type PromptParameters,
   ProcessingMode,
+  type PaymentResult,
+  type PaymentFailure,
+  type PaymentSuccess,
 } from 'mobile-payments-sdk-react-native';
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  Image,
-  StyleSheet,
-  SafeAreaView,
-  TouchableOpacity,
-} from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import uuid from 'react-native-uuid';
 import LoadingButton from '../components/LoadingButton';
 import HeaderButton from '../components/HeaderButton';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { usePayment } from '../providers/PaymentProvider';
+
+function isPaymentSuccess(result: PaymentResult): result is PaymentSuccess {
+  return (result as PaymentSuccess).payment !== undefined;
+}
+
+function isPaymentFailure(result: PaymentResult): result is PaymentFailure {
+  return (result as PaymentFailure).failure !== undefined;
+}
 
 const HomeView = () => {
   const navigation = useNavigation();
-
+  const { startPayment } = usePayment();
   const [isMockReaderPresented, setMockReaderPresented] = useState(false);
 
   const dismissMockReader = () => {
@@ -68,14 +72,21 @@ const HomeView = () => {
       mode: PromptMode.DEFAULT,
     };
 
-    try {
-      const payment = await startPayment(paymentParameters, promptParameters);
-      console.log('Payment successful:', payment);
-    } catch (error) {
-      // convert the error.userInfo into a Failure object
-      const failure: Failure = mapUserInfoToFailure(error.userInfo);
-      console.log('Payment error:', JSON.stringify(failure));
-    }
+    startPayment(
+      paymentParameters,
+      promptParameters,
+      (paymentResult) => {
+        if (isPaymentSuccess(paymentResult)) {
+          paymentResult.payment;
+          console.log('Payment successful:', paymentResult.payment);
+        } else if (isPaymentFailure(paymentResult)) {
+          console.log('Payment error:', paymentResult.failure);
+        }
+      },
+      (failure) => {
+        console.log('Payment error:', JSON.stringify(failure));
+      }
+    );
   };
 
   return (
@@ -85,6 +96,7 @@ const HomeView = () => {
         <View style={styles.headerSpacer} />
         <HeaderButton
           title="Permissions"
+          //@ts-ignore
           onPress={() => navigation.navigate('Permissions')}
         />
       </View>
@@ -126,8 +138,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   header: {
+    justifyContent: 'space-between',
     flexDirection: 'row',
-    marginBottom: 50,
     paddingLeft: 16,
     paddingRight: 16,
   },
@@ -136,7 +148,8 @@ const styles = StyleSheet.create({
   },
   content: {
     alignItems: 'center',
-    flex: 9,
+    flex: 1,
+    justifyContent: 'center',
     paddingLeft: 16,
     paddingRight: 16,
   },
@@ -152,7 +165,6 @@ const styles = StyleSheet.create({
     marginBottom: 32,
   },
   mockButton: {
-    flex: 1,
     alignItems: 'center',
   },
   mockReaderText: {

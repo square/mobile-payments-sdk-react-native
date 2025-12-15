@@ -143,13 +143,18 @@ In order to pair a reader, you can show the settings screen, which allows reader
 
 ## Step 6: Take a payment
 
-To take a payment, you must pass it a `PaymentParameters` object, which includes payment-specific values such as amount, tip, location; and a `PromptParameters`, which includes the payment methods offered to the customer, and the display mode (which for now only supports the `default` mode of presenting over a given view). This will look like this:
+To take a payment, you must pass it a `PaymentParameters` object, which includes payment-specific values such as amount, tip, location; a `PromptParameters`, which includes the payment methods offered to the customer, and the display mode (`DEFAULT` or `CUSTOM` mode of presenting over a given view); and a `PaymentCallback` which receives a `PaymentResult`, this result can be a `PaymentSuccess` which contains the payment and the payment type (`ONLINE` or `OFFLINE`); or it can be a `PaymentFailure` which contains failure. The function also returns a `PaymentHandle`, which is optional when using the `DEFAULT` prompt mode.
+
+Make sure to use `ProcessingMode.ONLINE_ONLY` when working in sandbox mode. offline processing is not supported in sandbox environments.
+
+Taking a payment will look like this:
 
 ```javascript
 import {
   AdditionalPaymentMethodType,
   CurrencyCode,
   PromptMode,
+  ProcessingMode,
   startPayment,
   mapUserInfoToFailure,
   type PaymentParameters,
@@ -158,8 +163,9 @@ import {
 
 const paymentParameters: PaymentParameters = {
 	amountMoney: { amount: 100, currencyCode: CurrencyCode.USD },
-	appFeeMoney: { amount: 0, currencyCode: CurrencyCode.USD },
-	idempotencyKey: uuid.v4(),
+  processingMode: ProcessingMode.ONLINE_ONLY;
+	paymentAttemptId: uuid.v4(),
+  allowCardSurcharge: false,
 	note: 'Payment for services',
 };
 
@@ -169,8 +175,13 @@ const promptParameters: PromptParameters = {
 };
 
 try {
-  const payment = await startPayment(paymentParameters, promptParameters);
-  console.log('Payment successful:', payment);
+  await startPayment(paymentParameters, promptParameters, (paymentResult) => {
+    if (paymentResult.payment) {
+      console.log('Payment successful:', paymentResult.payment);
+    } else if (paymentResult.failure) {
+      console.log('Payment error:', JSON.stringify(paymentResult.failure));
+    }
+  });
 } catch (error) {
   // Handle a payment error
   const failure: Failure = mapUserInfoToFailure(error.userInfo);
@@ -178,6 +189,70 @@ try {
 }
 ```
 Payment parameters supports a number of additional attributes, which can be seen in the [PaymentParameters definition](https://github.com/square/mobile-payments-sdk-react-native/blob/main/src/models/objects.ts#L50-L71). For error descriptions, visit the respective pages for [iOS](https://developer.squareup.com/docs/mobile-payments-sdk/ios/handling-errors), and [Android](https://developer.squareup.com/docs/mobile-payments-sdk/android/handling-errors).
+
+## Optional: Take a custom prompt payment
+To take a payment using a `CUSTOM` prompt, the process is similar to the previous step; however, in this case, to ensure a proper payment flow you must implement your own navigation logic and payment cancellation handling using the `PaymentHandle`.
+
+This should look something like:
+
+```javascript
+import {
+  AdditionalPaymentMethodType,
+  CurrencyCode,
+  PromptMode,
+  ProcessingMode,
+  startPayment,
+  mapUserInfoToFailure,
+  type PaymentHandle,
+  type PaymentParameters,
+  type PromptParameters,
+} from 'mobile-payments-sdk-react-native';
+
+const paymentParameters: PaymentParameters = {
+	amountMoney: { amount: 100, currencyCode: CurrencyCode.USD },
+  processingMode: ProcessingMode.ONLINE_ONLY;
+	paymentAttemptId: uuid.v4(),
+  allowCardSurcharge: false,
+	note: 'Payment for services',
+};
+
+const promptParameters: PromptParameters = {
+  additionalMethods: [AdditionalPaymentMethodType.ALL],
+  mode: PromptMode.CUSTOM,
+};
+
+try {
+  const paymentHandle: PaymentHandle = await startPayment(paymentParameters, promptParameters, (paymentResult) => {
+    // Handle result navigation
+    navigation.goBack();
+    if (paymentResult.payment) {
+      console.log('Payment successful:', paymentResult.payment);
+    } else if (paymentResult.failure) {
+      console.log('Payment error:', JSON.stringify(paymentResult.failure));
+    }
+  });
+  // Handle custom prompt screen
+  navigation.navigate('CustomPrompt');
+} catch (error) {
+  // Handle a payment error
+  const failure: Failure = mapUserInfoToFailure(error.userInfo);
+  console.log('Payment error:', JSON.stringify(failure));
+}
+```
+
+And in your custom Screen: 
+
+```javascript
+const CustomPrompt = () => {
+  useEffect(() => {
+    const sub = navigation.addListener('beforeRemove', () => {
+      // Handle payment cancellation when navigating back, or trigger it from a custom button
+      paymentHandle.cancel();
+    });
+    return sub;
+  }, []);
+}
+```
 
 
 ## Optional: Use Mock Readers in Sandbox

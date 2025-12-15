@@ -11,8 +11,6 @@ class MobilePaymentsSdkReactNative: RCTEventEmitter {
     private var observingAuthorizationChanges = false
     private var authorizationObservers: NSHashTable<AnyObject> = .weakObjects()
 
-    private var startPaymentResolveBlock: RCTPromiseResolveBlock?
-    private var startPaymentRejectBlock: RCTPromiseRejectBlock?
     private var paymentHandle: PaymentHandle?
 
     private var readersObservers: [String: ReaderObserver] = [:]
@@ -22,7 +20,7 @@ class MobilePaymentsSdkReactNative: RCTEventEmitter {
 
     /// We use notifications to propagate authorization status changes and reader changes
     override func supportedEvents() -> [String]! {
-        return ["AuthorizationStatusChange", "ReaderChanged"]
+        return ["AuthorizationStatusChange", "ReaderChanged", "PaymentResult"]
     }
 
     /// Authorize: https://developer.squareup.com/docs/mobile-payments-sdk/ios/configure-authorize
@@ -277,9 +275,6 @@ class MobilePaymentsSdkReactNative: RCTEventEmitter {
     /// Start Payment: https://developer.squareup.com/docs/mobile-payments-sdk/ios/take-payments
     @objc(startPayment:promptParameters:withResolver:withRejecter:)
     func startPayment(_ paymentParameters: [String: Any], promptParameters: [String: Any], resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
-        // Keeping a reference for the resolvers so the protocol can propagate the results
-        self.startPaymentResolveBlock = resolve
-        self.startPaymentRejectBlock = reject
 
         let params: PaymentParameters
         let paymentResult = Mappers.mapPaymentParameters(paymentParameters)
@@ -301,7 +296,6 @@ class MobilePaymentsSdkReactNative: RCTEventEmitter {
 
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
-            // TODO: add support to custom prompts. For now only default is supported.
             guard let presentedViewController = RCTPresentedViewController() else {
                 return reject("NO_PRESENTED_VIEW_CONTROLLER", "Can't present payment view controller.", nil)
             }
@@ -311,24 +305,34 @@ class MobilePaymentsSdkReactNative: RCTEventEmitter {
                 from: presentedViewController,
                 delegate: self
             )
+          resolve(NSNull())
         }
     }
 
     @objc(cancelPayment:withRejecter:)
     func cancelPayment(resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         guard let handle = paymentHandle else {
-            return reject("PAYMENT_CANCEL_ERROR", "No payment available to cancel.", nil)
+            return resolve("NO_PAYMENT_IN_PROGRESS")
         }
         DispatchQueue.main.async { [weak self] in
-            guard let self else { return }
+          guard let self else {
+            return resolve("NO_PAYMENT_IN_PROGRESS")
+          }
             let cancelation = handle.cancelPayment()
             if (cancelation == true) {
-                resolve("Payment successfully canceled")
+                resolve("CANCELED")
             } else {
-                reject("PAYMENT_CANCEL_ERROR", "This payment cannot be canceled.", nil)
+              resolve("NOT_CANCELABLE")
             }
-            paymentHandle = nil
         }
+    }
+
+    @objc(getPaymentsParameters:withRejecter:)
+    func getPaymentsParameters(resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+      guard let handle = paymentHandle else {
+          return resolve(NSNull())
+      }
+      return resolve(handle.paymentParameters.toMap())
     }
 
     @objc(isOfflineProcessingAllowed:withRejecter:)
@@ -569,7 +573,17 @@ extension MobilePaymentsSdkReactNative : AuthorizationStateObserver {
 
 extension MobilePaymentsSdkReactNative: PaymentManagerDelegate {
     func paymentManager(_ paymentManager: PaymentManager, didFinish payment: Payment) {
-        startPaymentResolveBlock?(Mappers.mapToDictionary(payment: payment))
+        var type = "ONLINE"
+        if let onlinePayment = payment as? OnlinePayment {
+          type = "ONLINE"
+        } else if let offlinePayment = payment as? OfflinePayment {
+          type = "OFFLINE"
+        }
+        sendEvent(withName:"PaymentResult", body: [
+          "success" : true,
+          "payment" : Mappers.mapToDictionary(payment: payment),
+          "paymentType" : type
+        ])
         paymentHandle = nil
     }
 
@@ -610,17 +624,24 @@ extension MobilePaymentsSdkReactNative: PaymentManagerDelegate {
         default:
             errorMessage = "There has been an error taking a payment. Check the request details and try the payment again."
         }
-        startPaymentRejectBlock?("PAYMENT_FAILED", errorMessage, (error as NSError).reactNativeError);
+        sendEvent(withName: "PaymentResult", body: [
+          "success": false,
+          "error": [
+            "errorCode": "PAYMENT_FAILED",
+            "errorMessage": errorMessage,
+          ]
+        ])
         paymentHandle = nil
     }
 
     func paymentManager(_ paymentManager: PaymentManager, didCancel payment: Payment) {
-        if let paymentDictionary = Mappers.mapToDictionary(payment: payment) as? [String: Any] {
-            let error = NSError.initSquareError(customMessage: paymentDictionary)
-            startPaymentRejectBlock?("PAYMENT_CANCELED", "The payment has been canceled.", error.reactNativeError);
-        } else {
-            startPaymentRejectBlock?("PAYMENT_CANCELED", "The payment has been canceled.", nil);
-        }
+        sendEvent(withName: "PaymentResult", body: [
+          "success": false,
+          "error": [
+            "errorCode": "PAYMENT_CANCELED",
+            "errorMessage": "The payment has been canceled.",
+          ]
+        ])
         paymentHandle = nil
     }
 }

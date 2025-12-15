@@ -131,6 +131,7 @@ fun convertToProcessingMode(value: Int?) = when (value) {
 
 fun convertToPromptMode(value: Int?) = when (value) {
   0 -> PromptMode.DEFAULT
+  1 -> PromptMode.CUSTOM
   else -> PromptMode.DEFAULT
 }
 
@@ -168,7 +169,7 @@ private fun SourceType.toEnumInt(): Int = when (this) {
   WALLET -> 6
 }
 
-fun Payment.toPaymentMap(): ReadableMap {
+fun Payment.toPaymentMap(): WritableMap {
   return WritableNativeMap().apply {
     putMap("amountMoney", amountMoney.toMoneyMap())
     putMap("appFeeMoney", appFeeMoney.toMoneyMap())
@@ -176,17 +177,18 @@ fun Payment.toPaymentMap(): ReadableMap {
     putString("locationId", locationId)
     putString("orderId", orderId)
     putString("referenceId", referenceId)
-    putInt("sourceType", sourceType.toEnumInt())
     putMap("tipMoney", tipMoney.toMoneyMap())
     putMap("totalMoney", totalMoney.toMoneyMap())
     putString("updatedAt", updatedAt.toIsoInstantString())
+    putInt("sourceType", sourceType.toEnumInt())
+
     //cashDetails
     //externalDetails
     when (this@toPaymentMap) {
       is OfflinePayment -> {
+        putString("id", id)
         putString("uploadedAt", uploadedAt?.toIsoInstantString())
         putString("localId", localId)
-        putString("id", id)
         putString("status", status.toOfflineStatusString())
         putMap("cardDetails", cardDetails?.toCardDetailsMap())
       }
@@ -330,8 +332,7 @@ fun ReaderInfo.toReaderInfoMap(): WritableMap {
   return WritableNativeMap().apply {
     putString("id", id)
     putString("model", model.toModelString())
-    putString("state", state.toStateString())
-    putString("status", status.toStatusString())
+    putMap("status", status.toStatusMap())
     putString("serialNumber", serialNumber)
     putString("name", name)
     putMap("batteryStatus", batteryStatus?.toBatteryStatusMap())
@@ -370,27 +371,76 @@ fun ReaderInfo.Model.toModelString(): String {
   }
 }
 
-fun ReaderInfo.State.toStateString(): String {
-  return when(this) {
-    is ReaderInfo.State.Ready ->"READY"
-    is ReaderInfo.State.Disabled ->"DISABLE"
-    is ReaderInfo.State.Connecting ->"CONNECTING"
-    is ReaderInfo.State.Disconnected ->"DISCONNECTED"
-    is ReaderInfo.State.FailedToConnect->"FAILED_TO_CONNECT"
-    is ReaderInfo.State.UpdatingFirmware ->"UPDATING_FIRMWARE"
-  }
-}
-
 fun ReaderInfo.Status.toStatusString(): String {
   return when (this) {
     is ReaderInfo.Status.Ready -> "READY"
     is ReaderInfo.Status.ConnectingToDevice -> "CONNECTING_TO_DEVICE"
     is ReaderInfo.Status.ConnectingToSquare -> "CONNECTING_TO_SQUARE"
     is ReaderInfo.Status.Faulty -> "FAULTY"
-    is ReaderInfo.Status.ReaderUnavailable -> "READER_UNAVAILABLE_${this.reason.name}"
+    is ReaderInfo.Status.ReaderUnavailable -> "READER_UNAVAILABLE"
   }
 }
 
+fun ReaderInfo.Status.toUnavailableReasonString(): String? {
+  if (this is ReaderInfo.Status.ReaderUnavailable) {
+      return when (reason) {
+        ReaderInfo.Status.ReaderUnavailable.ReaderUnavailableReason.INTERNAL_ERROR -> "INTERNAL_ERROR"
+        ReaderInfo.Status.ReaderUnavailable.ReaderUnavailableReason.BLUETOOTH_DISABLED -> "BLUETOOTH_DISABLED"
+        ReaderInfo.Status.ReaderUnavailable.ReaderUnavailableReason.BLUETOOTH_FAILURE -> "BLUETOOTH_FAILURE"
+        ReaderInfo.Status.ReaderUnavailable.ReaderUnavailableReason.SECURE_CONNECTION_TO_SQUARE_FAILURE -> "SECURE_CONNECTION_TO_SQUARE_FAILURE"
+        ReaderInfo.Status.ReaderUnavailable.ReaderUnavailableReason.SECURE_CONNECTION_NETWORK_FAILURE -> "SECURE_CONNECTION_NETWORK_FAILURE"
+        ReaderInfo.Status.ReaderUnavailable.ReaderUnavailableReason.OFFLINE_SESSION_EXPIRED -> "OFFLINE_SESSION_EXPIRED"
+        ReaderInfo.Status.ReaderUnavailable.ReaderUnavailableReason.READER_UNAVAILABLE_OFFLINE -> "READER_UNAVAILABLE_OFFLINE"
+        ReaderInfo.Status.ReaderUnavailable.ReaderUnavailableReason.OFFLINE_MODE_DISABLED -> "OFFLINE_MODE_DISABLED"
+        ReaderInfo.Status.ReaderUnavailable.ReaderUnavailableReason.READER_UPDATE_FAILED -> "READER_UPDATE_FAILED"
+        ReaderInfo.Status.ReaderUnavailable.ReaderUnavailableReason.BLOCKING_UPDATE -> "BLOCKING_UPDATE"
+        ReaderInfo.Status.ReaderUnavailable.ReaderUnavailableReason.MERCHANT_SUSPENDED -> "MERCHANT_SUSPENDED"
+        ReaderInfo.Status.ReaderUnavailable.ReaderUnavailableReason.MERCHANT_INELIGIBLE -> "MERCHANT_INELIGIBLE"
+        ReaderInfo.Status.ReaderUnavailable.ReaderUnavailableReason.MERCHANT_NOT_ACTIVATED -> "MERCHANT_NOT_ACTIVATED"
+        ReaderInfo.Status.ReaderUnavailable.ReaderUnavailableReason.DEVICE_NOT_SUPPORTED -> "DEVICE_NOT_SUPPORTED"
+        ReaderInfo.Status.ReaderUnavailable.ReaderUnavailableReason.READER_FIRMWARE_UPDATE_REQUIRED -> "READER_FIRMWARE_UPDATE_REQUIRED"
+        ReaderInfo.Status.ReaderUnavailable.ReaderUnavailableReason.READER_NOT_SUPPORTED -> "READER_NOT_SUPPORTED"
+        ReaderInfo.Status.ReaderUnavailable.ReaderUnavailableReason.DEVICE_ROOTED -> "DEVICE_ROOTED"
+        ReaderInfo.Status.ReaderUnavailable.ReaderUnavailableReason.DEVICE_DEVELOPER_MODE -> "DEVICE_DEVELOPER_MODE"
+        ReaderInfo.Status.ReaderUnavailable.ReaderUnavailableReason.DISABLED -> "DISABLED"
+      }
+  }
+  return  null;
+}
+
+fun ReaderInfo.Status.toUnavailableReasonString(): String? {
+  if (this is ReaderInfo.Status.ReaderUnavailable) {
+      return when (reason) {
+        ReaderInfo.Status.ReaderUnavailable.ReaderUnavailableReason.INTERNAL_ERROR -> "INTERNAL_ERROR"
+        ReaderInfo.Status.ReaderUnavailable.ReaderUnavailableReason.BLUETOOTH_DISABLED -> "BLUETOOTH_DISABLED"
+        ReaderInfo.Status.ReaderUnavailable.ReaderUnavailableReason.BLUETOOTH_FAILURE -> "BLUETOOTH_FAILURE"
+        ReaderInfo.Status.ReaderUnavailable.ReaderUnavailableReason.SECURE_CONNECTION_TO_SQUARE_FAILURE -> "SECURE_CONNECTION_TO_SQUARE_FAILURE"
+        ReaderInfo.Status.ReaderUnavailable.ReaderUnavailableReason.SECURE_CONNECTION_NETWORK_FAILURE -> "SECURE_CONNECTION_NETWORK_FAILURE"
+        ReaderInfo.Status.ReaderUnavailable.ReaderUnavailableReason.OFFLINE_SESSION_EXPIRED -> "OFFLINE_SESSION_EXPIRED"
+        ReaderInfo.Status.ReaderUnavailable.ReaderUnavailableReason.READER_UNAVAILABLE_OFFLINE -> "READER_UNAVAILABLE_OFFLINE"
+        ReaderInfo.Status.ReaderUnavailable.ReaderUnavailableReason.OFFLINE_MODE_DISABLED -> "OFFLINE_MODE_DISABLED"
+        ReaderInfo.Status.ReaderUnavailable.ReaderUnavailableReason.READER_UPDATE_FAILED -> "READER_UPDATE_FAILED"
+        ReaderInfo.Status.ReaderUnavailable.ReaderUnavailableReason.BLOCKING_UPDATE -> "BLOCKING_UPDATE"
+        ReaderInfo.Status.ReaderUnavailable.ReaderUnavailableReason.MERCHANT_SUSPENDED -> "MERCHANT_SUSPENDED"
+        ReaderInfo.Status.ReaderUnavailable.ReaderUnavailableReason.MERCHANT_INELIGIBLE -> "MERCHANT_INELIGIBLE"
+        ReaderInfo.Status.ReaderUnavailable.ReaderUnavailableReason.MERCHANT_NOT_ACTIVATED -> "MERCHANT_NOT_ACTIVATED"
+        ReaderInfo.Status.ReaderUnavailable.ReaderUnavailableReason.DEVICE_NOT_SUPPORTED -> "DEVICE_NOT_SUPPORTED"
+        ReaderInfo.Status.ReaderUnavailable.ReaderUnavailableReason.READER_FIRMWARE_UPDATE_REQUIRED -> "READER_FIRMWARE_UPDATE_REQUIRED"
+        ReaderInfo.Status.ReaderUnavailable.ReaderUnavailableReason.READER_NOT_SUPPORTED -> "READER_NOT_SUPPORTED"
+        ReaderInfo.Status.ReaderUnavailable.ReaderUnavailableReason.DEVICE_ROOTED -> "DEVICE_ROOTED"
+        ReaderInfo.Status.ReaderUnavailable.ReaderUnavailableReason.DEVICE_DEVELOPER_MODE -> "DEVICE_DEVELOPER_MODE"
+        ReaderInfo.Status.ReaderUnavailable.ReaderUnavailableReason.DISABLED -> "DISABLED"
+      }
+  }
+  return  null;
+}
+
+fun ReaderInfo.Status.toStatusMap(): WritableMap {
+  return WritableNativeMap().apply {
+    putString("readerUnavailableReason", toUnavailableReasonString())
+    putString("status", toStatusString())
+  }
+}
 
 fun ReaderChangedEvent.toChangedEventMap(): WritableMap {
   return WritableNativeMap().apply {
@@ -408,5 +458,43 @@ fun ReaderChangedEvent.Change.toChangeString(): String {
     ReaderChangedEvent.Change.BATTERY_CHARGING -> "BATTERY_CHARGING"
     ReaderChangedEvent.Change.FIRMWARE_PROGRESS -> "FIRMWARE_PROGRESS"
     ReaderChangedEvent.Change.REMOVED -> "REMOVED"
+  }
+}
+
+
+fun PaymentParameters.toPaymentParametersMap(): WritableMap {
+  return WritableNativeMap().apply {
+    putBoolean("acceptPartialAuthorization", acceptPartialAuthorization)
+    putMap("amountMoney", amountMoney.toMoneyMap())
+    putMap("appFeeMoney", appFeeMoney?.toMoneyMap())
+    putBoolean("autocomplete", autocomplete)
+    putString("customerId", customerId)
+    putInt("delayAction", delayAction?.toInt()?:0)
+    putDouble("delayDuration", delayDuration?.toDouble() ?: 0.0)
+    putInt("processingMode", processingMode.toInt())
+    putBoolean("allowCardSurcharge", allowCardSurcharge)
+    putString("paymentAttemptId", paymentAttemptId)
+    putString("locationId", locationId)
+    putString("note", note)
+    putString("orderId", orderId)
+    putString("referenceId", referenceId)
+    putString("teamMemberId", teamMemberId)
+    putMap("tipMoney", tipMoney?.toMoneyMap())
+    putString("statementDescription", statementDescription)
+  }
+}
+
+fun ProcessingMode.toInt(): Int {
+    return when(this) {
+      ProcessingMode.ONLINE_ONLY -> 0
+      ProcessingMode.OFFLINE_ONLY -> 1
+      ProcessingMode.AUTO_DETECT -> 2
+    }
+}
+
+fun DelayAction.toInt(): Int {
+  return when(this) {
+    DelayAction.CANCEL -> 0
+    DelayAction.COMPLETE -> 1
   }
 }

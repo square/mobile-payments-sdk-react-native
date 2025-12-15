@@ -16,6 +16,7 @@ import com.squareup.sdk.mobilepayments.core.CallbackReference
 import com.squareup.sdk.mobilepayments.core.Result.Failure
 import com.squareup.sdk.mobilepayments.core.Result.Success
 import com.squareup.sdk.mobilepayments.mockreader.ui.MockReaderUI
+import com.squareup.sdk.mobilepayments.payment.Payment
 import com.squareup.sdk.mobilepayments.payment.PaymentHandle
 import com.squareup.sdk.mobilepayments.payment.PaymentHandle.CancelResult.CANCELED
 import com.squareup.sdk.mobilepayments.payment.PaymentHandle.CancelResult.NOT_CANCELABLE
@@ -191,24 +192,55 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
       ) { result ->
         paymentHandle = null
         when (result) {
-          is Success -> promise.resolve(result.value.toPaymentMap())
-          is Failure -> promise.reject("PAYMENT_FAILED", result.errorMessage, result.toErrorMap())
+          is Success -> {
+            val type = when (result.value) {
+              is Payment.OnlinePayment -> "ONLINE"
+              is Payment.OfflinePayment -> "OFFLINE"
+            }
+            emitEvent(reactContext, "PaymentResult",
+              WritableNativeMap().apply {
+                putBoolean("success", true)
+                putString("paymentType", type)
+                putMap("payment", result.value.toPaymentMap());
+              });
+          }
+          is Failure -> {
+            emitEvent(reactContext,"PaymentResult",
+              WritableNativeMap().apply {
+                putBoolean("success", false)
+                putMap("error", WritableNativeMap().apply {
+                  putString("errorCode", result.errorCode.toString())
+                  putString("errorMessage", result.errorMessage)
+                });
+              });
+          }
         }
+      }
+    }
+
+    promise.resolve(null);
+  }
+
+  @ReactMethod
+  fun cancelPayment(promise: Promise) {
+    reactContext.runOnUiQueueThread {
+      val cancelResult = paymentHandle?.cancel()
+      when (cancelResult) {
+        CANCELED -> promise.resolve("CANCELED")
+        NOT_CANCELABLE ->
+          promise.resolve("NOT_CANCELABLE")
+        NO_PAYMENT_IN_PROGRESS, null ->
+          promise.resolve("NO_PAYMENT_IN_PROGRESS")
       }
     }
   }
 
   @ReactMethod
-  fun cancelPayment(promise: Promise) {
-    val cancelResult = paymentHandle?.cancel()
-    when (cancelResult) {
-      CANCELED -> promise.resolve("Payment successfully canceled")
-      NOT_CANCELABLE ->
-        promise.reject("PAYMENT_CANCEL_ERROR", "This payment cannot be canceled.")
-      NO_PAYMENT_IN_PROGRESS, null ->
-        promise.reject("PAYMENT_CANCEL_ERROR", "No payment available to cancel.")
+  fun getPaymentsParameters(promise: Promise) {
+    reactContext.runOnUiQueueThread {
+      val paymentParameters = paymentHandle?.paymentParameters;
+      promise.resolve(paymentParameters?.toPaymentParametersMap())
     }
-    paymentHandle = null
   }
 
   @ReactMethod

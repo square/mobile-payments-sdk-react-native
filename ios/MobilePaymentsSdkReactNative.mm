@@ -38,6 +38,9 @@ RCT_EXTERN_METHOD(startPayment:(NSDictionary *)paymentParameters
 RCT_EXTERN_METHOD(cancelPayment:(RCTPromiseResolveBlock)resolve
                   withRejecter:(RCTPromiseRejectBlock)reject)
 
+RCT_EXTERN_METHOD(getPaymentsParameters:(RCTPromiseResolveBlock)resolve
+                  withRejecter:(RCTPromiseRejectBlock)reject)
+
 RCT_EXTERN_METHOD(getEnvironment:(RCTPromiseResolveBlock)resolve
                   withRejecter:(RCTPromiseRejectBlock)reject)
 

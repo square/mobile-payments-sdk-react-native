@@ -96,6 +96,7 @@ export enum PaymentStatus {
 
 export enum PromptMode {
   DEFAULT = 0,
+  CUSTOM = 1,
 }
 
 export enum SourceType {
@@ -220,6 +221,12 @@ export enum ReaderUnavailableReason {
   DEVICE_ROOTED = 'DEVICE_ROOTED',
   DEVICE_DEVELOPER_MODE = 'DEVICE_DEVELOPER_MODE',
   DISABLED = 'DISABLED',
+  MAX_READERS_CONNECTED = 'MAX_READERS_CONNECTED',
+  NOT_CONNECTED_TO_INTERNET = 'NOT_CONNECTED_TO_INTERNET',
+  READER_TIMEOUT = 'READER_TIMEOUT',
+  REVOKED_BY_DEVICE = 'REVOKED_BY_DEVICE',
+  TAP_TO_PAY_ERROR = 'TAP_TO_PAY_ERROR',
+  TAP_TO_PAY_IS_NOT_LINKED = 'TAP_TO_PAY_IS_NOT_LINKED',
 }
 
 export enum CardEntryMethod {
@@ -250,3 +257,48 @@ export enum ProcessingMode {
   OFFLINE_ONLY = 1,
   AUTO_DETECT = 2,
 }
+
+export enum PaymentType {
+  ONLINE = 'ONLINE',
+  OFFLINE = 'OFFLINE',
+}
+
+export enum CancelResult {
+  NO_PAYMENT_IN_PROGRESS = 'NO_PAYMENT_IN_PROGRESS',
+  CANCELED = 'CANCELED',
+  NOT_CANCELABLE = 'NOT_CANCELABLE',
+}
+
+export const getCurrencySymbol = (code: CurrencyCode) => {
+  switch (code) {
+    case CurrencyCode.AUD:
+      return 'A$';
+    case CurrencyCode.CAD:
+      return 'C$';
+    case CurrencyCode.EUR:
+      return '€';
+    case CurrencyCode.GBP:
+      return '£';
+    case CurrencyCode.JPY:
+      return '¥';
+    case CurrencyCode.USD:
+      return '$';
+  }
+};
+
+export const getCurrencyLabel = (code: CurrencyCode) => {
+  switch (code) {
+    case CurrencyCode.AUD:
+      return 'Australian Dollar';
+    case CurrencyCode.CAD:
+      return 'Canadian Dollar';
+    case CurrencyCode.EUR:
+      return 'Euro';
+    case CurrencyCode.GBP:
+      return 'British Pound';
+    case CurrencyCode.JPY:
+      return 'Japanese Yen';
+    case CurrencyCode.USD:
+      return 'US Dollar';
+  }
+};

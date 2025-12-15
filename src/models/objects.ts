@@ -1,5 +1,6 @@
 import type {
   AdditionalPaymentMethodType,
+  CancelResult,
   CardBrand,
   CardCoBrand,
   CardEntryMethod,
@@ -10,6 +11,8 @@ import type {
   EntryMethod,
   OfflinePaymentStatus,
   PaymentStatus,
+  PaymentType,
+  ProcessingMode,
   PromptMode,
   ReaderBatteryLevel,
   ReaderChange,
@@ -18,10 +21,10 @@ import type {
   ReaderConnectionState,
   ReaderInternalStatus,
   ReaderModel,
-  ReaderState,
   ReaderUnavailableReason,
   SourceType,
 } from './enums';
+import type { Failure } from './errors';
 
 export type Location = {
   id: String;
@@ -35,46 +38,42 @@ export type Money = {
   currencyCode: CurrencyCode;
 };
 
-export type OnlinePayment = {
+export interface Payment {
   amountMoney: Money;
-  appFeeMoney: Money;
-  cardDetails: CardPaymentDetails;
+  appFeeMoney?: Money;
   createdAt: Date;
-  customerId: String;
-  id: String;
-  locationId: String;
-  note: String;
-  orderId: String;
-  referenceId: String;
-  status: PaymentStatus;
-  tipMoney: Money;
+  locationId?: String;
+  orderId?: String;
+  referenceId?: String;
+  tipMoney?: Money;
   totalMoney: Money;
   updatedAt: Date;
-};
-
-export type OffLinePayment = {
-  amountMoney: Money;
-  appFeeMoney: Money;
-  cardDetails: OfflineCardPaymentDetails;
-  createdAt: Date;
-  id: String;
-  localId: String;
-  locationId: String;
-  orderId: String;
-  referenceId: String;
-  status: OfflinePaymentStatus;
   sourceType: SourceType;
-  tipMoney: Money;
-  totalMoney: Money;
-  updatedAt: Date;
-  uploadedAt: Date;
-};
+}
+
+export interface OnlinePayment extends Payment {
+  id: String;
+  cardDetails?: CardPaymentDetails;
+  customerId?: String;
+  note?: String;
+  teamMemberId?: String;
+  status: PaymentStatus;
+}
+
+export interface OffLinePayment extends Payment {
+  id?: String;
+  cardDetails?: OfflineCardPaymentDetails;
+  localId: String;
+  status: OfflinePaymentStatus;
+  uploadedAt?: Date;
+}
 
 export type PaymentParameters = {
   // Required
   amountMoney: Money;
-  processingMode: Number;
-  allowCardSurcharge?: Boolean; //required for Android
+  processingMode: ProcessingMode;
+  paymentAttemptId: String; //required for ios
+  allowCardSurcharge: Boolean; //required for Android
   // Optional. For defaults, check:
   // Android: https://square.github.io/mobile-payments-sdk-android/-mobile%20-payments%20-s-d-k%20-android%20-technical%20-reference/com.squareup.sdk.mobilepayments.payment/-payment-parameters/index.html
   // iOS: https://square.github.io/mobile-payments-sdk-ios/docs/documentation/mobilepaymentssdkapi/paymentparameters/
@@ -88,12 +87,10 @@ export type PaymentParameters = {
   note?: String;
   orderId?: String;
   referenceId?: String;
-  statementDescriptionIdentifer?: String;
+  statementDescriptionIdentifier?: String;
   teamMemberId?: String;
   tipMoney?: Money;
-  totalMoney?: Money;
   idempotencyKey?: String;
-  paymentAttemptId?: String;
 };
 
 export type Card = {
@@ -133,20 +130,6 @@ export type PromptParameters = {
   mode: PromptMode;
 };
 
-export type Payment = {
-  amountMoney: Money;
-  appFeeMoney: Money;
-  createdAt: Date;
-  id: String;
-  locationId: String;
-  orderId: String;
-  referenceId: String;
-  sourceType: SourceType;
-  tipMoney: Money;
-  totalMoney: Money;
-  updatedAt: Date;
-};
-
 export type ReaderBatteryStatus = {
   isCharging: Boolean;
   level?: ReaderBatteryLevel;
@@ -179,7 +162,6 @@ export type ReaderStatus = {
 export type ReaderInfo = {
   id: String;
   model: ReaderModel;
-  state: ReaderState;
   status: ReaderStatus;
   serialNumber?: String;
   name: String;
@@ -189,9 +171,7 @@ export type ReaderInfo = {
   supportedCardEntryMethods: CardEntryMethod[];
   isForgettable: Boolean;
   isBlinkable: Boolean;
-
   cardInsertionStatus?: CardInsertionStatus;
-  connectionInfo?: ReaderConnectionInfo;
   firmwareInfo?: ReaderFirmwareInfo;
   isConnectionRetryable?: Boolean;
 };
@@ -199,6 +179,23 @@ export type ReaderInfo = {
 export type ReaderChangedEvent = {
   change: ReaderChange;
   reader: ReaderInfo;
-  readerState: ReaderState;
   readerSerialNumber?: String;
 };
+
+export interface PaymentResult {}
+
+export interface PaymentSuccess extends PaymentResult {
+  payment: Payment;
+  type: PaymentType;
+}
+
+export interface PaymentFailure extends PaymentResult {
+  failure: Failure;
+}
+
+export type PaymentCallback = (paymentResult: PaymentResult) => void;
+
+export interface PaymentHandle {
+  cancel: () => Promise<CancelResult>;
+  getPaymentsParameters: () => Promise<PaymentParameters | undefined>;
+}
