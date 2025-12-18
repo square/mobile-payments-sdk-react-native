@@ -4,7 +4,6 @@ import {
   Text,
   ScrollView,
   StyleSheet,
-  SafeAreaView,
   Alert,
   Platform,
 } from 'react-native';
@@ -29,7 +28,7 @@ import {
 } from 'react-native-permissions';
 import LoadingButton from '../components/LoadingButton';
 import BuildConfig from 'react-native-build-config';
-
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export const requestBluetooth = () => {
   requestMultiple(
@@ -39,6 +38,7 @@ export const requestBluetooth = () => {
         PERMISSIONS.ANDROID.BLUETOOTH_SCAN,
       ],
       ios: [PERMISSIONS.IOS.BLUETOOTH_PERIPHERAL],
+      default: [],
     })
   ).then((statuses) => {
     console.log(statuses);

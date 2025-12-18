@@ -11,19 +11,14 @@ import {
   type PaymentParameters,
   type PromptParameters,
   ProcessingMode,
+  type Failure,
 } from 'mobile-payments-sdk-react-native';
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  Image,
-  StyleSheet,
-  SafeAreaView,
-  TouchableOpacity,
-} from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import uuid from 'react-native-uuid';
 import LoadingButton from '../components/LoadingButton';
 import HeaderButton from '../components/HeaderButton';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const HomeView = () => {
   const navigation = useNavigation();
@@ -126,8 +121,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   header: {
+    justifyContent: 'space-between',
     flexDirection: 'row',
-    marginBottom: 50,
     paddingLeft: 16,
     paddingRight: 16,
   },
@@ -136,7 +131,8 @@ const styles = StyleSheet.create({
   },
   content: {
     alignItems: 'center',
-    flex: 9,
+    flex: 1,
+    justifyContent: 'center',
     paddingLeft: 16,
     paddingRight: 16,
   },
@@ -152,7 +148,6 @@ const styles = StyleSheet.create({
     marginBottom: 32,
   },
   mockButton: {
-    flex: 1,
     alignItems: 'center',
   },
   mockReaderText: {

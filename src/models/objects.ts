@@ -18,7 +18,6 @@ import type {
   ReaderConnectionState,
   ReaderInternalStatus,
   ReaderModel,
-  ReaderState,
   ReaderUnavailableReason,
   SourceType,
 } from './enums';
@@ -179,7 +178,6 @@ export type ReaderStatus = {
 export type ReaderInfo = {
   id: String;
   model: ReaderModel;
-  state: ReaderState;
   status: ReaderStatus;
   serialNumber?: String;
   name: String;
@@ -189,9 +187,7 @@ export type ReaderInfo = {
   supportedCardEntryMethods: CardEntryMethod[];
   isForgettable: Boolean;
   isBlinkable: Boolean;
-
   cardInsertionStatus?: CardInsertionStatus;
-  connectionInfo?: ReaderConnectionInfo;
   firmwareInfo?: ReaderFirmwareInfo;
   isConnectionRetryable?: Boolean;
 };
@@ -199,6 +195,5 @@ export type ReaderInfo = {
 export type ReaderChangedEvent = {
   change: ReaderChange;
   reader: ReaderInfo;
-  readerState: ReaderState;
   readerSerialNumber?: String;
 };
