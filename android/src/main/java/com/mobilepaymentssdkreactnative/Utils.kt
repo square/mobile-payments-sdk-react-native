@@ -408,33 +408,6 @@ fun ReaderInfo.Status.toUnavailableReasonString(): String? {
   return  null;
 }
 
-fun ReaderInfo.Status.toUnavailableReasonString(): String? {
-  if (this is ReaderInfo.Status.ReaderUnavailable) {
-      return when (reason) {
-        ReaderInfo.Status.ReaderUnavailable.ReaderUnavailableReason.INTERNAL_ERROR -> "INTERNAL_ERROR"
-        ReaderInfo.Status.ReaderUnavailable.ReaderUnavailableReason.BLUETOOTH_DISABLED -> "BLUETOOTH_DISABLED"
-        ReaderInfo.Status.ReaderUnavailable.ReaderUnavailableReason.BLUETOOTH_FAILURE -> "BLUETOOTH_FAILURE"
-        ReaderInfo.Status.ReaderUnavailable.ReaderUnavailableReason.SECURE_CONNECTION_TO_SQUARE_FAILURE -> "SECURE_CONNECTION_TO_SQUARE_FAILURE"
-        ReaderInfo.Status.ReaderUnavailable.ReaderUnavailableReason.SECURE_CONNECTION_NETWORK_FAILURE -> "SECURE_CONNECTION_NETWORK_FAILURE"
-        ReaderInfo.Status.ReaderUnavailable.ReaderUnavailableReason.OFFLINE_SESSION_EXPIRED -> "OFFLINE_SESSION_EXPIRED"
-        ReaderInfo.Status.ReaderUnavailable.ReaderUnavailableReason.READER_UNAVAILABLE_OFFLINE -> "READER_UNAVAILABLE_OFFLINE"
-        ReaderInfo.Status.ReaderUnavailable.ReaderUnavailableReason.OFFLINE_MODE_DISABLED -> "OFFLINE_MODE_DISABLED"
-        ReaderInfo.Status.ReaderUnavailable.ReaderUnavailableReason.READER_UPDATE_FAILED -> "READER_UPDATE_FAILED"
-        ReaderInfo.Status.ReaderUnavailable.ReaderUnavailableReason.BLOCKING_UPDATE -> "BLOCKING_UPDATE"
-        ReaderInfo.Status.ReaderUnavailable.ReaderUnavailableReason.MERCHANT_SUSPENDED -> "MERCHANT_SUSPENDED"
-        ReaderInfo.Status.ReaderUnavailable.ReaderUnavailableReason.MERCHANT_INELIGIBLE -> "MERCHANT_INELIGIBLE"
-        ReaderInfo.Status.ReaderUnavailable.ReaderUnavailableReason.MERCHANT_NOT_ACTIVATED -> "MERCHANT_NOT_ACTIVATED"
-        ReaderInfo.Status.ReaderUnavailable.ReaderUnavailableReason.DEVICE_NOT_SUPPORTED -> "DEVICE_NOT_SUPPORTED"
-        ReaderInfo.Status.ReaderUnavailable.ReaderUnavailableReason.READER_FIRMWARE_UPDATE_REQUIRED -> "READER_FIRMWARE_UPDATE_REQUIRED"
-        ReaderInfo.Status.ReaderUnavailable.ReaderUnavailableReason.READER_NOT_SUPPORTED -> "READER_NOT_SUPPORTED"
-        ReaderInfo.Status.ReaderUnavailable.ReaderUnavailableReason.DEVICE_ROOTED -> "DEVICE_ROOTED"
-        ReaderInfo.Status.ReaderUnavailable.ReaderUnavailableReason.DEVICE_DEVELOPER_MODE -> "DEVICE_DEVELOPER_MODE"
-        ReaderInfo.Status.ReaderUnavailable.ReaderUnavailableReason.DISABLED -> "DISABLED"
-      }
-  }
-  return  null;
-}
-
 fun ReaderInfo.Status.toStatusMap(): WritableMap {
   return WritableNativeMap().apply {
     putString("readerUnavailableReason", toUnavailableReasonString())
