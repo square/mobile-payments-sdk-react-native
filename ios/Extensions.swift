@@ -66,27 +66,6 @@ extension CardInputMethods {
     }
 }
 
-extension ReaderState {
-    func toName() -> String {
-        return switch self {
-        case .connecting:
-            "CONNECTING"
-        case .disabled:
-            "DISABLED"
-        case .disconnected:
-            "DISCONNECTED"
-        case .failedToConnect:
-            "FAILED_TO_CONNECT"
-        case .ready:
-            "READY"
-        case .updatingFirmware:
-            "UPDATING_FIRMWARE"
-        default:
-            "UNKNOWN"
-        }
-    }
-}
-
 extension ReaderModel {
     func toName() -> String {
         return switch self {
@@ -112,96 +91,6 @@ extension ReaderFirmwareInfo {
             "failureReason" : failureReason?.localizedDescription ?? NSNull(),
             "updatePercentage" : updatePercentage,
             "version" : version
-        ]
-    }
-}
-
-extension ReaderConnectionFailureReason {
-    func toName() -> String {
-        return switch self {
-        case .deniedByServer:
-            "DENIED_BY_SERVER"
-        case .genericError:
-            "GENERIC_ERROR"
-        case .maxReadersConnected:
-            "MAX_READERS_CONNECTED"
-        case .networkTimeout:
-            "NETWORK_TIMEOUT"
-        case .networkTransportError:
-            "NETWORK_TRANSPORT_ERROR"
-        case .notConnectedToInternet:
-            "NOT_CONNECTED_TO_INTERNET"
-        case .readerTimeout:
-            "READER_TIMEOUT"
-        case .revokedByDevice:
-            "REVOKED_BY_DEVICE"
-        case .serverError:
-            "SERVER_ERROR"
-        case .tapToPayError:
-            "TAP_TO_PAY_ERROR"
-        case .unknown:
-            "UNKNOWN"
-        default : "UNKNOWN"
-        }
-    }
-}
-
-
-extension ReaderConnectionFailureRecoverySuggestion {
-    func toName() -> String {
-        return switch self {
-        case .activateAccount:
-            "ACTIVATE_ACCOUNT"
-        case .contactSupport:
-            "CONTACT_SUPPORT"
-        case .enablePasscodeToUseTapToPay:
-            "ENABLE_PASSCODE_TO_USE_TAP_TO_PAY"
-        case .noSuggestion:
-            "NO_SUGGESTION"
-        case .retry:
-            "RETRY"
-        case .reviewTapToPayGuidelines:
-            "REVIEW_TAP_TO_PAY_GUIDELINES"
-        default:
-            "UNKNOWN"
-        }
-    }
-}
-
-
-extension ReaderConnectionFailureInfo {
-    func toMap() -> NSDictionary {
-        return [
-            "failureReason" : failureReason.toName(),
-            "localizedDescription" : localizedDescription,
-            "localizedTitle" : localizedTitle,
-            "recoverySuggestion": recoverySuggestion.toName()
-        ]
-    }
-}
-
-extension ReaderConnectionState {
-    func toName() -> String {
-        return switch self {
-        case .connected:
-            "CONNECTED"
-        case .connecting:
-            "CONNECTING"
-        case .failedToConnect:
-            "FAILED_TO_CONNECT"
-        case .notConnected:
-            "NOT_CONNECTED"
-        default:
-            "UNKNOWN"
-        }
-    }
-}
-
-extension ReaderConnectionInfo {
-    func toMap() -> NSDictionary {
-        return [
-            "failureInfo" : failureInfo?.toMap() ?? NSNull(),
-            "state" : state.toName()
         ]
     }
 }
@@ -245,6 +134,18 @@ extension ReaderBatteryStatus {
     }
 }
 
+extension ReaderStatusInfo {
+    func toMap() -> NSDictionary {
+        return [
+          "status" : status.rawValue,
+          "statusDescription" : status.description,
+          "unavailableReasonInfo" : unavailableReasonInfo?.reason.rawValue ?? NSNull(),
+          "unavailableReasonInfoTitle" : unavailableReasonInfo?.title ?? NSNull(),
+          "unavailableReasonInfoDescription" : unavailableReasonInfo?.description ?? NSNull(),
+        ]
+    }
+}
+
 extension ReaderChange {
     func toName() -> String {
         switch self {
@@ -258,16 +159,10 @@ extension ReaderChange {
             return "CARD_INSERTED"
         case .cardRemoved:
             return "CARD_REMOVED"
-        case .connectionDidFail:
-            return "CONNECTION_DID_FAILED"
-        case .connectionStateDidChange:
-            return "CONNECTION_STATE_DID_CHANGED"
         case .firmwareUpdateDidFail:
             return "FIRMWARE_UPDATE_DID_FAILED"
         case .firmwareUpdatePercentDidChange:
             return "FIRMWARE_UPDATE_PERCENT_DID_CHANGED"
-        case .stateDidChange:
-            return "STATE_DID_CHANGED"
         default: return "UNKNOWN"
         }
     }
