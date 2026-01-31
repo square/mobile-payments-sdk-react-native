@@ -45,14 +45,6 @@ class Mappers {
                 processingMode: processingMode
             )
         }
-        else if let idempotencyKey = paymentParameters["idempotencyKey"] as? String {
-            paymentParams = PaymentParameters(
-                idempotencyKey: idempotencyKey,
-                amountMoney: amountMoney,
-                processingMode: processingMode
-            )
-        }
-        
         guard let paymentParams
         else {
           return .failure(.missingPaymentAttemptIdOrIdempotencyKey)
@@ -143,7 +135,6 @@ class Mappers {
         return [
             "batteryStatus" : reader.batteryStatus?.toMap() ?? NSNull(),
             "cardInsertionStatus": reader.cardInsertionStatus.toName(),
-            "connectionInfo": reader.connectionInfo.toMap(),
             "firmwareInfo" : reader.firmwareInfo?.toMap() ?? NSNull(),
             "id": String(reader.id),
             "isBlinkable" : reader.isBlinkable,
@@ -152,7 +143,7 @@ class Mappers {
             "model": reader.model.toName(),
             "name" : reader.name,
             "serialNumber" : reader.serialNumber ?? NSNull(),
-            "state" : reader.state.toName(),
+            "statusInfo" : reader.statusInfo.toMap(),
             "supportedCardEntryMethods" : reader.supportedInputMethods.toList()
         ]
     }

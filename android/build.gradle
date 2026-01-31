@@ -89,6 +89,16 @@ repositories {
 
 def kotlin_version = getExtOrDefault("kotlinVersion")
 
+// Align Kotlin stdlib with compiler to avoid "metadata version 2.2.0, expected 2.0.0" when
+// other dependencies pull in a newer stdlib
+configurations.all {
+  resolutionStrategy {
+    force "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    force "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    force "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+  }
+}
+
 dependencies {
   // For < 0.71, this will be from the local maven repo
   // For > 0.71, this will be replaced by `com.facebook.react:react-android:$version` by react gradle plugin

@@ -61,10 +61,10 @@ fun ReadableMap.readPaymentParameters(): PaymentParameters {
   val statementDescription = getString("statementDescription")
   val teamMemberId = getString("teamMemberId")
   val tipMoney = convertToMoney(getMap("tipMoney"))
-  val idempotencyKey = getString("idempotencyKey")
   val paymentAttemptId = getString("paymentAttemptId")
+    ?: java.util.UUID.randomUUID().toString()
 
-  val builder = PaymentParameters.Builder(amountMoney, processingMode, allowCardSurcharge)
+  val builder = PaymentParameters.Builder(amountMoney, processingMode, allowCardSurcharge, paymentAttemptId)
   acceptPartialAuthorization?.let { builder.acceptPartialAuthorization(it) }
   appFeeMoney?.let { builder.appFeeMoney(it) }
   autocomplete?.let { builder.autocomplete(it) }
@@ -78,8 +78,6 @@ fun ReadableMap.readPaymentParameters(): PaymentParameters {
   statementDescription?.let { builder.statementDescription(it) }
   teamMemberId?.let { builder.teamMemberId(it) }
   tipMoney?.let { builder.tipMoney(it) }
-  idempotencyKey?.let { builder.idempotencyKey(it) }
-  paymentAttemptId?.let { builder.paymentAttemptId(it) }
 
   return builder.build()
 }
@@ -330,7 +328,7 @@ fun ReaderInfo.toReaderInfoMap(): WritableMap {
   return WritableNativeMap().apply {
     putString("id", id)
     putString("model", model.toModelString())
-    putString("state", state.toStateString())
+    putString("state", status.toStatusString())
     putString("status", status.toStatusString())
     putString("serialNumber", serialNumber)
     putString("name", name)

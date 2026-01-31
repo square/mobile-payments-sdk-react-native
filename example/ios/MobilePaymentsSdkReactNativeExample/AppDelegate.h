@@ -1,7 +1,7 @@
 #import <RCTAppDelegate.h>
-#import <SquareMobilePaymentsSDK/SquareMobilePaymentsSDK-Swift.h>
 #import <UIKit/UIKit.h>
 #import <React/RCTBridgeModule.h>
+#import "SquareSDKInitializer.h"
 
 @interface AppDelegate : RCTAppDelegate
 
