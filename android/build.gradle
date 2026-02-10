@@ -88,6 +88,7 @@ repositories {
 }
 
 def kotlin_version = getExtOrDefault("kotlinVersion")
+def squareSdkVersion = "2.3.4"
 
 dependencies {
   // For < 0.71, this will be from the local maven repo
