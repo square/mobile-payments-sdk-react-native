@@ -579,8 +579,6 @@ extension MobilePaymentsSdkReactNative: PaymentManagerDelegate {
         switch paymentError {
         case .deviceTimeDoesNotMatchServerTime:
             errorMessage = "The local device time is out of sync with the server time, which could lead to inaccurate payment reporting. Check your device's time and attempt your action again."
-        case .idempotencyKeyReused:
-            errorMessage = "The idempotency key used for this payment has already been used. Review previous payments to ensure you are not processing a duplicate payment, and then try again with a new idempotency key."
         case .invalidPaymentParameters:
             errorMessage = "The PaymentParameters provided were invalid. Check the request details and try the payment again."
         case .invalidPaymentSource:
