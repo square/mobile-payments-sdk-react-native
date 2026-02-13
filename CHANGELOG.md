@@ -1,5 +1,9 @@
 ## Changelog
 
+### v2026.2.1 Feb 12, 2026
+
+* Fix SDK to Android SDK 2.3.4 and iOS to 2.3.1
+
 ### v2025.2.1 Feb 19, 2025
 
 * Address NPM dependency issue

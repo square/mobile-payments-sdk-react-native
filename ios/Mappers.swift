@@ -18,6 +18,10 @@ class Mappers {
           additionalPayments = AdditionalPaymentMethods.all
       } else if (additionalPaymentsRawArray.contains("KEYED")) {
           additionalPayments = AdditionalPaymentMethods.keyed
+      } else if (additionalPaymentsRawArray.contains("TAP_TO_PAY")) {
+          additionalPayments = AdditionalPaymentMethods.tapToPay
+      } else if (additionalPaymentsRawArray.contains("CASH")) {
+        additionalPayments = AdditionalPaymentMethods.cash
       }
       guard let prompt = PromptMode(rawValue: promptMode) else {
           return .failure(.cannotCreatePrompt)
@@ -41,13 +45,6 @@ class Mappers {
         if let paymentAttemptID = paymentParameters["paymentAttemptId"] as? String{
             paymentParams = PaymentParameters(
                 paymentAttemptID: paymentAttemptID,
-                amountMoney: amountMoney,
-                processingMode: processingMode
-            )
-        }
-        else if let idempotencyKey = paymentParameters["idempotencyKey"] as? String {
-            paymentParams = PaymentParameters(
-                idempotencyKey: idempotencyKey,
                 amountMoney: amountMoney,
                 processingMode: processingMode
             )

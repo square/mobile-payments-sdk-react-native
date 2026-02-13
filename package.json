@@ -1,6 +1,6 @@
 {
   "name": "mobile-payments-sdk-react-native",
-  "version": "2025.9.1",
+  "version": "2026.2.1",
   "description": "Mobile Payments SDK plug-in for React Native. Enables developers to build secure in-person payment solutions.",
   "source": "./src/index.tsx",
   "main": "./lib/commonjs/index.js",
