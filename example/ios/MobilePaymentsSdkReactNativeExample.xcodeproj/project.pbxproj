@@ -230,6 +230,7 @@
 				F0C06FCD06EEF84EA2F24865 /* [CP] Embed Pods Frameworks */,
 				A1682D1A2CBE9B6C0011933F /* ShellScript */,
 				6946B4FEF2A06271C5A3F199 /* [CP] Copy Pods Resources */,
+				A1682D1A2CBE9B6C0011933F /* ShellScript */,
 			);
 			buildRules = (
 			);
