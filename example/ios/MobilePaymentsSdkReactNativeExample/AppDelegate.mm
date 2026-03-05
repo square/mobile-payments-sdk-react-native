@@ -1,6 +1,5 @@
 #import "AppDelegate.h"
 #import <React/RCTBundleURLProvider.h>
-#import "Config.h"
 
 @implementation AppDelegate
 
