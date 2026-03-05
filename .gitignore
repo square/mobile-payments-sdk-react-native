@@ -86,5 +86,3 @@ android/generated
 ios/Pods/
 *.xcworkspacedata
 
-# Local properties (*.example are non-local illustations, however)
-example/android/app/
