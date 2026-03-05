@@ -35,6 +35,7 @@ The example app makes the following assumptions:
 * Clone this repo (if you have not already):
   `https://github.com/square/mobile-payments-sdk-react-native`
 * Make sure you've set up your environment for developing in React Native, by visiting the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) guide.
+* **Android 16KB:** The example is configured for 16KB page size support (NDK r28, Build Tools 35). Install **NDK 28.0.12433566** (or newer r28) and **Build Tools 35.0.0** via Android Studio SDK Manager if needed.
 
 ## 2. Get application credentials
 In your [Developer Dashboard](https://developer.squareup.com/apps), create an application or open an existing one you would like to use. If this is your first time creating an application with Square, you can review this [Get Started](https://developer.squareup.com/docs/square-get-started) guide for more information.
@@ -53,7 +54,7 @@ Click "Locations" in the left navigation and make note of the Default Test Accou
 ## 4. Run the app
 1. Make sure you're in the root folder of the repository.
 2. Run `yarn`, then `yarn example start`. This will start `Metro`, the JavaScript _bundler_ that ships _with_ React Native.
-3. Once Metro has loaded, select the plaform of your choice: `a` for Android, `i` for iOS.
+3. Once Metro has loaded, select the platform of your choice: `a` for Android, `i` for iOS.
 
 You can also run the app for each individual platform by opening `ios/MobilePaymentsSdkReactNativeExample.xcworkspace` in Xcode for iOS; or `android/build.gradle` in Android Studio, for Android.
 

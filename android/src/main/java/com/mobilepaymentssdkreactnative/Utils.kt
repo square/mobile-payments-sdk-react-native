@@ -61,10 +61,9 @@ fun ReadableMap.readPaymentParameters(): PaymentParameters {
   val statementDescription = getString("statementDescription")
   val teamMemberId = getString("teamMemberId")
   val tipMoney = convertToMoney(getMap("tipMoney"))
-  val idempotencyKey = getString("idempotencyKey")
-  val paymentAttemptId = getString("paymentAttemptId")
+  val paymentAttemptId = getString("paymentAttemptId") ?: ""
 
-  val builder = PaymentParameters.Builder(amountMoney, processingMode, allowCardSurcharge)
+  val builder = PaymentParameters.Builder(amountMoney, processingMode, allowCardSurcharge, paymentAttemptId)
   acceptPartialAuthorization?.let { builder.acceptPartialAuthorization(it) }
   appFeeMoney?.let { builder.appFeeMoney(it) }
   autocomplete?.let { builder.autocomplete(it) }
@@ -78,8 +77,6 @@ fun ReadableMap.readPaymentParameters(): PaymentParameters {
   statementDescription?.let { builder.statementDescription(it) }
   teamMemberId?.let { builder.teamMemberId(it) }
   tipMoney?.let { builder.tipMoney(it) }
-  idempotencyKey?.let { builder.idempotencyKey(it) }
-  paymentAttemptId?.let { builder.paymentAttemptId(it) }
 
   return builder.build()
 }
