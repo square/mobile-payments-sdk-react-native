@@ -135,7 +135,7 @@ extension ReaderBatteryStatus {
 }
 
 extension ReaderStatusInfo {
-    func toMap() -> NSDictionary {
+    func toStatusMap() -> NSDictionary {
         return [
           "status" : status.rawValue,
           "statusDescription" : status.description,

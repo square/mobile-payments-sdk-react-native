@@ -7,7 +7,7 @@ PODS:
   - hermes-engine (0.75.3):
     - hermes-engine/Pre-built (= 0.75.3)
   - hermes-engine/Pre-built (0.75.3)
-  - mobile-payments-sdk-react-native (2025.9.1):
+  - mobile-payments-sdk-react-native (2026.2.1):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1823,7 +1823,7 @@ SPEC CHECKSUMS:
   fmt: 4c2741a687cc09f0634a2e2c72a838b99f1ff120
   glog: 69ef571f3de08433d766d614c73a9838a06bf7eb
   hermes-engine: 8d2103d6c0176779aea4e25df6bb1410f9946680
-  mobile-payments-sdk-react-native: 383bbd2a98346a3a66ed5b72581a97bba781ae75
+  mobile-payments-sdk-react-native: 161fbdf5a7a5cd788224a78d361c08c5d2a3fb8c
   MockReaderUI: e527a5bc446b95e8cd5ddb4c565fc7d614d38a0f
   Permission-BluetoothPeripheral: 34ab829f159c6cf400c57bac05f5ba1b0af7a86e
   Permission-LocationAccuracy: 30c5421911024b28d8916db5cbd728097da54434
