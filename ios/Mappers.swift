@@ -148,7 +148,7 @@ class Mappers {
             "model": reader.model.toName(),
             "name" : reader.name,
             "serialNumber" : reader.serialNumber ?? NSNull(),
-            "statusInfo" : reader.statusInfo.toMap(),
+            "statusInfo" : reader.statusInfo.toStatusMap(),
             "supportedCardEntryMethods" : reader.supportedInputMethods.toList()
         ]
     }
