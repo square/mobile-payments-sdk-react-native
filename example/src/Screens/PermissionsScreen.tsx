@@ -88,22 +88,23 @@ const checkPermissions = (
   setBluetoothPermission: (value: boolean) => void,
   setReadPhoneStateGranted: (value: boolean) => void
 ) => {
-  const permissions: Permission[] = Platform.select({
-    android: [
-      PERMISSIONS.ANDROID.BLUETOOTH_CONNECT,
-      PERMISSIONS.ANDROID.BLUETOOTH_SCAN,
-      PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
-      PERMISSIONS.ANDROID.RECORD_AUDIO,
-      PERMISSIONS.ANDROID.READ_PHONE_STATE,
-    ],
-    ios: [
-      PERMISSIONS.IOS.BLUETOOTH_PERIPHERAL,
-      PERMISSIONS.IOS.LOCATION_WHEN_IN_USE,
-      PERMISSIONS.IOS.LOCATION_ALWAYS,
-      PERMISSIONS.IOS.MICROPHONE,
-    ],
-    default: [],
-  }) ?? [];
+  const permissions: Permission[] =
+    Platform.select({
+      android: [
+        PERMISSIONS.ANDROID.BLUETOOTH_CONNECT,
+        PERMISSIONS.ANDROID.BLUETOOTH_SCAN,
+        PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
+        PERMISSIONS.ANDROID.RECORD_AUDIO,
+        PERMISSIONS.ANDROID.READ_PHONE_STATE,
+      ],
+      ios: [
+        PERMISSIONS.IOS.BLUETOOTH_PERIPHERAL,
+        PERMISSIONS.IOS.LOCATION_WHEN_IN_USE,
+        PERMISSIONS.IOS.LOCATION_ALWAYS,
+        PERMISSIONS.IOS.MICROPHONE,
+      ],
+      default: [],
+    }) ?? [];
   checkMultiple(permissions).then((statuses) => {
     if (
       statuses[PERMISSIONS.ANDROID.RECORD_AUDIO] === RESULTS.GRANTED ||
@@ -179,8 +180,7 @@ const PermissionsView = () => {
     } catch (error: unknown) {
       setIsAuthorized(false);
       console.log('Authorization error: ', JSON.stringify(error));
-      const message =
-        error instanceof Error ? error.message : String(error);
+      const message = error instanceof Error ? error.message : String(error);
       Alert.alert('Error Authenticating', message);
     }
     setIsLoading(false);

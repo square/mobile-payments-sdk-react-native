@@ -87,7 +87,7 @@ const HomeView = () => {
         <HeaderButton
           title="Settings"
           onPress={() => {
-            void showSettings();
+            showSettings().catch(() => undefined);
           }}
         />
         <View style={styles.headerSpacer} />
