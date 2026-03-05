@@ -5,7 +5,12 @@ import PermissionsScreen from './Screens/PermissionsScreen';
 import { StatusBar } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-const Stack = createNativeStackNavigator();
+export type RootStackParamList = {
+  Home: undefined;
+  Permissions: undefined;
+};
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
   return (

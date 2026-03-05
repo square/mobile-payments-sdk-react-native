@@ -1,4 +1,6 @@
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
+import type { RootStackParamList } from '../App';
 import {
   AdditionalPaymentMethodType,
   CurrencyCode,
@@ -8,11 +10,12 @@ import {
   showSettings,
   startPayment,
   mapUserInfoToFailure,
+  type Failure,
   type PaymentParameters,
   type PromptParameters,
   ProcessingMode,
 } from 'mobile-payments-sdk-react-native';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import uuid from 'react-native-uuid';
@@ -20,7 +23,8 @@ import LoadingButton from '../components/LoadingButton';
 import HeaderButton from '../components/HeaderButton';
 
 const HomeView = () => {
-  const navigation = useNavigation();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const [isMockReaderPresented, setMockReaderPresented] = useState(false);
 
@@ -65,9 +69,14 @@ const HomeView = () => {
     try {
       const payment = await startPayment(paymentParameters, promptParameters);
       console.log('Payment successful:', payment);
-    } catch (error) {
+    } catch (error: unknown) {
       // convert the error.userInfo into a Failure object
-      const failure: Failure = mapUserInfoToFailure(error.userInfo);
+      const userInfo =
+        error !== null &&
+        typeof error === 'object' &&
+        'userInfo' in error &&
+        (error as { userInfo?: unknown }).userInfo;
+      const failure: Failure = mapUserInfoToFailure(userInfo);
       console.log('Payment error:', JSON.stringify(failure));
     }
   };
@@ -75,7 +84,12 @@ const HomeView = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <HeaderButton title="Settings" onPress={() => showSettings()} />
+        <HeaderButton
+          title="Settings"
+          onPress={() => {
+            void showSettings();
+          }}
+        />
         <View style={styles.headerSpacer} />
         <HeaderButton
           title="Permissions"

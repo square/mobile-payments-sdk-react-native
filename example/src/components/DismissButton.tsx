@@ -1,6 +1,10 @@
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 
-const DismissButton = ({ onDismiss }) => {
+interface DismissButtonProps {
+  onDismiss: () => void;
+}
+
+const DismissButton = ({ onDismiss }: DismissButtonProps) => {
   return (
     <TouchableOpacity style={styles.dismissButton} onPress={onDismiss}>
       <Text style={styles.closeButtonText}>&#x2715;</Text>
