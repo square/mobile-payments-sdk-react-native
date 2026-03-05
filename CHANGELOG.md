@@ -1,7 +1,8 @@
 ## Changelog
 ### v2026.3.1 Mar 5, 2026
 
-* Fix compatibility issues to support kotlin 2.2.21
+* Fix compatibility issues to support Kotlin 2.2.21
+* **Android:** React Native 0.75.x requires a patch for Kotlin 2.2.x compatibility. See [Kotlin Compatibility Workaround](docs/KOTLIN_COMPATIBILITY.md)
 
 ### v2026.2.1 Feb 12, 2026
 
