@@ -8,7 +8,7 @@ buildscript {
   }
 
   dependencies {
-    classpath "com.android.tools.build:gradle:8.6.0"
+    classpath "com.android.tools.build:gradle:8.7.2"
     // noinspection DifferentKotlinGradleVersion
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
   }
@@ -88,17 +88,7 @@ repositories {
 }
 
 def kotlin_version = getExtOrDefault("kotlinVersion")
-def squareSdkVersion = "2.3.4"
-
-// Align Kotlin stdlib with compiler to avoid "metadata version 2.2.0, expected 2.0.0" when
-// other dependencies pull in a newer stdlib
-configurations.all {
-  resolutionStrategy {
-    force "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    force "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    force "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-  }
-}
+def squareSdkVersion = "2.4.0"
 
 dependencies {
   // For < 0.71, this will be from the local maven repo
