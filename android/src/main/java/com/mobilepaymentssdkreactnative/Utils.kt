@@ -61,8 +61,7 @@ fun ReadableMap.readPaymentParameters(): PaymentParameters {
   val statementDescription = getString("statementDescription")
   val teamMemberId = getString("teamMemberId")
   val tipMoney = convertToMoney(getMap("tipMoney"))
-  val paymentAttemptId = getString("paymentAttemptId")
-    ?: java.util.UUID.randomUUID().toString()
+  val paymentAttemptId = getString("paymentAttemptId") ?: ""
 
   val builder = PaymentParameters.Builder(amountMoney, processingMode, allowCardSurcharge, paymentAttemptId)
   acceptPartialAuthorization?.let { builder.acceptPartialAuthorization(it) }

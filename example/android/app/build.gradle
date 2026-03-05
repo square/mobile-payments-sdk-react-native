@@ -2,7 +2,6 @@ apply plugin: "com.android.application"
 apply plugin: "org.jetbrains.kotlin.android"
 apply plugin: "com.facebook.react"
 
-
 /* Load custom properties for the app, if any */
 Properties localProperties = new Properties()
 if (project.file("app.properties").exists()) {
