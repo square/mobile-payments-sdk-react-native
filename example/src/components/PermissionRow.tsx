@@ -1,7 +1,19 @@
 import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 
-const PermissionRow = ({ title, description, isGranted, onRequest }) => (
+interface PermissionRowProps {
+  title: string;
+  description: string;
+  isGranted: boolean;
+  onRequest: () => void;
+}
+
+const PermissionRow = ({
+  title,
+  description,
+  isGranted,
+  onRequest,
+}: PermissionRowProps) => (
   <View style={styles.permissionRow}>
     <View style={styles.textContainer}>
       <Text style={styles.permissionTitle}>{title}</Text>

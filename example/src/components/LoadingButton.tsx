@@ -5,13 +5,21 @@ import {
   StyleSheet,
 } from 'react-native';
 
+interface LoadingButtonProps {
+  isLoading: boolean;
+  isActive: boolean;
+  handleOnPress: () => void;
+  activeLabel: string;
+  inactiveLabel?: string;
+}
+
 const LoadingButton = ({
   isLoading,
   isActive,
   handleOnPress,
   activeLabel,
   inactiveLabel = '',
-}) => {
+}: LoadingButtonProps) => {
   console.log(isActive ? activeLabel : inactiveLabel);
   return (
     <TouchableOpacity

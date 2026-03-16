@@ -54,7 +54,9 @@ const TestModal = ({ visible, onClose, onLog }: AsyncTestModalProps) => {
       OfflinePaymentQueue.getTotalStoredPaymentAmount()
         .then((money) => {
           console.log('getTotalStoredPaymentAmount -> ', money);
-          onLog(`getTotalStoredPaymentAmount:\n ${JSON.stringify(money, null, 2)}`);
+          onLog(
+            `getTotalStoredPaymentAmount:\n ${JSON.stringify(money, null, 2)}`
+          );
           onClose();
         })
         .catch((error) => {

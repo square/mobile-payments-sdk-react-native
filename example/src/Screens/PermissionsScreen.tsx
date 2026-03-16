@@ -20,6 +20,7 @@ import {
   stopObservingAuthorizationChanges,
 } from 'mobile-payments-sdk-react-native';
 import { useEffect, useState } from 'react';
+import type { Permission } from 'react-native-permissions';
 import {
   checkMultiple,
   PERMISSIONS,
@@ -46,59 +47,64 @@ export const requestBluetooth = () => {
 };
 
 const requestLocation = () => {
-  request(
-    Platform.select({
-      android: PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
-      ios: PERMISSIONS.IOS.LOCATION_WHEN_IN_USE,
-    })
-  ).then((status) => {
-    console.log(status);
+  const permission = Platform.select({
+    android: PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
+    ios: PERMISSIONS.IOS.LOCATION_WHEN_IN_USE,
   });
+  if (permission) {
+    request(permission).then((status) => {
+      console.log(status);
+    });
+  }
 };
 
 const requestMicrophone = () => {
-  request(
-    Platform.select({
-      android: PERMISSIONS.ANDROID.RECORD_AUDIO,
-      ios: PERMISSIONS.IOS.MICROPHONE,
-    })
-  ).then((status) => {
-    console.log(status);
+  const permission = Platform.select({
+    android: PERMISSIONS.ANDROID.RECORD_AUDIO,
+    ios: PERMISSIONS.IOS.MICROPHONE,
   });
+  if (permission) {
+    request(permission).then((status) => {
+      console.log(status);
+    });
+  }
 };
 
 const requestReadPhoneState = () => {
-  request(
-    Platform.select({
-      android: PERMISSIONS.ANDROID.READ_PHONE_STATE,
-      ios: undefined,
-    })
-  ).then((status) => {
-    console.log(status);
+  const permission = Platform.select({
+    android: PERMISSIONS.ANDROID.READ_PHONE_STATE,
+    ios: undefined,
   });
+  if (permission) {
+    request(permission).then((status) => {
+      console.log(status);
+    });
+  }
 };
 
 const checkPermissions = (
-  setMicPermission,
-  setLocationPermission,
-  setBluetoothPermission,
-  setReadPhoneStateGranted
+  setMicPermission: (value: boolean) => void,
+  setLocationPermission: (value: boolean) => void,
+  setBluetoothPermission: (value: boolean) => void,
+  setReadPhoneStateGranted: (value: boolean) => void
 ) => {
-  const permissions = Platform.select({
-    android: [
-      PERMISSIONS.ANDROID.BLUETOOTH_CONNECT,
-      PERMISSIONS.ANDROID.BLUETOOTH_SCAN,
-      PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
-      PERMISSIONS.ANDROID.RECORD_AUDIO,
-      PERMISSIONS.ANDROID.READ_PHONE_STATE,
-    ],
-    ios: [
-      PERMISSIONS.IOS.BLUETOOTH_PERIPHERAL,
-      PERMISSIONS.IOS.LOCATION_WHEN_IN_USE,
-      PERMISSIONS.IOS.LOCATION_ALWAYS,
-      PERMISSIONS.IOS.MICROPHONE,
-    ],
-  });
+  const permissions: Permission[] =
+    Platform.select({
+      android: [
+        PERMISSIONS.ANDROID.BLUETOOTH_CONNECT,
+        PERMISSIONS.ANDROID.BLUETOOTH_SCAN,
+        PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
+        PERMISSIONS.ANDROID.RECORD_AUDIO,
+        PERMISSIONS.ANDROID.READ_PHONE_STATE,
+      ],
+      ios: [
+        PERMISSIONS.IOS.BLUETOOTH_PERIPHERAL,
+        PERMISSIONS.IOS.LOCATION_WHEN_IN_USE,
+        PERMISSIONS.IOS.LOCATION_ALWAYS,
+        PERMISSIONS.IOS.MICROPHONE,
+      ],
+      default: [],
+    }) ?? [];
   checkMultiple(permissions).then((statuses) => {
     if (
       statuses[PERMISSIONS.ANDROID.RECORD_AUDIO] === RESULTS.GRANTED ||
@@ -129,7 +135,9 @@ const checkPermissions = (
   });
 };
 
-const observeAuthChanges = async (setIsAuthorized) => {
+const observeAuthChanges = async (
+  setIsAuthorized: (value: boolean) => void
+) => {
   observeAuthorizationChanges((newStatus) => {
     if (newStatus === AuthorizationState.NOT_AUTHORIZED) {
       // You can handle deauthorization here calling, for instance, your own authorization method.
@@ -169,10 +177,11 @@ const PermissionsView = () => {
       console.log(
         'SDK Authorization Status is ' + JSON.stringify(authorizationState)
       );
-    } catch (error) {
+    } catch (error: unknown) {
       setIsAuthorized(false);
       console.log('Authorization error: ', JSON.stringify(error));
-      Alert.alert('Error Authenticating', error.message);
+      const message = error instanceof Error ? error.message : String(error);
+      Alert.alert('Error Authenticating', message);
     }
     setIsLoading(false);
   };

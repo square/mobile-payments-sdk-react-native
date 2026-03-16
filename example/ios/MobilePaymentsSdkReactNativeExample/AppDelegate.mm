@@ -1,13 +1,12 @@
 #import "AppDelegate.h"
 #import <React/RCTBundleURLProvider.h>
-#import "Config.h"
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   NSString *APP_ID = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"APP_ID"];
-  [SQMPMobilePaymentsSDK initializeWithApplicationLaunchOptions:launchOptions squareApplicationID: APP_ID];
+  MPRNInitializeSquareSDK(launchOptions, APP_ID);
  
 
   self.moduleName = @"MobilePaymentsSdkReactNativeExample";

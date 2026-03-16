@@ -12,6 +12,10 @@ Before getting started, please review the Requirements and Limitations and Devic
 * Android: [Requirements and Limitations](https://developer.squareup.com/docs/mobile-payments-sdk/android#requirements-and-limitations), [Device Compatibility](https://developer.squareup.com/docs/mobile-payments-sdk/android#device-permissions)
 * iOS: [Requirements and Limitations](https://developer.squareup.com/docs/mobile-payments-sdk/ios#requirements-and-limitations), [Device Compatibility](https://developer.squareup.com/docs/mobile-payments-sdk/ios#device-permissions)
 
+## Android: Kotlin 2.2.x Compatibility
+
+Mobile Payments SDK 2.4.0 requires Kotlin 2.2.21, which is not yet supported by React Native's Gradle plugin (0.75.x and earlier). Android builds will fail unless you apply a small patch to your project. See the [Kotlin Compatibility Workaround](docs/KOTLIN_COMPATIBILITY.md) for step-by-step instructions.
+
 ## Installation
 ```sh
 npm install mobile-payments-sdk-react-native
