@@ -1,4 +1,8 @@
 ## Changelog
+### v2026.3.2 Mar 23, 2026
+
+* Fix npm publish pipeline to use trusted publishers
+
 ### v2026.3.1 Mar 5, 2026
 
 * Fix compatibility issues to support Kotlin 2.2.21
