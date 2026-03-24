@@ -7,6 +7,7 @@ export enum AccountType {
 export enum AdditionalPaymentMethodType {
   ALL = 'ALL',
   KEYED = 'KEYED',
+  CASH = 'CASH',
   TAP_TO_PAY = 'TAP_TO_PAY',
 }
 

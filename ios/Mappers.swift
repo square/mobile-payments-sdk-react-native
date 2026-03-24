@@ -13,16 +13,17 @@ class Mappers {
               let promptMode = promptParameters["mode"] as? Int else {
           return .failure(.invalidPromptParameters)
       }
-      var additionalPayments = AdditionalPaymentMethods()
-      if (additionalPaymentsRawArray.contains("ALL")) {
-          additionalPayments = AdditionalPaymentMethods.all
-      } else if (additionalPaymentsRawArray.contains("KEYED")) {
-          additionalPayments = AdditionalPaymentMethods.keyed
-      } else if (additionalPaymentsRawArray.contains("TAP_TO_PAY")) {
-          additionalPayments = AdditionalPaymentMethods.tapToPay
-      } else if (additionalPaymentsRawArray.contains("CASH")) {
-        additionalPayments = AdditionalPaymentMethods.cash
+      var methods: [AdditionalPaymentMethods] = []
+      for method in additionalPaymentsRawArray {
+          switch method {
+          case "ALL": methods = [.all]
+          case "KEYED": methods.append(.keyed)
+          case "TAP_TO_PAY": methods.append(.tapToPay)
+          case "CASH": methods.append(.cash)
+          default: break
+          }
       }
+      let additionalPayments = AdditionalPaymentMethods(methods)
       guard let prompt = PromptMode(rawValue: promptMode) else {
           return .failure(.cannotCreatePrompt)
       }
@@ -49,7 +50,7 @@ class Mappers {
                 processingMode: processingMode
             )
         }
-        
+
         guard let paymentParams
         else {
           return .failure(.missingPaymentAttemptIdOrIdempotencyKey)
