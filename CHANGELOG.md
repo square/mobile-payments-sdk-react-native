@@ -1,4 +1,8 @@
 ## Changelog
+### v2026.3.3 Mar 24, 2026
+
+* Fix `AdditionalPaymentMethods` mapping to support combining multiple methods (e.g. `TAP_TO_PAY` + `KEYED`)
+
 ### v2026.3.2 Mar 23, 2026
 
 * Fix npm publish pipeline to use trusted publishers
