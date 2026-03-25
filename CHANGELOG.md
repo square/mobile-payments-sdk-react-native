@@ -1,4 +1,9 @@
 ## Changelog
+
+### v2026.3.4 Mar 25, 2026
+
+* Fix `AdditionalPaymentMethods` mapping to support combining multiple methods (e.g. `TAP_TO_PAY` + `KEYED`) on Android.
+
 ### v2026.3.3 Mar 24, 2026
 
 * Fix `AdditionalPaymentMethods` mapping to support combining multiple methods (e.g. `TAP_TO_PAY` + `KEYED`)
@@ -26,7 +31,7 @@
 
 ### v2025.2.0 Feb 19, 2025
 
-* iOS: 
+* iOS:
     * Fixed an issue with the `MockReaderUI` dependency for release build configurations.
     * Bump native SDK version to 2.0.2.
 
