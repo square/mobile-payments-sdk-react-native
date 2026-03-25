@@ -132,9 +132,34 @@ fun convertToPromptMode(value: Int?) = when (value) {
 }
 
 fun convertToAdditionalPaymentMethods(array: ReadableArray?): List<Type> {
+  // If nothing provided → fallback to all methods
   if (array == null) return AdditionalPaymentMethod.allPaymentMethods
+
+  // If explicitly empty → return empty list
   if (array.size() == 0) return emptyList()
-  return AdditionalPaymentMethod.allPaymentMethods
+
+  val result = mutableListOf<Type>()
+
+  for (i in 0 until array.size()) {
+    if (array.getType(i) != com.facebook.react.bridge.ReadableType.String) continue
+
+    val value = array.getString(i)?.uppercase() ?: continue
+
+    val type = when (value) {
+      "KEYED" -> Type.KEYED
+      "CASH" -> Type.CASH
+      else -> null
+    }
+
+    type?.let { result.add(it) }
+  }
+
+  // Optional fallback if nothing valid was provided
+  return if (result.isEmpty()) {
+    AdditionalPaymentMethod.allPaymentMethods
+  } else {
+    result
+  }
 }
 
 fun ReadableMap.getBooleanOrNull(key: String): Boolean? {
