@@ -292,15 +292,10 @@ private fun Card.Brand.toBrandString(): String =
     Card.Brand.JCB -> "JCB"
     Card.Brand.CHINA_UNIONPAY -> "CHINA_UNIONPAY"
     Card.Brand.SQUARE_GIFT_CARD -> "SQUARE_GIFT_CARD"
-    Card.Brand.ALIPAY -> "ALIPAY"
-    Card.Brand.CASH_APP -> "CASH_APP"
     Card.Brand.EFTPOS -> "EFTPOS"
     Card.Brand.FELICA -> "FELICA"
     Card.Brand.INTERAC -> "INTERAC"
     Card.Brand.SQUARE_CAPITAL_CARD -> "SQUARE_CAPITAL_CARD"
-    Card.Brand.SUICA -> "SUICA"
-    Card.Brand.ID -> "ID"
-    Card.Brand.QUICPAY -> "QUICPAY"
   }
 
 private fun Card.CoBrand.toCoBrandString(): String =
@@ -356,8 +351,10 @@ fun ReaderInfo.toReaderInfoMap(): WritableMap {
     putString("serialNumber", serialNumber)
     putString("name", name)
     putMap("batteryStatus", batteryStatus?.toBatteryStatusMap())
-    putString("firmwareVersion", firmwareVersion)
-    putInt("firmwarePercent", firmwarePercent ?: 0)
+    putMap(
+      "firmwareInfo",
+      firmwareInfo.toFirmwareInfoMap()
+    )
     putArray("supportedCardEntryMethods", WritableNativeArray().apply {
       supportedCardEntryMethods.forEach {
         pushString(it.toEntryMethodString())
@@ -366,6 +363,21 @@ fun ReaderInfo.toReaderInfoMap(): WritableMap {
     putBoolean("isForgettable", isForgettable)
     putBoolean("isBlinkable", isBlinkable)
   }
+}
+
+fun ReaderInfo.ReaderFirmwareInfo.toFirmwareInfoMap(): WritableMap  {
+  return WritableNativeMap().apply {
+    putString("version", version)
+    putInt("updatePercentage", updateStatus.toPercent() ?: 0)
+  }
+}
+
+fun  ReaderInfo.FirmwareUpdateStatus.toPercent() : Int? {
+    return when(this) {
+      is ReaderInfo.FirmwareUpdateStatus.None -> null
+      is ReaderInfo.FirmwareUpdateStatus.InProgress -> this.updatePercentage
+      is ReaderInfo.FirmwareUpdateStatus.Pending -> null
+    }
 }
 
 fun CardEntryMethod.toEntryMethodString(): String {

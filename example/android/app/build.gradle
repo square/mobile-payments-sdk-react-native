@@ -120,6 +120,7 @@ android {
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            pickFirsts += "META-INF/versions/9/OSGI-INF/MANIFEST.MF"
         }
     }
 }
@@ -127,7 +128,7 @@ android {
 dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
-    // Mobile Payments SDK 2.4.0
+    // Mobile Payments SDK 2.5.0
     implementation("com.squareup.sdk:mobile-payments-sdk:$squareSdkVersion")
     implementation("com.squareup.sdk:mockreader-ui:$squareSdkVersion")
     if (hermesEnabled.toBoolean()) {

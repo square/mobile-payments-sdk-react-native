@@ -182,8 +182,6 @@ export type ReaderInfo = {
   serialNumber?: String;
   name: String;
   batteryStatus?: ReaderBatteryStatus;
-  firmwareVersion?: String;
-  firmwarePercent?: Number;
   supportedCardEntryMethods: CardEntryMethod[];
   isForgettable: Boolean;
   isBlinkable: Boolean;
