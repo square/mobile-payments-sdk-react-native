@@ -10,6 +10,8 @@ import com.squareup.sdk.mobilepayments.authorization.AuthorizedLocation
 import com.squareup.sdk.mobilepayments.cardreader.CardEntryMethod
 import com.squareup.sdk.mobilepayments.cardreader.ReaderChangedEvent
 import com.squareup.sdk.mobilepayments.cardreader.ReaderInfo
+import com.squareup.sdk.mobilepayments.cardreader.ReaderSettings
+import com.squareup.sdk.mobilepayments.core.TimeOfDay
 import com.squareup.sdk.mobilepayments.core.Result.Failure
 import com.squareup.sdk.mobilepayments.payment.AdditionalPaymentMethod
 import com.squareup.sdk.mobilepayments.payment.AdditionalPaymentMethod.Type
@@ -463,5 +465,21 @@ fun ReaderChangedEvent.Change.toChangeString(): String {
     ReaderChangedEvent.Change.BATTERY_CHARGING -> "BATTERY_CHARGING"
     ReaderChangedEvent.Change.FIRMWARE_PROGRESS -> "FIRMWARE_PROGRESS"
     ReaderChangedEvent.Change.REMOVED -> "REMOVED"
+  }
+}
+
+fun ReaderSettings.toReaderSettingsMap(): WritableMap {
+  return WritableNativeMap().apply {
+    putBoolean("isReducedChargingModeEnabled", isReducedChargingModeEnabled)
+    putMap("preferredFirmwareUpdateTime", preferredFirmwareUpdateTime
+      ?.toTimeOfDayMap()
+    )
+  }
+}
+
+fun TimeOfDay.toTimeOfDayMap(): WritableMap {
+  return WritableNativeMap().apply {
+    putInt("hour", hour)
+    putInt("minute", minute)
   }
 }

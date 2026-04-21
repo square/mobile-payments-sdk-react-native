@@ -4,7 +4,11 @@ import {
   type EmitterSubscription,
 } from 'react-native';
 import MobilePaymentsSdkReactNative from '../base_sdk';
-import type { ReaderChangedEvent, ReaderInfo } from '../models/objects';
+import type {
+  ReaderChangedEvent,
+  ReaderInfo,
+  ReaderSettings,
+} from '../models/objects';
 
 export const readerEventEmitter = new NativeEventEmitter(
   MobilePaymentsSdkReactNative
@@ -29,6 +33,10 @@ export const blink = (id: string): Promise<void> => {
 
 export const isPairingInProgress = (): Promise<boolean> => {
   return MobilePaymentsSdkReactNative.isPairingInProgress();
+};
+
+export const readerSettings = (): Promise<ReaderSettings> => {
+  return MobilePaymentsSdkReactNative.readerSettings();
 };
 
 const addReaderChangedCallback = (refId: String): Promise<String> => {

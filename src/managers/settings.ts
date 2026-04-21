@@ -13,6 +13,14 @@ export const getSdkVersion = (): Promise<String> => {
   return MobilePaymentsSdkReactNative.getSdkVersion();
 };
 
+export const isShowingSettings = (): Promise<boolean> => {
+  return MobilePaymentsSdkReactNative.isShowingSettings();
+};
+
+export const closeSettings = (): Promise<boolean> => {
+  return MobilePaymentsSdkReactNative.closeSettings();
+};
+
 export namespace PaymentSettings {
   export const isOfflineProcessingAllowed = (): Promise<Boolean> => {
     return MobilePaymentsSdkReactNative.isOfflineProcessingAllowed();

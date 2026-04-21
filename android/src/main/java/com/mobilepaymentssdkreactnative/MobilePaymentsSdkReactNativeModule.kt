@@ -128,6 +128,22 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
   }
 
   @ReactMethod
+  fun isShowingSettings(promise: Promise) {
+    reactContext.runOnUiQueueThread {
+      val settingsManager = MobilePaymentsSdk.settingsManager()
+      promise.resolve(settingsManager.isShowingSettings())
+    }
+  }
+
+  @ReactMethod
+  fun closeSettings(promise: Promise) {
+    reactContext.runOnUiQueueThread {
+      val settingsManager = MobilePaymentsSdk.settingsManager()
+      promise.resolve(settingsManager.closeSettings())
+    }
+  }
+
+  @ReactMethod
   fun showMockReaderUI(promise: Promise) {
     if (!MobilePaymentsSdk.isSandboxEnvironment()) {
       promise.reject(
@@ -359,6 +375,12 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
     promise.resolve(null)
   }
   // ---
+
+  @ReactMethod
+  private fun readerSettings(promise: Promise) {
+    val readerManager = MobilePaymentsSdk.readerManager()
+    promise.resolve(readerManager.readerSettings.toReaderSettingsMap())
+  }
 
   private fun emitEvent(reactContext: ReactContext, eventName: String, map: WritableMap) {
     reactContext

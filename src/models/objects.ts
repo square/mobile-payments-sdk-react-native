@@ -195,3 +195,13 @@ export type ReaderChangedEvent = {
   reader: ReaderInfo;
   readerSerialNumber?: String;
 };
+
+export type TimeOfDay = {
+  hour: Number;
+  minute: Number;
+};
+
+export type ReaderSettings = {
+  isReducedChargingModeEnabled: boolean;
+  preferredFirmwareUpdateTime?: TimeOfDay | null;
+};

@@ -114,6 +114,20 @@ class MobilePaymentsSdkReactNative: RCTEventEmitter {
         }
     }
 
+    @objc(isShowingSettings:withRejecter:)
+    func isShowingSettings(resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+        let settingsManager = mobilePaymentsSDK.settingsManager
+        resolve(settingsManager.isSettingsPresented)
+    }
+
+    @objc(closeSettings:withRejecter:)
+    func closeSettings(resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+        DispatchQueue.main.async {
+          let settingsManager = self.mobilePaymentsSDK.settingsManager
+          resolve(settingsManager.dismissSettings())
+        }
+    }
+
     @objc(getEnvironment:withRejecter:)
     func getEnvironment(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         switch(mobilePaymentsSDK.settingsManager.sdkSettings.environment) {
@@ -496,6 +510,12 @@ class MobilePaymentsSdkReactNative: RCTEventEmitter {
         resolve(NSNull())
     }
     // ---
+
+    @objc(readerSettings:withRejecter:)
+    func readerSettings(resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+        let settings = mobilePaymentsSDK.readerManager.readerSettings
+        resolve(settings.toMap())
+    }
 }
 
 class MobilePaymentsReaderObserver: ReaderObserver {
