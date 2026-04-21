@@ -374,7 +374,7 @@ fun ReaderInfo.ReaderFirmwareInfo.toFirmwareInfoMap(): WritableMap  {
   }
 }
 
-fun  ReaderInfo.FirmwareUpdateStatus.toPercent() : Int? {
+fun ReaderInfo.FirmwareUpdateStatus.toPercent() : Int? {
     return when(this) {
       is ReaderInfo.FirmwareUpdateStatus.None -> null
       is ReaderInfo.FirmwareUpdateStatus.InProgress -> this.updatePercentage

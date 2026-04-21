@@ -1,5 +1,9 @@
 ## Changelog
 
+### v2026.4.1 Apr 1, 2026
+
+* Upgrade Android and iOS SDK to 2.5.0
+
 ### v2026.3.4 Mar 25, 2026
 
 * Fix `AdditionalPaymentMethods` mapping to support combining multiple methods (e.g. `TAP_TO_PAY` + `KEYED`) on Android.
