@@ -346,7 +346,7 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
 
   // pairReader
   @ReactMethod
-  private fun pairReader(promise: Promise) {
+  fun pairReader(promise: Promise) {
     if(pairingHandler != null) {
       promise.reject("PAIRING_IN_PROGRESS", "A pairing is already in progress")
     }
@@ -367,7 +367,7 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
   }
 
   @ReactMethod
-  private fun stopPairing(promise: Promise) {
+  fun stopPairing(promise: Promise) {
     if(pairingHandler != null) {
       pairingHandler?.stop()
       pairingHandler = null;
@@ -377,7 +377,7 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
   // ---
 
   @ReactMethod
-  private fun readerSettings(promise: Promise) {
+  fun readerSettings(promise: Promise) {
     val readerManager = MobilePaymentsSdk.readerManager()
     promise.resolve(readerManager.readerSettings.toReaderSettingsMap())
   }

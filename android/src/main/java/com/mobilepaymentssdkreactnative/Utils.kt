@@ -371,6 +371,7 @@ fun ReaderInfo.ReaderFirmwareInfo.toFirmwareInfoMap(): WritableMap  {
   return WritableNativeMap().apply {
     putString("version", version)
     putInt("updatePercentage", updateStatus.toPercent() ?: 0)
+    putString("failureReason", null)
   }
 }
 

@@ -1,8 +1,13 @@
 ## Changelog
 
-### v2026.4.1 Apr 1, 2026
+### v2026.4.1 Apr 22, 2026
 
-* Upgrade Android and iOS SDK to 2.5.0
+* Upgrade Android and iOS native SDK to `2.5.0`
+* Add `SettingsManager.isShowingSettings()` to check whether the Settings screen is currently presented
+* Add `SettingsManager.closeSettings()` to programmatically dismiss the Settings screen
+* Add `ReaderManager.readerSettings()` which returns a new `ReaderSettings` object (`isReducedChargingModeEnabled`, `preferredFirmwareUpdateTime`). Adds a new `TimeOfDay` type (`hour`, `minute`) used by `preferredFirmwareUpdateTime`
+* **Breaking:** `ReaderInfo.firmwareVersion` and `ReaderInfo.firmwarePercent` have been replaced by a single `ReaderInfo.firmwareInfo` object of shape `{ version, updatePercentage }`, mirroring the 2.5.0 native API
+*  **Breaking (Android):** Removed `ALIPAY`, `CASH_APP`, `SUICA`, `ID`, and `QUICPAY` from the mapped `Card.Brand` values — these were removed in native SDK `2.5.0`
 
 ### v2026.3.4 Mar 25, 2026
 
