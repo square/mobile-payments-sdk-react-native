@@ -10,6 +10,8 @@ import com.squareup.sdk.mobilepayments.authorization.AuthorizedLocation
 import com.squareup.sdk.mobilepayments.cardreader.CardEntryMethod
 import com.squareup.sdk.mobilepayments.cardreader.ReaderChangedEvent
 import com.squareup.sdk.mobilepayments.cardreader.ReaderInfo
+import com.squareup.sdk.mobilepayments.cardreader.ReaderSettings
+import com.squareup.sdk.mobilepayments.core.TimeOfDay
 import com.squareup.sdk.mobilepayments.core.Result.Failure
 import com.squareup.sdk.mobilepayments.payment.AdditionalPaymentMethod
 import com.squareup.sdk.mobilepayments.payment.AdditionalPaymentMethod.Type
@@ -292,15 +294,10 @@ private fun Card.Brand.toBrandString(): String =
     Card.Brand.JCB -> "JCB"
     Card.Brand.CHINA_UNIONPAY -> "CHINA_UNIONPAY"
     Card.Brand.SQUARE_GIFT_CARD -> "SQUARE_GIFT_CARD"
-    Card.Brand.ALIPAY -> "ALIPAY"
-    Card.Brand.CASH_APP -> "CASH_APP"
     Card.Brand.EFTPOS -> "EFTPOS"
     Card.Brand.FELICA -> "FELICA"
     Card.Brand.INTERAC -> "INTERAC"
     Card.Brand.SQUARE_CAPITAL_CARD -> "SQUARE_CAPITAL_CARD"
-    Card.Brand.SUICA -> "SUICA"
-    Card.Brand.ID -> "ID"
-    Card.Brand.QUICPAY -> "QUICPAY"
   }
 
 private fun Card.CoBrand.toCoBrandString(): String =
@@ -356,8 +353,10 @@ fun ReaderInfo.toReaderInfoMap(): WritableMap {
     putString("serialNumber", serialNumber)
     putString("name", name)
     putMap("batteryStatus", batteryStatus?.toBatteryStatusMap())
-    putString("firmwareVersion", firmwareVersion)
-    putInt("firmwarePercent", firmwarePercent ?: 0)
+    putMap(
+      "firmwareInfo",
+      firmwareInfo.toFirmwareInfoMap()
+    )
     putArray("supportedCardEntryMethods", WritableNativeArray().apply {
       supportedCardEntryMethods.forEach {
         pushString(it.toEntryMethodString())
@@ -366,6 +365,22 @@ fun ReaderInfo.toReaderInfoMap(): WritableMap {
     putBoolean("isForgettable", isForgettable)
     putBoolean("isBlinkable", isBlinkable)
   }
+}
+
+fun ReaderInfo.ReaderFirmwareInfo.toFirmwareInfoMap(): WritableMap  {
+  return WritableNativeMap().apply {
+    putString("version", version)
+    putInt("updatePercentage", updateStatus.toPercent() ?: 0)
+    putString("failureReason", null)
+  }
+}
+
+fun ReaderInfo.FirmwareUpdateStatus.toPercent() : Int? {
+    return when(this) {
+      is ReaderInfo.FirmwareUpdateStatus.None -> null
+      is ReaderInfo.FirmwareUpdateStatus.InProgress -> this.updatePercentage
+      is ReaderInfo.FirmwareUpdateStatus.Pending -> null
+    }
 }
 
 fun CardEntryMethod.toEntryMethodString(): String {
@@ -451,5 +466,21 @@ fun ReaderChangedEvent.Change.toChangeString(): String {
     ReaderChangedEvent.Change.BATTERY_CHARGING -> "BATTERY_CHARGING"
     ReaderChangedEvent.Change.FIRMWARE_PROGRESS -> "FIRMWARE_PROGRESS"
     ReaderChangedEvent.Change.REMOVED -> "REMOVED"
+  }
+}
+
+fun ReaderSettings.toReaderSettingsMap(): WritableMap {
+  return WritableNativeMap().apply {
+    putBoolean("isReducedChargingModeEnabled", isReducedChargingModeEnabled)
+    putMap("preferredFirmwareUpdateTime", preferredFirmwareUpdateTime
+      ?.toTimeOfDayMap()
+    )
+  }
+}
+
+fun TimeOfDay.toTimeOfDayMap(): WritableMap {
+  return WritableNativeMap().apply {
+    putInt("hour", hour)
+    putInt("minute", minute)
   }
 }

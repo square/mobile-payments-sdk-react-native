@@ -43,7 +43,7 @@ The SDK follows a standard React Native bridge pattern with four feature manager
 
 ## Platform Constraints
 
-- **iOS**: Min deployment target 16. Depends on `SquareMobilePaymentsSDK ~> 2.4.0` and `MockReaderUI ~> 2.4.0`.
+- **iOS**: Min deployment target 16. Depends on `SquareMobilePaymentsSDK ~> 2.5.0` and `MockReaderUI ~> 2.5.0`.
 - **Android**: Min SDK 28, Compile/Target SDK 35. Kotlin 2.2.21. Proguard must be disabled (`minifyEnabled: false`).
 - **Kotlin 2.2.x**: React Native 0.75.x Gradle plugin doesn't natively support Kotlin 2.2.x — requires `patch-package` workaround (see `docs/KOTLIN_COMPATIBILITY.md`).
 - Not compatible with Expo Go (requires native code).

@@ -167,3 +167,21 @@ extension ReaderChange {
         }
     }
 }
+
+extension ReaderSettings {
+  func toMap() -> NSDictionary {
+    return [
+      "isReducedChargingModeEnabled" : reducedChargingModeEnabled,
+      "preferredFirmwareUpdateTime" : preferredFirmwareUpdateTime?.toMap() ?? NSNull()
+    ]
+  }
+}
+
+extension TimeOfDay {
+  func toMap() -> NSDictionary {
+    return [
+      "hour" : hour,
+      "minute" : minute
+    ]
+  }
+}

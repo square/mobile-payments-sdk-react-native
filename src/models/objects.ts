@@ -182,8 +182,6 @@ export type ReaderInfo = {
   serialNumber?: String;
   name: String;
   batteryStatus?: ReaderBatteryStatus;
-  firmwareVersion?: String;
-  firmwarePercent?: Number;
   supportedCardEntryMethods: CardEntryMethod[];
   isForgettable: Boolean;
   isBlinkable: Boolean;
@@ -196,4 +194,14 @@ export type ReaderChangedEvent = {
   change: ReaderChange;
   reader: ReaderInfo;
   readerSerialNumber?: String;
+};
+
+export type TimeOfDay = {
+  hour: Number;
+  minute: Number;
+};
+
+export type ReaderSettings = {
+  isReducedChargingModeEnabled: boolean;
+  preferredFirmwareUpdateTime?: TimeOfDay | null;
 };

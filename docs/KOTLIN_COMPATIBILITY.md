@@ -1,8 +1,8 @@
 # Kotlin 2.2.x Compatibility Workaround for React Native
 
-Mobile Payments SDK 2.4.0 requires **Kotlin 2.2.21**, which introduces a breaking change with React Native's Gradle plugin (versions 0.75.x and earlier). The `KotlinTopLevelExtension` class was removed in Kotlin 2.2.x, causing the Android build to fail during Gradle configuration.
+Mobile Payments SDK 2.5.0 requires **Kotlin 2.2.21**, which introduces a breaking change with React Native's Gradle plugin (versions 0.75.x and earlier). The `KotlinTopLevelExtension` class was removed in Kotlin 2.2.x, causing the Android build to fail during Gradle configuration.
 
-This guide explains how to apply a patch to your project so you can use Mobile Payments SDK 2.4.0 with React Native until React Native itself adds support for Kotlin 2.2.x.
+This guide explains how to apply a patch to your project so you can use Mobile Payments SDK 2.5.0 with React Native until React Native itself adds support for Kotlin 2.2.x.
 
 > **Note:** This workaround is temporary. Once React Native releases a version with Kotlin 2.2.x support, you can remove the patch and `patch-package` dependency.
 
@@ -111,7 +111,7 @@ Applying patches...
 
 ### 5. Build your project
 
-Your Android build should now succeed with Kotlin 2.2.21 and Mobile Payments SDK 2.4.0.
+Your Android build should now succeed with Kotlin 2.2.21 and Mobile Payments SDK 2.5.0.
 
 ## Removing the Workaround
 
