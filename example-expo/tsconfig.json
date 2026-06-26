@@ -1,0 +1,19 @@
+{
+  "extends": "expo/tsconfig.base.json",
+  "compilerOptions": {
+    "strict": true,
+    "paths": {
+      "@/*": [
+        "./src/*",
+        "./*"
+      ],
+      "mobile-payments-sdk-react-native": [
+        "../lib/typescript/module/src/index.d.ts"
+      ]
+    }
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.tsx"
+  ]
+}
