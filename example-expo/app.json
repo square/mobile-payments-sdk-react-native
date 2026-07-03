@@ -15,7 +15,8 @@
           "NSAllowsArbitraryLoads": false,
           "NSAllowsLocalNetworking": true
         }
-      }
+      },
+      "bundleIdentifier": "com.anonymous.exampleexpo"
     },
     "android": {
       "adaptiveIcon": {
@@ -31,7 +32,6 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
-
       [
         "expo-splash-screen",
         {
@@ -50,6 +50,9 @@
           "android": {
             "minSdkVersion": 28,
             "kotlinVersion": "2.1.20"
+          },
+          "ios": {
+            "deploymentTarget": "16.0"
           }
         }
       ],
@@ -64,18 +67,17 @@
       [
         "react-native-permissions",
         {
-          "permissions": [
-            "BLUETOOTH",
-            "LOCATION_ACCURACY",
-            "LOCATION_ALWAYS",
-            "LOCATION_WHEN_IN_USE",
-            "MICROPHONE"
+          "iosPermissions": [
+            "Bluetooth",
+            "LocationAccuracy",
+            "LocationAlways",
+            "LocationWhenInUse",
+            "Microphone"
           ]
         }
       ]
     ],
     "experiments": {
-
       "reactCompiler": true
     }
   }
