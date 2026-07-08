@@ -35,6 +35,12 @@ const withSquareMavenRepository = (config) => {
       const buildGradle = modConfig.modResults.contents;
       const mavenUrl =
         'maven { url("https://sdk.squareup.com/public/android/") }';
+      // Expo 54 KSP only maps Kotlin up to 2.2.20 (not 2.2.21 used by the RN
+      // library), and Square Mobile Payments SDK 2.5.0 transitively pulls
+      // kotlin-stdlib 2.3.x. We cannot align all Kotlin versions in this sample
+      // until Expo bumps its KSP/Kotlin support. This flag is required so the
+      // app compiles against the mixed metadata; remove once Expo supports the
+      // Kotlin version required by the Square SDK without a metadata mismatch.
       const kotlinArgs = `
     tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
         compilerOptions {
@@ -215,8 +221,7 @@ const withSquareAppBuildGradle = (config, { accessToken, locationId }) => {
   return withAppBuildGradle(config, (modConfig) => {
     if (modConfig.modResults.language === 'groovy') {
       let contents = modConfig.modResults.contents;
-      const mpsdkDep =
-        'implementation("com.squareup.sdk:mobile-payments-sdk:2.5.0")';
+
       const vectorIconsFonts =
         'apply from: new File(["node", "--print", "require.resolve(\'react-native-vector-icons/package.json\')"].execute(null, rootDir).text.trim()).getParentFile().absolutePath + "/fonts.gradle"';
 
@@ -230,13 +235,6 @@ const withSquareAppBuildGradle = (config, { accessToken, locationId }) => {
             `defaultConfig {\n        ${accessTokenField}\n        ${locationIdField}`
           );
         }
-      }
-
-      if (!contents.includes('mobile-payments-sdk')) {
-        contents = contents.replace(
-          /dependencies\s*\{/,
-          `dependencies {\n    ${mpsdkDep}`
-        );
       }
 
       if (
@@ -374,10 +372,12 @@ const withIosPodfileWorkarounds = (config) => {
 };
 
 const withSquareMobilePayments = (config, options) => {
-  if (!options || !options.applicationId) {
-    throw new Error(
-      "You must provide an 'applicationId' for the Mobile Payments SDK plugin in app.json"
-    );
+  for (const key of ['applicationId', 'accessToken', 'locationId']) {
+    if (!options?.[key]) {
+      throw new Error(
+        `You must provide '${key}' for the Mobile Payments SDK plugin in app.json`
+      );
+    }
   }
 
   config = withSquareAppBuildGradle(config, options);

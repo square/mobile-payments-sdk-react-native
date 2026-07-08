@@ -106,7 +106,7 @@ const HomeView = () => {
           isLoading={false}
           isActive={true}
           handleOnPress={() => handleStartPayment()}
-          activeLabel="Buy for $1"
+          activeLabel="Buy for 1€"
         />
       </View>
       <TouchableOpacity

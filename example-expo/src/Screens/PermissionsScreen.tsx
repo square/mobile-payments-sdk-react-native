@@ -135,9 +135,7 @@ const checkPermissions = (
   });
 };
 
-const observeAuthChanges = async (
-  setIsAuthorized: (value: boolean) => void
-) => {
+const observeAuthChanges = (setIsAuthorized: (value: boolean) => void) => {
   observeAuthorizationChanges((newStatus) => {
     if (newStatus === AuthorizationState.NOT_AUTHORIZED) {
       // You can handle deauthorization here calling, for instance, your own authorization method.

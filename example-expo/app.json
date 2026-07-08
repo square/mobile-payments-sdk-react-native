@@ -16,7 +16,7 @@
           "NSAllowsLocalNetworking": true
         }
       },
-      "bundleIdentifier": "com.anonymous.exampleexpo"
+      "bundleIdentifier": "com.squareup.mobilepaymentssdk.exampleexpo"
     },
     "android": {
       "adaptiveIcon": {
@@ -25,7 +25,7 @@
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
-      "package": "com.anonymous.exampleexpo"
+      "package": "com.squareup.mobilepaymentssdk.exampleexpo"
     },
     "web": {
       "output": "single",

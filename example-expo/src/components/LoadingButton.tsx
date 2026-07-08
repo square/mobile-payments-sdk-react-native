@@ -20,11 +20,10 @@ const LoadingButton = ({
   activeLabel,
   inactiveLabel = '',
 }: LoadingButtonProps) => {
-  console.log(isActive ? activeLabel : inactiveLabel);
   return (
     <TouchableOpacity
       style={[
-        styles.loadingButtonActive,
+        styles.loadingButton,
         isActive ? styles.loadingButtonActive : styles.loadingButtonInactive,
       ]}
       onPress={handleOnPress}
@@ -48,14 +47,16 @@ const LoadingButton = ({
 };
 
 const styles = StyleSheet.create({
-  loadingButtonActive: {
+  loadingButton: {
     height: 48,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#E5ACD4',
     marginVertical: 16,
     borderRadius: 5,
     width: '100%',
+  },
+  loadingButtonActive: {
+    backgroundColor: '#E5ACD4',
   },
   loadingButtonInactive: {
     backgroundColor: '#d6d6d6',

@@ -4,14 +4,14 @@ This is the **Expo** version of the Donut Counter sample app, demonstrating how 
 
 ## SDK Quick Reference
 
-| Reference | File |
-| --- | --- |
-| ⚡️ Init SDK (Android) | Automated via `app.plugin.js` → `MainApplication.kt` |
-| ⚡️ Init SDK (iOS) | Automated via `app.plugin.js` → `AppDelegate` |
-| 🔒 Authorizing the SDK | [src/app/permissions.tsx](./src/app/permissions.tsx) |
-| 💰 Taking a Payment | [src/app/index.tsx](./src/app/index.tsx) |
-| ⚙️ Presenting Settings Screen | [src/app/index.tsx](./src/app/index.tsx) |
-| 💳 Presenting MockReaderUI | [src/app/index.tsx](./src/app/index.tsx) |
+| Reference                     | File                                                                     |
+| ----------------------------- | ------------------------------------------------------------------------ |
+| ⚡️ Init SDK (Android)        | Automated via `app.plugin.js` → `MainApplication.kt`                     |
+| ⚡️ Init SDK (iOS)            | Automated via `app.plugin.js` → `AppDelegate`                            |
+| 🔒 Authorizing the SDK        | [src/Screens/PermissionsScreen.tsx](./src/Screens/PermissionsScreen.tsx) |
+| 💰 Taking a Payment           | [src/Screens/HomeScreen.tsx](./src/Screens/HomeScreen.tsx)               |
+| ⚙️ Presenting Settings Screen | [src/Screens/HomeScreen.tsx](./src/Screens/HomeScreen.tsx)               |
+| 💳 Presenting MockReaderUI    | [src/Screens/HomeScreen.tsx](./src/Screens/HomeScreen.tsx)               |
 
 ## Get Started
 
@@ -35,7 +35,7 @@ Open [`app.json`](./app.json) and update the plugin configuration:
 
 ```json
 [
-  "../app.plugin.js",
+  "./app.plugin.js",
   {
     "applicationId": "YOUR_SQUARE_APP_ID",
     "accessToken": "YOUR_ACCESS_TOKEN",
@@ -65,6 +65,7 @@ yarn ios
 ### 5. Request permissions
 
 Tap the **Permissions** button (top right of the home screen) and grant all required permissions:
+
 - Bluetooth
 - Location
 - Microphone
@@ -77,9 +78,11 @@ In the Permissions screen, tap **Sign In** to authorize the SDK with your creden
 ### 7. Pair a reader
 
 #### Sandbox
+
 Tap **Show Mock Reader** at the bottom of the home screen. Drag the reader button anywhere on screen and tap it to add a mock magstripe or contactless reader.
 
 #### Production
+
 Tap **Settings** (top left) → **Pair a reader** and follow the instructions.
 
 ### 8. Take a payment
