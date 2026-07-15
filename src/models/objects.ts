@@ -51,7 +51,7 @@ export type OnlinePayment = {
   updatedAt: Date;
 };
 
-export type OffLinePayment = {
+export type OfflinePayment = {
   amountMoney: Money;
   appFeeMoney: Money;
   cardDetails: OfflineCardPaymentDetails;

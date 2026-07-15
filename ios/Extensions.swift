@@ -134,18 +134,6 @@ extension ReaderBatteryStatus {
     }
 }
 
-extension ReaderStatusInfo {
-    func toStatusMap() -> NSDictionary {
-        return [
-          "status" : status.rawValue,
-          "statusDescription" : status.description,
-          "unavailableReasonInfo" : unavailableReasonInfo?.reason.rawValue ?? NSNull(),
-          "unavailableReasonInfoTitle" : unavailableReasonInfo?.title ?? NSNull(),
-          "unavailableReasonInfoDescription" : unavailableReasonInfo?.description ?? NSNull(),
-        ]
-    }
-}
-
 extension ReaderChange {
     func toName() -> String {
         switch self {
