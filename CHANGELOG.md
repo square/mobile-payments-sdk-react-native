@@ -1,5 +1,11 @@
 ## Changelog
 
+### v2026.7.1 Jul 17, 2026
+
+* Add Expo sample
+* Fix status info models
+
+
 ### v2026.4.1 Apr 22, 2026
 
 * Upgrade Android and iOS native SDK to `2.5.0`
