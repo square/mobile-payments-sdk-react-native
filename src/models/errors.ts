@@ -64,6 +64,7 @@ export enum ReaderPairingError {
   READER_ALREADY_PAIRING,
   TIMED_OUT,
   UPDATE_REQUIRED,
+  HOST_ID_MISMATCH,
 }
 
 // Corresponds to the ErrorDetails inside the Failure object in the SDK

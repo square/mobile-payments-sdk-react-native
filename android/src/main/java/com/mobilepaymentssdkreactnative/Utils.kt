@@ -205,7 +205,6 @@ fun Payment.toPaymentMap(): ReadableMap {
     putMap("totalMoney", totalMoney.toMoneyMap())
     putString("updatedAt", updatedAt.toIsoInstantString())
     //cashDetails
-    //externalDetails
     when (this@toPaymentMap) {
       is OfflinePayment -> {
         putString("uploadedAt", uploadedAt?.toIsoInstantString())
@@ -438,6 +437,7 @@ fun ReaderInfo.Status.toUnavailableReasonString(): String? {
         ReaderInfo.Status.ReaderUnavailable.ReaderUnavailableReason.DEVICE_ROOTED -> "DEVICE_ROOTED"
         ReaderInfo.Status.ReaderUnavailable.ReaderUnavailableReason.DEVICE_DEVELOPER_MODE -> "DEVICE_DEVELOPER_MODE"
         ReaderInfo.Status.ReaderUnavailable.ReaderUnavailableReason.DISABLED -> "DISABLED"
+        ReaderInfo.Status.ReaderUnavailable.ReaderUnavailableReason.HOST_ID_MISMATCH -> "HOST_ID_MISMATCH"
       }
   }
   return  null;

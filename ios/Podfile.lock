@@ -1,16 +1,16 @@
 PODS:
-  - SquareMobilePaymentsSDK (2.5.0)
+  - SquareMobilePaymentsSDK (2.6.0)
 
 DEPENDENCIES:
-  - SquareMobilePaymentsSDK (~> 2.5.0)
+  - SquareMobilePaymentsSDK (~> 2.6.0)
 
 SPEC REPOS:
   trunk:
     - SquareMobilePaymentsSDK
 
 SPEC CHECKSUMS:
-  SquareMobilePaymentsSDK: 61d783cb2ef4b238731f4433a42028d95c77893c
+  SquareMobilePaymentsSDK: 7fd3fd8f9c3b114d5a0e747bc52120a6edd87c4b
 
-PODFILE CHECKSUM: b2206f603fba9bc930b94625386c4dfad56fed65
+PODFILE CHECKSUM: 9fbaec2432e5c2b560244e342d7926484c63cfac
 
 COCOAPODS: 1.16.2

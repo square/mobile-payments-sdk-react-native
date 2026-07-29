@@ -41,7 +41,8 @@ Make sure this build phase is after any `[CP] Embed Pods Frameworks` or `Embed F
 
 For Android:
 1. Modify your `/android/build.gradle`
-   - Add `squareSdkVersion = "2.0.2"` inside the `ext {...}` block
+   - Add `squareSdkVersion = "2.6.0"` inside the `ext {...}` block
+   - Set `compileSdkVersion = 36` (or higher) and use Android Gradle Plugin `8.9.1` or higher with Gradle `8.13` or higher, as required by `androidx.core:core:1.18.0`
    - Add `maven { url 'https://sdk.squareup.com/public/android/' }` inside the `allprojects`'s `repositories {...}` block
 2. Modify your `/android/app/build.gradle`
    - Add `implementation("com.squareup.sdk:mobile-payments-sdk:$squareSdkVersion")` inside the `dependencies{...}` block

@@ -36,8 +36,8 @@ const withSquareMavenRepository = (config) => {
       const mavenUrl =
         'maven { url("https://sdk.squareup.com/public/android/") }';
       // Expo 54 KSP only maps Kotlin up to 2.2.20 (not 2.2.21 used by the RN
-      // library), and Square Mobile Payments SDK 2.5.0 transitively pulls
-      // kotlin-stdlib 2.3.x. We cannot align all Kotlin versions in this sample
+      // library), and Square Mobile Payments SDK 2.6.0 is compiled with Kotlin
+      // 2.3.x metadata. We cannot align all Kotlin versions in this sample
       // until Expo bumps its KSP/Kotlin support. This flag is required so the
       // app compiles against the mixed metadata; remove once Expo supports the
       // Kotlin version required by the Square SDK without a metadata mismatch.
