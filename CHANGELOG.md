@@ -2,7 +2,7 @@
 
 ### v2026.7.1 Jul 28, 2026
 
-* Upgrade Android and iOS native SDK to `2.6.0`
+- Upgrade Android and iOS native SDK to `2.6.0`. See the native changelog: [https://developer.squareup.com/docs/changelog/mobile-logs/2026-07-27](https://developer.squareup.com/docs/changelog/mobile-logs/2026-07-27)
 * Add `HOST_ID_MISMATCH` to `ReaderUnavailableReason` and `ReaderPairingError` (Android only). It is reported when a reader refuses a connection because another device is its most-recently-paired host, and was previously surfaced as a generic `INTERNAL_ERROR` / unknown error. Prompt the user to put the reader into pairing mode to re-pair it with the current device
 * Cash payments may now be automatically rounded to the nearest five cents for CAD and AUD, and optionally USD when enabled for the seller. Payment results reflect the rounded amount
 * **iOS:** Fixes an issue where calling `authorize` during SDK startup could leave connected readers in an indeterminate state that required reconnecting to become `READY`. Adds support for iOS 27
