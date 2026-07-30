@@ -18,6 +18,10 @@ Pod::Spec.new do |s|
   s.dependency "SquareMobilePaymentsSDK", "~> 2.6.0"
 
   s.source_files = "ios/**/*.{h,m,mm,swift}"
+  # Exclude local CocoaPods output from the standalone ios/ Xcode project.
+  # Without this, stale SquareMobilePaymentsSDK headers get compiled into this
+  # module and clash with the real 2.x framework ("different definitions in different modules").
+  s.exclude_files = "ios/Pods/**/*"
 
   # Use install_modules_dependencies helper to install the dependencies if React Native version >=0.71.0.
   # See https://github.com/facebook/react-native/blob/febf6b7f33fdb4904669f99d795eba4c0f95d7bf/scripts/cocoapods/new_architecture.rb#L79.
