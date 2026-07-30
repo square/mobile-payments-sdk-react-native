@@ -24,6 +24,9 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
       # npm 12+ requires Node 22+; pin to 11 for Node 20 while keeping OIDC/provenance support
       - run: npm install -g npm@11
-      - run: npm i --ignore-scripts
+      # Yarn workspaces use link: (e.g. example-expo); npm cannot resolve that protocol
+      - run: corepack enable
+      - run: yarn install --immutable --mode=skip-build
+      - run: yarn prepare
       - run: npm pack
       - run: npm publish --provenance --access public
