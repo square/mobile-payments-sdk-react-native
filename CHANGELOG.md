@@ -7,7 +7,6 @@
 * Cash payments may now be automatically rounded to the nearest five cents for CAD and AUD, and optionally USD when enabled for the seller. Payment results reflect the rounded amount
 * **iOS:** Fixes an issue where calling `authorize` during SDK startup could leave connected readers in an indeterminate state that required reconnecting to become `READY`. Adds support for iOS 27
 * **Breaking (Android):** Requires `compileSdkVersion` 36 or higher and Android Gradle Plugin `8.9.1` or higher (Gradle `8.13` or higher). Native SDK `2.6.0` pulls in `androidx.core:core:1.18.0`, which enforces these minimums. The example app now uses AGP `8.11.1` and Gradle `8.14`
-* **Breaking (Android):** The native `ExternalPaymentDetails`, `ExternalTenderType` and `Payment.externalDetails` APIs were removed in native SDK `2.6.0`. `SourceType.EXTERNAL` remains available
 
 ### v2026.4.1 Apr 22, 2026
 
