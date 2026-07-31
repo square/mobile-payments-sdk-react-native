@@ -1823,7 +1823,7 @@ SPEC CHECKSUMS:
   fmt: 4c2741a687cc09f0634a2e2c72a838b99f1ff120
   glog: 69ef571f3de08433d766d614c73a9838a06bf7eb
   hermes-engine: 8d2103d6c0176779aea4e25df6bb1410f9946680
-  mobile-payments-sdk-react-native: 5043e9739abac95242a248e3fa6764020767cb56
+  mobile-payments-sdk-react-native: 0127c776080d69197430521a51c9e6061f00d0fc
   MockReaderUI: f920dd06eaa41846b5c033da4bc01993b5ad4e50
   Permission-BluetoothPeripheral: 34ab829f159c6cf400c57bac05f5ba1b0af7a86e
   Permission-LocationAccuracy: 30c5421911024b28d8916db5cbd728097da54434
