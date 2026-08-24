@@ -1,5 +1,9 @@
 ## Changelog
 
+### v2026.8.1 Aug 24, 2026
+
+* Upgrade Android native SDK to `2.6.1`, which fixes a bug where Tap to Pay on Android became unavailable for up to 2 hours before the daily payment-key rotation
+
 ### v2026.7.1 Jul 28, 2026
 
 - Upgrade Android and iOS native SDK to `2.6.0`. See the native changelog: [https://developer.squareup.com/docs/changelog/mobile-logs/2026-07-27](https://developer.squareup.com/docs/changelog/mobile-logs/2026-07-27)
