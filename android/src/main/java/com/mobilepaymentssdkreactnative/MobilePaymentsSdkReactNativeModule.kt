@@ -344,6 +344,17 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
   }
   // ---
 
+  @ReactMethod
+  fun retryConnection(id: String, promise: Promise) {
+    val readerManager = MobilePaymentsSdk.readerManager()
+    val reader = readerManager.getReader(id)
+    if (reader == null) {
+      promise.reject("READER_NOT_FOUND", "No reader found with id '$id'")
+      return
+    }
+    promise.resolve(readerManager.retryConnection(reader).toRetryConnectionResultString())
+  }
+
   // pairReader
   @ReactMethod
   fun pairReader(promise: Promise) {

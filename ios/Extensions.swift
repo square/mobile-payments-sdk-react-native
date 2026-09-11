@@ -156,6 +156,23 @@ extension ReaderChange {
     }
 }
 
+extension RetryConnectionResult {
+    func mapToString() -> String {
+        switch self {
+        case .startingReconnection:
+            return "STARTING_RECONNECTION"
+        case .readerAlreadyConnectingToSquare:
+            return "READER_ALREADY_CONNECTING_TO_SQUARE"
+        case .readerNotFound:
+            return "READER_NOT_FOUND"
+        case .unableToRetry:
+            fallthrough
+        @unknown default:
+            return "UNABLE_TO_RETRY"
+        }
+    }
+}
+
 extension ReaderSettings {
   func toMap() -> NSDictionary {
     return [
