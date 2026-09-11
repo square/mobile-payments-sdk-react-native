@@ -9,6 +9,7 @@ import type {
   ReaderInfo,
   ReaderSettings,
 } from '../models/objects';
+import type { RetryConnectionResult } from '../models/enums';
 
 export const readerEventEmitter = new NativeEventEmitter(
   MobilePaymentsSdkReactNative
@@ -29,6 +30,18 @@ export const forget = (id: string): Promise<void> => {
 
 export const blink = (id: string): Promise<void> => {
   return MobilePaymentsSdkReactNative.blink(id);
+};
+
+export const retryConnection = (id: string): Promise<RetryConnectionResult> => {
+  return MobilePaymentsSdkReactNative.retryConnection(id);
+};
+
+export const rebootReader = (id: string): Promise<void> => {
+  return Platform.select({
+    ios: () => MobilePaymentsSdkReactNative.rebootReader(id),
+    android: () =>
+      Promise.reject(new Error('This feature is only available on iOS.')),
+  })!();
 };
 
 export const isPairingInProgress = (): Promise<boolean> => {

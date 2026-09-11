@@ -465,6 +465,35 @@ class MobilePaymentsSdkReactNative: RCTEventEmitter {
         resolve(NSNull())
     }
 
+    @objc(retryConnection:withResolve:withRejecter:)
+    func retryConnection(id: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+        guard let readerId = parseId(readerId: id, reject: reject) else {
+            return
+        }
+        guard let reader = findReader(readerId: readerId) else {
+            reject("READER_NOT_FOUND", "No reader found with id '\(id)'", nil)
+            return
+        }
+        resolve(mobilePaymentsSDK.readerManager.retryConnection(reader).mapToString())
+    }
+
+    @objc(rebootReader:withResolve:withRejecter:)
+    func rebootReader(id: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+        guard let readerId = parseId(readerId: id, reject: reject) else {
+            return
+        }
+        guard let reader = findReader(readerId: readerId) else {
+            reject("READER_NOT_FOUND", "No reader found with id '\(id)'", nil)
+            return
+        }
+        guard reader.isRebootable else {
+            reject("READER_NOT_REBOOTABLE", "Reader '\(id)' does not support rebooting.", nil)
+            return
+        }
+        mobilePaymentsSDK.readerManager.rebootReader(reader)
+        resolve(NSNull())
+    }
+
     @objc(isPairingInProgress:withRejecter:)
     func isPairingInProgress(resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         resolve(mobilePaymentsSDK.readerManager.isPairingInProgress)
