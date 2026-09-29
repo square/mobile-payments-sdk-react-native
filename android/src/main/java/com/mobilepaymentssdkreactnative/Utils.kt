@@ -11,6 +11,7 @@ import com.squareup.sdk.mobilepayments.cardreader.CardEntryMethod
 import com.squareup.sdk.mobilepayments.cardreader.ReaderChangedEvent
 import com.squareup.sdk.mobilepayments.cardreader.ReaderInfo
 import com.squareup.sdk.mobilepayments.cardreader.ReaderSettings
+import com.squareup.sdk.mobilepayments.cardreader.RetryConnectionResult
 import com.squareup.sdk.mobilepayments.core.TimeOfDay
 import com.squareup.sdk.mobilepayments.core.Result.Failure
 import com.squareup.sdk.mobilepayments.payment.AdditionalPaymentMethod
@@ -483,4 +484,11 @@ fun TimeOfDay.toTimeOfDayMap(): WritableMap {
     putInt("hour", hour)
     putInt("minute", minute)
   }
+}
+
+fun RetryConnectionResult.toRetryConnectionResultString(): String = when (this) {
+  RetryConnectionResult.STARTING_RECONNECTION -> "STARTING_RECONNECTION"
+  RetryConnectionResult.READER_ALREADY_CONNECTING_TO_SQUARE -> "READER_ALREADY_CONNECTING_TO_SQUARE"
+  RetryConnectionResult.UNABLE_TO_RETRY -> "UNABLE_TO_RETRY"
+  RetryConnectionResult.READER_NOT_FOUND -> "READER_NOT_FOUND"
 }
