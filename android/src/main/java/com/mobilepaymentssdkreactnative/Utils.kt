@@ -17,11 +17,16 @@ import com.squareup.sdk.mobilepayments.core.Result.Failure
 import com.squareup.sdk.mobilepayments.payment.AdditionalPaymentMethod
 import com.squareup.sdk.mobilepayments.payment.AdditionalPaymentMethod.Type
 import com.squareup.sdk.mobilepayments.payment.CurrencyCode
+import com.squareup.sdk.mobilepayments.settings.SdkSettings
+import com.squareup.sdk.mobilepayments.settings.TrackingConsentState
 import com.squareup.sdk.mobilepayments.payment.DelayAction
 import com.squareup.sdk.mobilepayments.payment.Money
 import com.squareup.sdk.mobilepayments.payment.CardPaymentDetails
+import com.squareup.sdk.mobilepayments.payment.CashPaymentDetails
+import com.squareup.sdk.mobilepayments.payment.PaymentProcessingFee
 import com.squareup.sdk.mobilepayments.payment.Card
 import com.squareup.sdk.mobilepayments.payment.Payment
+import com.squareup.sdk.mobilepayments.payment.PaymentManager
 import com.squareup.sdk.mobilepayments.payment.Payment.OfflineStatus
 import com.squareup.sdk.mobilepayments.payment.Payment.OfflinePayment
 import com.squareup.sdk.mobilepayments.payment.Payment.OnlinePayment
@@ -205,9 +210,10 @@ fun Payment.toPaymentMap(): ReadableMap {
     putMap("tipMoney", tipMoney.toMoneyMap())
     putMap("totalMoney", totalMoney.toMoneyMap())
     putString("updatedAt", updatedAt.toIsoInstantString())
-    //cashDetails
+    putMap("cashDetails", cashDetails?.toCashDetailsMap())
     when (this@toPaymentMap) {
       is OfflinePayment -> {
+        putString("paymentType", "OFFLINE")
         putString("uploadedAt", uploadedAt?.toIsoInstantString())
         putString("localId", localId)
         putString("id", id)
@@ -215,19 +221,18 @@ fun Payment.toPaymentMap(): ReadableMap {
         putMap("cardDetails", cardDetails?.toCardDetailsMap())
       }
       is OnlinePayment -> {
+        putString("paymentType", "ONLINE")
         putString("id", id)
-        /*processingFee
-        status
-        cardDetails
-        customerId
-        note
-        statementDescription
-        teamMemberId
-        capabilities
-        receiptNumber
-        remainingBalance
-        squareAccountDetails
-        digitalWalletDetails*/
+        putString("status", status.toPaymentStatusString())
+        putMap("cardDetails", cardDetails?.toCardDetailsMap())
+        putString("customerId", customerId)
+        putString("note", note)
+        putString("teamMemberId", teamMemberId)
+        putString("statementDescription", statementDescription)
+        putString("receiptNumber", receiptNumber)
+        putString("receiptUrl", receiptUrl)
+        putMap("capabilities", capabilities.toCapabilitiesMap())
+        putArray("processingFee", processingFee.toProcessingFeeArray())
       }
     }
   }
@@ -254,8 +259,11 @@ private fun CardPaymentDetails.toCardDetailsMap(): ReadableMap {
       is CardPaymentDetails.OnlineCardPaymentDetails -> {
         putString("applicationIdentifier", applicationId)
         putString("applicationName", applicationName)
-        //authorizationCode
-        //Status
+        putString("authorizationCode", authorizationCode)
+        putString("status", status.toCardPaymentStatusString())
+        putMap("appliedCardSurchargeDetails", appliedCardSurchargeDetails?.toSurchargeDetailsMap())
+        putString("verificationMethod", verificationMethod?.toVerificationMethodString())
+        putString("verificationResults", verificationResults?.toVerificationResultString())
       }
     }
   }
@@ -270,6 +278,7 @@ private fun Card.toCardMap(): ReadableMap {
     putInt("expirationYear", expirationYear)
     putString("cardholderName", cardholderName)
     putString("id", id)
+    putString("bin", bin)
   }
 }
 
@@ -319,6 +328,9 @@ fun AuthorizedLocation.toLocationMap(): WritableMap {
     putString("currencyCode", currencyCode.name)
     putString("name", name)
     putString("mcc", merchantId)
+    putString("merchantId", merchantId)
+    putString("businessName", businessName)
+    putBoolean("cardProcessingActivated", cardProcessingActivated)
   }
 }
 
@@ -352,6 +364,7 @@ fun ReaderInfo.toReaderInfoMap(): WritableMap {
     putMap("status", status.toStatusMap())
     putString("serialNumber", serialNumber)
     putString("name", name)
+    putString("connectionType", connectionType.toConnectionTypeString())
     putMap("batteryStatus", batteryStatus?.toBatteryStatusMap())
     putMap(
       "firmwareInfo",
@@ -371,6 +384,8 @@ fun ReaderInfo.ReaderFirmwareInfo.toFirmwareInfoMap(): WritableMap  {
   return WritableNativeMap().apply {
     putString("version", version)
     putInt("updatePercentage", updateStatus.toPercent() ?: 0)
+    putString("updateStatus", updateStatus.toFirmwareUpdateStatusString())
+    putString("updateTime", updateStatus.toUpdateTime()?.toIsoInstantString())
     putString("failureReason", null)
   }
 }
@@ -492,3 +507,138 @@ fun RetryConnectionResult.toRetryConnectionResultString(): String = when (this) 
   RetryConnectionResult.UNABLE_TO_RETRY -> "UNABLE_TO_RETRY"
   RetryConnectionResult.READER_NOT_FOUND -> "READER_NOT_FOUND"
 }
+
+fun SdkSettings.toSdkSettingsMap(): WritableMap {
+  return WritableNativeMap().apply {
+    putString("sdkVersion", sdkVersion)
+    putString("sdkEnvironment", sdkEnvironment.name)
+    putString("securityComplianceVersion", securityComplianceVersion)
+  }
+}
+
+fun TrackingConsentState.toTrackingConsentStateString(): String {
+  return when (this) {
+    TrackingConsentState.PENDING -> "PENDING"
+    TrackingConsentState.GRANTED -> "GRANTED"
+    TrackingConsentState.DENIED -> "DENIED"
+    TrackingConsentState.NOT_REQUIRED -> "NOT_REQUIRED"
+  }
+}
+
+fun PaymentManager.IdempotencyKeyData.toIdempotencyKeyDataMap(): WritableMap {
+  return WritableNativeMap().apply {
+    putString("idempotencyKey", idempotencyKey)
+    putString("paymentAttemptId", paymentAttemptId)
+    putString("updatedAt", updatedAt.toIsoInstantString())
+  }
+}
+
+fun Set<CardEntryMethod>.toCardEntryMethodsArray(): WritableNativeArray {
+  return WritableNativeArray().apply {
+    this@toCardEntryMethodsArray.forEach { pushString(it.toEntryMethodString()) }
+  }
+}
+
+fun ReadableMap.toTimeOfDay(): TimeOfDay {
+  val hour = requireNotNull(getIntOrNull("hour")) { "hour is required" }
+  val minute = requireNotNull(getIntOrNull("minute")) { "minute is required" }
+  return TimeOfDay(hour, minute)
+}
+
+fun ReaderInfo.FirmwareUpdateStatus.toFirmwareUpdateStatusString(): String {
+  return when(this) {
+    is ReaderInfo.FirmwareUpdateStatus.None -> "NONE"
+    is ReaderInfo.FirmwareUpdateStatus.Pending -> "PENDING"
+    is ReaderInfo.FirmwareUpdateStatus.InProgress -> "IN_PROGRESS"
+  }
+}
+
+fun ReaderInfo.FirmwareUpdateStatus.toUpdateTime(): Date? {
+  return when(this) {
+    is ReaderInfo.FirmwareUpdateStatus.Pending -> this.updateDate
+    else -> null
+  }
+}
+
+fun ReaderInfo.ConnectionType.toConnectionTypeString(): String {
+  return when(this) {
+    ReaderInfo.ConnectionType.USB -> "USB"
+    ReaderInfo.ConnectionType.BLUETOOTH -> "BLUETOOTH"
+    ReaderInfo.ConnectionType.AUDIO -> "AUDIO"
+    ReaderInfo.ConnectionType.EMBEDDED -> "EMBEDDED"
+  }
+}
+
+private fun CashPaymentDetails.toCashDetailsMap(): ReadableMap {
+  return WritableNativeMap().apply {
+    putMap("buyerSuppliedMoney", buyerSuppliedMoney.toMoneyMap())
+    putMap("changeBackMoney", changeBackMoney.toMoneyMap())
+  }
+}
+
+private fun Payment.Capabilities.toCapabilitiesMap(): ReadableMap {
+  return WritableNativeMap().apply {
+    putArray("allCapabilities", WritableNativeArray().apply {
+      allCapabilities.forEach { pushString(it) }
+    })
+  }
+}
+
+private fun Payment.Status.toPaymentStatusString(): String =
+  when (this) {
+    Payment.Status.APPROVED -> "APPROVED"
+    Payment.Status.COMPLETED -> "COMPLETED"
+    Payment.Status.CANCELED -> "CANCELED"
+    Payment.Status.FAILED -> "FAILED"
+    Payment.Status.UNKNOWN -> "UNKNOWN"
+  }
+
+private fun CardPaymentDetails.CardSurchargeDetails.toSurchargeDetailsMap(): ReadableMap {
+  return WritableNativeMap().apply {
+    putMap("cardSurchargeMoney", cardSurchargeMoney.toMoneyMap())
+    putMap("taxOnSurchargeMoney", taxOnSurchargeMoney?.toMoneyMap())
+    putMap("totalSurchargeMoney", totalSurchargeMoney.toMoneyMap())
+  }
+}
+
+private fun CardPaymentDetails.Status.toCardPaymentStatusString(): String =
+  when (this) {
+    CardPaymentDetails.Status.AUTHORIZED -> "AUTHORIZED"
+    CardPaymentDetails.Status.CAPTURED -> "CAPTURED"
+    CardPaymentDetails.Status.VOIDED -> "VOIDED"
+    CardPaymentDetails.Status.FAILED -> "FAILED"
+  }
+
+private fun CardPaymentDetails.VerificationMethod.toVerificationMethodString(): String =
+  when (this) {
+    CardPaymentDetails.VerificationMethod.PIN -> "PIN"
+    CardPaymentDetails.VerificationMethod.SIGNATURE -> "SIGNATURE"
+    CardPaymentDetails.VerificationMethod.PIN_AND_SIGNATURE -> "PIN_AND_SIGNATURE"
+    CardPaymentDetails.VerificationMethod.ON_DEVICE -> "ON_DEVICE"
+    CardPaymentDetails.VerificationMethod.NONE -> "NONE"
+  }
+
+private fun CardPaymentDetails.VerificationResult.toVerificationResultString(): String =
+  when (this) {
+    CardPaymentDetails.VerificationResult.SUCCESS -> "SUCCESS"
+    CardPaymentDetails.VerificationResult.FAILURE -> "FAILURE"
+    CardPaymentDetails.VerificationResult.UNKNOWN -> "UNKNOWN"
+  }
+
+private fun List<PaymentProcessingFee>.toProcessingFeeArray(): WritableNativeArray {
+  return WritableNativeArray().apply {
+    this@toProcessingFeeArray.forEach { fee ->
+      pushMap(WritableNativeMap().apply {
+        putString("effectiveAt", fee.effectiveAt.toIsoInstantString())
+        putString("type", fee.type.toProcessingFeeTypeString())
+        putMap("amountMoney", fee.amountMoney.toMoneyMap())
+      })
+    }
+  }
+}
+
+private fun PaymentProcessingFee.Type.toProcessingFeeTypeString(): String =
+  when (this) {
+    PaymentProcessingFee.Type.INITIAL -> "INITIAL"
+    PaymentProcessingFee.Type.ADJUSTMENT -> "ADJUSTMENT"
+  }

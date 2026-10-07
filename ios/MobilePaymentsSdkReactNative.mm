@@ -30,6 +30,16 @@ RCT_EXTERN_METHOD(isShowingSettings:(RCTPromiseResolveBlock)resolve
 RCT_EXTERN_METHOD(closeSettings:(RCTPromiseResolveBlock)resolve
                   withRejecter:(RCTPromiseRejectBlock)reject)
 
+RCT_EXTERN_METHOD(getSdkSettings:(RCTPromiseResolveBlock)resolve
+                  withRejecter:(RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(getTrackingConsentState:(RCTPromiseResolveBlock)resolve
+                  withRejecter:(RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(updateTrackingConsent:(BOOL)granted
+                  withResolve:(RCTPromiseResolveBlock)resolve
+                  withRejecter:(RCTPromiseRejectBlock)reject)
+
 RCT_EXTERN_METHOD(showMockReaderUI:(RCTPromiseResolveBlock)resolve
                   withRejecter:(RCTPromiseRejectBlock)reject)
 
@@ -77,6 +87,24 @@ RCT_EXTERN_METHOD(getPayments:(RCTPromiseResolveBlock)resolve
 RCT_EXTERN_METHOD(getTotalStoredPaymentAmount:(RCTPromiseResolveBlock)resolve
                   withRejecter:(RCTPromiseRejectBlock)reject)
 
+RCT_EXTERN_METHOD(getIdempotencyKey:(NSString *)paymentAttemptId
+                  withResolve:(RCTPromiseResolveBlock)resolve
+                  withRejecter:(RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(isPaymentInProgress:(RCTPromiseResolveBlock)resolve
+                  withRejecter:(RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(getAvailableCardEntryMethods:(RCTPromiseResolveBlock)resolve
+                  withRejecter:(RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(addAvailableCardEntryMethodsCallback:(NSString *)refId
+                  withResolve:(RCTPromiseResolveBlock)resolve
+                  withRejecter:(RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(removeAvailableCardEntryMethodsCallback:(NSString *)refId
+                  withResolve:(RCTPromiseResolveBlock)resolve
+                  withRejecter:(RCTPromiseRejectBlock)reject)
+
 RCT_EXTERN_METHOD(getReaders:(RCTPromiseResolveBlock)resolve
                   withRejecter:(RCTPromiseRejectBlock)reject)
 
@@ -97,6 +125,14 @@ RCT_EXTERN_METHOD(retryConnection:(NSString *)id
                   withRejecter:(RCTPromiseRejectBlock)reject)
 
 RCT_EXTERN_METHOD(rebootReader:(NSString *)id
+                  withResolve:(RCTPromiseResolveBlock)resolve
+                  withRejecter:(RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(setPreferredFirmwareUpdateTime:(NSDictionary *)time
+                  withResolve:(RCTPromiseResolveBlock)resolve
+                  withRejecter:(RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(setReducedChargingModeEnabled:(BOOL)enabled
                   withResolve:(RCTPromiseResolveBlock)resolve
                   withRejecter:(RCTPromiseRejectBlock)reject)
 

@@ -90,7 +90,9 @@ extension ReaderFirmwareInfo {
         return [
             "failureReason" : failureReason?.localizedDescription ?? NSNull(),
             "updatePercentage" : updatePercentage,
-            "version" : version
+            "version" : version,
+            "updateStatus" : updateStatus.toName(),
+            "updateTime" : updateTime?.ISO8601Format() ?? NSNull()
         ]
     }
 }
@@ -189,4 +191,48 @@ extension TimeOfDay {
       "minute" : minute
     ]
   }
+}
+
+extension CardInputMethods {
+    func toCardEntryMethodList() -> NSArray {
+        var result: [String] = []
+        if contains(.chip) { result.append("EMV") }
+        if contains(.contactless) { result.append("CONTACTLESS") }
+        if contains(.swipe) { result.append("SWIPED") }
+        return result as NSArray
+    }
+}
+
+extension FirmwareUpdateStatus {
+    func toName() -> String {
+        return switch self {
+        case FirmwareUpdateStatus.none:
+            "NONE"
+        case .pending:
+            "PENDING"
+        case .inProgress:
+            "IN_PROGRESS"
+        case .failed:
+            "FAILED"
+        default:
+            "NONE"
+        }
+    }
+}
+
+extension ReaderConnectionType {
+    func toName() -> String {
+        return switch self {
+        case .usb:
+            "USB"
+        case .bluetooth:
+            "BLUETOOTH"
+        case .audio:
+            "AUDIO"
+        case .embedded:
+            "EMBEDDED"
+        default:
+            "UNKNOWN"
+        }
+    }
 }

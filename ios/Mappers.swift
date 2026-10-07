@@ -122,7 +122,8 @@ class Mappers {
     }
 
     class func mapToDictionary(payment: Payment) -> NSDictionary {
-        return [
+        let result = NSMutableDictionary()
+        result.addEntries(from: [
             "amountMoney": Mappers.mapToDictionary(money: payment.amountMoney) ?? NSNull(),
             "appFeeMoney": Mappers.mapToDictionary(money: payment.appFeeMoney) ?? NSNull(),
             "createdAt": payment.createdAt.ISO8601Format(),
@@ -134,7 +135,29 @@ class Mappers {
             "tipMoney": Mappers.mapToDictionary(money: payment.tipMoney) ?? NSNull(),
             "totalMoney": Mappers.mapToDictionary(money: payment.totalMoney) ?? NSNull(),
             "updatedAt": payment.updatedAt.ISO8601Format(),
-            ]
+            "cashDetails": payment.cashDetails?.toMap() ?? NSNull(),
+        ] as [String: Any])
+
+        if let onlinePayment = payment as? OnlinePayment {
+            result.addEntries(from: [
+                "paymentType": "ONLINE",
+                "status": onlinePayment.status.mapToString(),
+                "cardDetails": onlinePayment.cardDetails?.toMap() ?? NSNull(),
+                "customerId": onlinePayment.customerID ?? NSNull(),
+                "note": onlinePayment.note ?? NSNull(),
+                "teamMemberId": onlinePayment.teamMemberID ?? NSNull(),
+            ] as [String: Any])
+        } else if let offlinePayment = payment as? OfflinePayment {
+            result.addEntries(from: [
+                "paymentType": "OFFLINE",
+                "localId": offlinePayment.localID,
+                "status": offlinePayment.status.mapToString(),
+                "cardDetails": offlinePayment.cardDetails?.toMap() ?? NSNull(),
+                "uploadedAt": offlinePayment.uploadedAt?.ISO8601Format() ?? NSNull(),
+            ] as [String: Any])
+        }
+
+        return result
     }
 
     static func mapToDictionary(reader: ReaderInfo) -> NSDictionary {
@@ -150,6 +173,8 @@ class Mappers {
             "name" : reader.name,
             "serialNumber" : reader.serialNumber ?? NSNull(),
             "status" : reader.statusInfo.toMap(),
+            "connectionType" : reader.connectionType.toName(),
+            "isRebootable" : reader.isRebootable,
             "supportedCardEntryMethods" : reader.supportedInputMethods.toList()
         ]
     }
@@ -160,6 +185,8 @@ extension ReaderStatusInfo {
     return [
       "status" : status.toName(),
       "readerUnavailableReason" : unavailableReasonInfo?.reason.toName() ?? NSNull(),
+      "title" : unavailableReasonInfo?.title ?? NSNull(),
+      "detail" : unavailableReasonInfo?.detail ?? NSNull(),
     ]
   }
 }
@@ -266,3 +293,202 @@ enum PaymentPromptError: Error {
     case cannotCreatePrompt
 }
 
+extension SquareMobilePaymentsSDK.Environment {
+    func mapToString() -> String {
+        switch self {
+        case .production:
+            return "PRODUCTION"
+        case .sandbox:
+            fallthrough
+        @unknown default:
+            return "SANDBOX"
+        }
+    }
+}
+
+extension SquareMobilePaymentsSDK.TrackingConsentState {
+    func mapToString() -> String {
+        switch self {
+        case .granted:
+            return "GRANTED"
+        case .denied:
+            return "DENIED"
+        case .notRequired:
+            return "NOT_REQUIRED"
+        case .pending:
+            fallthrough
+        @unknown default:
+            return "PENDING"
+        }
+    }
+}
+
+extension CashPaymentDetails {
+    func toMap() -> NSDictionary {
+        return [
+            "buyerSuppliedMoney": Mappers.mapToDictionary(money: buyerSuppliedMoney) ?? NSNull(),
+            "changeBackMoney": Mappers.mapToDictionary(money: changeBackMoney) ?? NSNull()
+        ]
+    }
+}
+
+extension CardSurchargeDetails {
+    func toMap() -> NSDictionary {
+        return [
+            "cardSurchargeMoney": Mappers.mapToDictionary(money: cardSurchargeMoney) ?? NSNull(),
+            "taxOnSurchargeMoney": Mappers.mapToDictionary(money: taxOnCardSurchargeMoney) ?? NSNull()
+        ]
+    }
+}
+
+extension Card {
+    func toMap() -> NSDictionary {
+        return [
+            "brand": cardBrand.mapToString(),
+            "coBrand": coBrand.mapToString(),
+            "lastFourDigits": last4 ?? NSNull(),
+            "expirationMonth": expMonth,
+            "expirationYear": expYear,
+            "cardholderName": cardholderName ?? NSNull(),
+            "id": id ?? NSNull()
+        ]
+    }
+}
+
+extension OfflineCard {
+    func toMap() -> NSDictionary {
+        return [
+            "brand": cardBrand.mapToString(),
+            "lastFourDigits": last4 ?? NSNull(),
+            "cardholderName": cardholderName ?? NSNull(),
+            "id": id ?? NSNull()
+        ]
+    }
+}
+
+extension CardPaymentDetails {
+    func toMap() -> NSDictionary {
+        return [
+            "card": card?.toMap() ?? NSNull(),
+            "entryMethod": entryMethod.mapToString(),
+            "status": status.mapToString(),
+            "applicationIdentifier": applicationIdentifier ?? NSNull(),
+            "applicationName": applicationName ?? NSNull(),
+            "authorizationCode": authResultCode ?? NSNull(),
+            "appliedCardSurchargeDetails": appliedCardSurchargeDetails?.toMap() ?? NSNull()
+        ]
+    }
+}
+
+extension OfflineCardPaymentDetails {
+    func toMap() -> NSDictionary {
+        return [
+            "card": card?.toMap() ?? NSNull(),
+            "entryMethod": entryMethod.mapToString(),
+            "applicationIdentifier": applicationIdentifier ?? NSNull(),
+            "applicationName": applicationName ?? NSNull()
+        ]
+    }
+}
+
+extension CardBrand {
+    func mapToString() -> String {
+        switch self {
+        case .visa: return "VISA"
+        case .mastercard: return "MASTERCARD"
+        case .americanExpress: return "AMERICAN_EXPRESS"
+        case .discover: return "DISCOVER"
+        case .discoverDiners: return "DISCOVER_DINERS"
+        case .jcb: return "JCB"
+        case .chinaUnionPay: return "CHINA_UNIONPAY"
+        case .squareGiftCard: return "SQUARE_GIFT_CARD"
+        case .squareCapitalCard: return "SQUARE_CAPITAL_CARD"
+        case .interac: return "INTERAC"
+        case .eftpos: return "EFTPOS"
+        case .felica: return "FELICA"
+        case .ebt: return "EBT"
+        case .otherBrand: return "OTHER_BRAND"
+        case .unknown:
+            fallthrough
+        @unknown default:
+            return "UNKNOWN"
+        }
+    }
+}
+
+extension CardCoBrand {
+    func mapToString() -> String {
+        switch self {
+        case .afterpay: return "AFTERPAY"
+        case CardCoBrand.none: return "NONE"
+        case .unknown:
+            fallthrough
+        @unknown default:
+            return "UNKNOWN"
+        }
+    }
+}
+
+extension CardEntryMethod {
+    func mapToString() -> String {
+        switch self {
+        case .keyed: return "KEYED"
+        case .swiped: return "SWIPED"
+        case .emv: return "EMV"
+        case .contactless: return "CONTACTLESS"
+        case .onFile: return "ON_FILE"
+        case .unknown:
+            fallthrough
+        @unknown default:
+            return "UNKNOWN"
+        }
+    }
+}
+
+extension CardPaymentStatus {
+    func mapToString() -> String {
+        switch self {
+        case .authorized: return "AUTHORIZED"
+        case .captured: return "CAPTURED"
+        case .voided: return "VOIDED"
+        case .failed: return "FAILED"
+        case .unknown:
+            fallthrough
+        @unknown default:
+            return "UNKNOWN"
+        }
+    }
+}
+
+extension PaymentStatus {
+    func mapToString() -> String {
+        switch self {
+        case .approved: return "APPROVED"
+        case .completed: return "COMPLETED"
+        case .canceled: return "CANCELED"
+        case .failed: return "FAILED"
+        case .initialized: return "INITIALIZED"
+        case .pending: return "PENDING"
+        case .unknown:
+            fallthrough
+        @unknown default:
+            return "UNKNOWN"
+        }
+    }
+}
+
+extension OfflineStatus {
+    func mapToString() -> String {
+        switch self {
+        case .queued: return "QUEUED"
+        case .uploaded: return "UPLOADED"
+        case .failedToUpload: return "FAILED_TO_UPLOAD"
+        case .failedToProcess: return "FAILED_TO_PROCESS"
+        case .processed: return "PROCESSED"
+        case .unknown:
+            fallthrough
+        @unknown default:
+            return "UNKNOWN"
+        }
+    }
+}
