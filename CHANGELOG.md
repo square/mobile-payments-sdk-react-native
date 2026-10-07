@@ -1,5 +1,24 @@
 ## Changelog
 
+### Unreleased
+
+This release only adds APIs and fields. No existing signature, type or value changes.
+
+* Add `SettingsManager.getSdkSettings()`, which returns a new `SdkSettings` object (`sdkVersion`, `sdkEnvironment`, `securityComplianceVersion`)
+* Add `SettingsManager.getTrackingConsentState()` and `SettingsManager.updateTrackingConsent(granted)`, with a new `TrackingConsentState` enum
+* Add `PaymentManager.getIdempotencyKey(paymentAttemptId)`, which returns the idempotency key the SDK generated for a payment attempt
+* Add `PaymentManager.isPaymentInProgress()`
+* Add `PaymentManager.getAvailableCardEntryMethods()` and `PaymentManager.setAvailableCardEntryMethodsCallback(callback)`, to know which card entry methods the connected hardware accepts and be notified when they change
+* **Android:** Add `PaymentManager.completePayment(paymentId)` to capture a payment taken with `autocomplete: false`. It takes the server-assigned `Payment.id`, not the `paymentAttemptId`
+* **Android:** Add `PaymentManager.getAllIdempotencyKeys()`, which returns a list of the new `IdempotencyKeyData` object
+* Add `ReaderManager.retryConnection(id)`, which returns a new `RetryConnectionResult` enum, and `ReaderManager.rebootReader(id)` (iOS only)
+* Add `ReaderManager.setPreferredFirmwareUpdateTime(time)` and `ReaderManager.setReducedChargingModeEnabled(enabled)`, so `ReaderSettings` can be changed and not only read
+* Payments now include `status`, `cardDetails`, `customerId`, `note`, `teamMemberId`, `cashDetails` and a `paymentType` of `ONLINE` or `OFFLINE`. Both platforms previously returned only the base fields. New `CashPaymentDetails`, `CardSurchargeDetails`, `Capabilities` and `PaymentProcessingFee` objects, and `PaymentType`, `PaymentCapability`, `PaymentProcessingFeeType`, `VerificationMethod` and `VerificationResult` enums
+* **Android:** Online payments also include `receiptNumber`, `receiptUrl`, `statementDescription`, `capabilities` and `processingFee`, and card details include `verificationMethod`, `verificationResults` and `Card.bin`
+* **iOS:** `OfflinePaymentQueue.getPayments()` now includes `localId`, `status`, `uploadedAt` and `cardDetails`
+* `ReaderInfo` now includes `connectionType` and, on iOS, `isRebootable`. `ReaderFirmwareInfo` includes `updateStatus` and `updateTime`, and the reader status includes `title` and `detail` on iOS. New `ReaderConnectionType` and `FirmwareUpdateStatus` enums
+* **Android:** `Location` now includes `merchantId`, `businessName` and `cardProcessingActivated`
+
 ### v2026.8.1 Aug 24, 2026
 
 * Upgrade Android native SDK to `2.6.1`, which fixes a bug where Tap to Pay on Android became unavailable for up to 2 hours before the daily payment-key rotation

@@ -266,3 +266,56 @@ export enum RetryConnectionResult {
   UNABLE_TO_RETRY = 'UNABLE_TO_RETRY',
   READER_NOT_FOUND = 'READER_NOT_FOUND',
 }
+
+export enum TrackingConsentState {
+  PENDING = 'PENDING',
+  GRANTED = 'GRANTED',
+  DENIED = 'DENIED',
+  NOT_REQUIRED = 'NOT_REQUIRED',
+}
+
+export enum ReaderConnectionType {
+  USB = 'USB',
+  BLUETOOTH = 'BLUETOOTH',
+  AUDIO = 'AUDIO',
+  EMBEDDED = 'EMBEDDED',
+  UNKNOWN = 'UNKNOWN',
+}
+
+export enum FirmwareUpdateStatus {
+  NONE = 'NONE',
+  PENDING = 'PENDING',
+  IN_PROGRESS = 'IN_PROGRESS',
+  FAILED = 'FAILED',
+}
+
+export enum PaymentType {
+  ONLINE = 'ONLINE',
+  OFFLINE = 'OFFLINE',
+}
+
+export enum VerificationMethod {
+  PIN = 'PIN',
+  SIGNATURE = 'SIGNATURE',
+  PIN_AND_SIGNATURE = 'PIN_AND_SIGNATURE',
+  ON_DEVICE = 'ON_DEVICE',
+  NONE = 'NONE',
+}
+
+export enum VerificationResult {
+  SUCCESS = 'SUCCESS',
+  FAILURE = 'FAILURE',
+  UNKNOWN = 'UNKNOWN',
+}
+
+export enum PaymentProcessingFeeType {
+  INITIAL = 'INITIAL',
+  ADJUSTMENT = 'ADJUSTMENT',
+}
+
+export enum PaymentCapability {
+  EDIT_AMOUNT_UP = 'EDIT_AMOUNT_UP',
+  EDIT_AMOUNT_DOWN = 'EDIT_AMOUNT_DOWN',
+  EDIT_TIP_AMOUNT_UP = 'EDIT_TIP_AMOUNT_UP',
+  EDIT_TIP_AMOUNT_DOWN = 'EDIT_TIP_AMOUNT_DOWN',
+}

@@ -8,6 +8,7 @@ import type {
   ReaderChangedEvent,
   ReaderInfo,
   ReaderSettings,
+  TimeOfDay,
 } from '../models/objects';
 import type { RetryConnectionResult } from '../models/enums';
 
@@ -42,6 +43,18 @@ export const rebootReader = (id: string): Promise<void> => {
     android: () =>
       Promise.reject(new Error('This feature is only available on iOS.')),
   })!();
+};
+
+export const setPreferredFirmwareUpdateTime = (
+  time: TimeOfDay | null
+): Promise<void> => {
+  return MobilePaymentsSdkReactNative.setPreferredFirmwareUpdateTime(time);
+};
+
+export const setReducedChargingModeEnabled = (
+  enabled: boolean
+): Promise<void> => {
+  return MobilePaymentsSdkReactNative.setReducedChargingModeEnabled(enabled);
 };
 
 export const isPairingInProgress = (): Promise<boolean> => {

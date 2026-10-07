@@ -1,5 +1,6 @@
 import MobilePaymentsSdkReactNative from '../base_sdk';
-import type { Money } from '../models/objects';
+import type { Money, SdkSettings } from '../models/objects';
+import type { TrackingConsentState } from '../models/enums';
 
 export const showSettings = (): Promise<void> => {
   return MobilePaymentsSdkReactNative.showSettings();
@@ -19,6 +20,18 @@ export const isShowingSettings = (): Promise<boolean> => {
 
 export const closeSettings = (): Promise<boolean> => {
   return MobilePaymentsSdkReactNative.closeSettings();
+};
+
+export const getSdkSettings = (): Promise<SdkSettings> => {
+  return MobilePaymentsSdkReactNative.getSdkSettings();
+};
+
+export const getTrackingConsentState = (): Promise<TrackingConsentState> => {
+  return MobilePaymentsSdkReactNative.getTrackingConsentState();
+};
+
+export const updateTrackingConsent = (granted: boolean): Promise<void> => {
+  return MobilePaymentsSdkReactNative.updateTrackingConsent(granted);
 };
 
 export namespace PaymentSettings {

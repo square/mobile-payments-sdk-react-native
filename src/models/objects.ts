@@ -8,11 +8,16 @@ import type {
   CurrencyCode,
   DelayAction,
   EntryMethod,
+  Environment,
+  FirmwareUpdateStatus,
   OfflinePaymentStatus,
+  PaymentProcessingFeeType,
   PaymentStatus,
+  PaymentType,
   PromptMode,
   ReaderBatteryLevel,
   ReaderChange,
+  ReaderConnectionType,
   ReaderConnectionFailureReason,
   ReaderConnectionFailureRecoverySuggestion,
   ReaderConnectionState,
@@ -20,6 +25,8 @@ import type {
   ReaderModel,
   ReaderUnavailableReason,
   SourceType,
+  VerificationMethod,
+  VerificationResult,
 } from './enums';
 
 export type Location = {
@@ -27,6 +34,9 @@ export type Location = {
   currencyCode: String;
   name: String;
   mcc: String;
+  merchantId?: string;
+  businessName?: string;
+  cardProcessingActivated?: boolean;
 };
 
 export type Money = {
@@ -49,6 +59,14 @@ export type OnlinePayment = {
   tipMoney: Money;
   totalMoney: Money;
   updatedAt: Date;
+  paymentType?: PaymentType;
+  cashDetails?: CashPaymentDetails;
+  teamMemberId?: string;
+  capabilities?: Capabilities;
+  processingFee?: PaymentProcessingFee[];
+  receiptNumber?: string;
+  receiptUrl?: string;
+  statementDescription?: string;
 };
 
 export type OfflinePayment = {
@@ -67,6 +85,8 @@ export type OfflinePayment = {
   totalMoney: Money;
   updatedAt: Date;
   uploadedAt: Date;
+  paymentType?: PaymentType;
+  cashDetails?: CashPaymentDetails;
 };
 
 export type PaymentParameters = {
@@ -103,6 +123,13 @@ export type Card = {
   expirationYear?: Number;
   id: String;
   lastFourDigits: String;
+  bin?: string;
+};
+
+export type CardSurchargeDetails = {
+  cardSurchargeMoney: Money;
+  taxOnSurchargeMoney?: Money;
+  totalSurchargeMoney?: Money;
 };
 
 export type CardPaymentDetails = {
@@ -112,6 +139,24 @@ export type CardPaymentDetails = {
   card: Card;
   entryMethod: EntryMethod;
   status: CardPaymentStatus;
+  appliedCardSurchargeDetails?: CardSurchargeDetails;
+  verificationMethod?: VerificationMethod;
+  verificationResults?: VerificationResult;
+};
+
+export type CashPaymentDetails = {
+  buyerSuppliedMoney?: Money;
+  changeBackMoney?: Money;
+};
+
+export type Capabilities = {
+  allCapabilities: string[];
+};
+
+export type PaymentProcessingFee = {
+  effectiveAt: Date;
+  type: PaymentProcessingFeeType;
+  amountMoney: Money;
 };
 
 export type OfflineCardPaymentDetails = {
@@ -144,6 +189,20 @@ export type Payment = {
   tipMoney: Money;
   totalMoney: Money;
   updatedAt: Date;
+  paymentType?: PaymentType;
+  status?: PaymentStatus | OfflinePaymentStatus;
+  cardDetails?: CardPaymentDetails | OfflineCardPaymentDetails;
+  customerId?: string;
+  note?: string;
+  teamMemberId?: string;
+  cashDetails?: CashPaymentDetails;
+  capabilities?: Capabilities;
+  processingFee?: PaymentProcessingFee[];
+  receiptNumber?: string;
+  receiptUrl?: string;
+  statementDescription?: string;
+  localId?: string;
+  uploadedAt?: Date;
 };
 
 export type ReaderBatteryStatus = {
@@ -168,11 +227,15 @@ export type ReaderFirmwareInfo = {
   failureReason?: String;
   updatePercentage: Number;
   version: String;
+  updateStatus?: FirmwareUpdateStatus;
+  updateTime?: Date;
 };
 
 export type ReaderStatus = {
   status: ReaderInternalStatus;
   readerUnavailableReason?: ReaderUnavailableReason;
+  title?: string;
+  detail?: string;
 };
 
 export type ReaderInfo = {
@@ -188,6 +251,8 @@ export type ReaderInfo = {
   cardInsertionStatus?: CardInsertionStatus;
   firmwareInfo?: ReaderFirmwareInfo;
   isConnectionRetryable?: Boolean;
+  connectionType?: ReaderConnectionType;
+  isRebootable?: boolean;
 };
 
 export type ReaderChangedEvent = {
@@ -204,4 +269,16 @@ export type TimeOfDay = {
 export type ReaderSettings = {
   isReducedChargingModeEnabled: boolean;
   preferredFirmwareUpdateTime?: TimeOfDay | null;
+};
+
+export type SdkSettings = {
+  sdkVersion: string;
+  sdkEnvironment: Environment;
+  securityComplianceVersion: string;
+};
+
+export type IdempotencyKeyData = {
+  idempotencyKey: string;
+  paymentAttemptId: string;
+  updatedAt: Date;
 };

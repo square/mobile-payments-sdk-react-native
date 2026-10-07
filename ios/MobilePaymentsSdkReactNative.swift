@@ -16,13 +16,14 @@ class MobilePaymentsSdkReactNative: RCTEventEmitter {
     private var paymentHandle: PaymentHandle?
 
     private var readersObservers: [String: ReaderObserver] = [:]
+    private var cardInputMethodsObservers: [String: AvailableCardInputMethodsObserver] = [:]
     private var pairingResolveBlock: RCTPromiseResolveBlock?
     private var pairingRejectBlock: RCTPromiseRejectBlock?
     private var pairingHandler: PairingHandle?
 
     /// We use notifications to propagate authorization status changes and reader changes
     override func supportedEvents() -> [String]! {
-        return ["AuthorizationStatusChange", "ReaderChanged"]
+        return ["AuthorizationStatusChange", "ReaderChanged", "AvailableCardEntryMethodsChanged"]
     }
 
     /// Authorize: https://developer.squareup.com/docs/mobile-payments-sdk/ios/configure-authorize
@@ -126,6 +127,27 @@ class MobilePaymentsSdkReactNative: RCTEventEmitter {
           let settingsManager = self.mobilePaymentsSDK.settingsManager
           resolve(settingsManager.dismissSettings())
         }
+    }
+
+    @objc(getSdkSettings:withRejecter:)
+    func getSdkSettings(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+        let settings = mobilePaymentsSDK.settingsManager.sdkSettings
+        resolve([
+            "sdkVersion": settings.version,
+            "sdkEnvironment": settings.environment.mapToString(),
+            "securityComplianceVersion": settings.securityComplianceVersion,
+        ] as NSDictionary)
+    }
+
+    @objc(getTrackingConsentState:withRejecter:)
+    func getTrackingConsentState(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+        resolve(mobilePaymentsSDK.settingsManager.trackingConsentState.mapToString())
+    }
+
+    @objc(updateTrackingConsent:withResolve:withRejecter:)
+    func updateTrackingConsent(granted: Bool, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+        mobilePaymentsSDK.settingsManager.updateTrackingConsent(withGranted: granted)
+        resolve(NSNull())
     }
 
     @objc(getEnvironment:withRejecter:)
@@ -400,6 +422,39 @@ class MobilePaymentsSdkReactNative: RCTEventEmitter {
     }
 
 
+    @objc(getIdempotencyKey:withResolve:withRejecter:)
+    func getIdempotencyKey(paymentAttemptId: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+        let key = mobilePaymentsSDK.paymentManager.getIdempotencyKey(withPaymentAttemptId: paymentAttemptId)
+        resolve(key ?? NSNull())
+    }
+
+    @objc(isPaymentInProgress:withRejecter:)
+    func isPaymentInProgress(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+        resolve(mobilePaymentsSDK.paymentManager.currentPaymentHandle != nil)
+    }
+
+    @objc(getAvailableCardEntryMethods:withRejecter:)
+    func getAvailableCardEntryMethods(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+        resolve(mobilePaymentsSDK.paymentManager.availableCardInputMethods.toCardEntryMethodList())
+    }
+
+    @objc(addAvailableCardEntryMethodsCallback:withResolve:withRejecter:)
+    func addAvailableCardEntryMethodsCallback(refId: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+        let observer = MobilePaymentsCardInputMethodsObserver(emitter: self)
+        mobilePaymentsSDK.paymentManager.add(observer)
+        cardInputMethodsObservers[refId] = observer
+        resolve(refId)
+    }
+
+    @objc(removeAvailableCardEntryMethodsCallback:withResolve:withRejecter:)
+    func removeAvailableCardEntryMethodsCallback(refId: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+        if let observer = cardInputMethodsObservers[refId] {
+            mobilePaymentsSDK.paymentManager.remove(observer)
+            cardInputMethodsObservers.removeValue(forKey: refId)
+        }
+        resolve(NSNull())
+    }
+
     @objc(getReaders:withRejecter:)
     func getReaders(resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         let readers = mobilePaymentsSDK.readerManager.readers
@@ -494,6 +549,28 @@ class MobilePaymentsSdkReactNative: RCTEventEmitter {
         resolve(NSNull())
     }
 
+    @objc(setPreferredFirmwareUpdateTime:withResolve:withRejecter:)
+    func setPreferredFirmwareUpdateTime(time: [String: Any]?, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+        guard let time else {
+            mobilePaymentsSDK.readerManager.readerSettings.preferredFirmwareUpdateTime = nil
+            resolve(NSNull())
+            return
+        }
+        guard let hour = time["hour"] as? Int, let minute = time["minute"] as? Int,
+              let timeOfDay = TimeOfDay(hour: hour, minute: minute) else {
+            reject("INVALID_TIME_OF_DAY", "hour and minute are required and must form a valid time of day", nil)
+            return
+        }
+        mobilePaymentsSDK.readerManager.readerSettings.preferredFirmwareUpdateTime = timeOfDay
+        resolve(NSNull())
+    }
+
+    @objc(setReducedChargingModeEnabled:withResolve:withRejecter:)
+    func setReducedChargingModeEnabled(enabled: Bool, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+        mobilePaymentsSDK.readerManager.readerSettings.reducedChargingModeEnabled = enabled
+        resolve(NSNull())
+    }
+
     @objc(isPairingInProgress:withRejecter:)
     func isPairingInProgress(resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         resolve(mobilePaymentsSDK.readerManager.isPairingInProgress)
@@ -544,6 +621,21 @@ class MobilePaymentsSdkReactNative: RCTEventEmitter {
     func readerSettings(resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         let settings = mobilePaymentsSDK.readerManager.readerSettings
         resolve(settings.toMap())
+    }
+}
+
+class MobilePaymentsCardInputMethodsObserver: AvailableCardInputMethodsObserver {
+    let emitter: RCTEventEmitter
+
+    init(emitter: RCTEventEmitter) {
+        self.emitter = emitter
+    }
+
+    func availableCardInputMethodsDidChange(_ cardInputMethods: CardInputMethods) {
+        emitter.sendEvent(
+            withName: "AvailableCardEntryMethodsChanged",
+            body: ["methods": cardInputMethods.toCardEntryMethodList()]
+        )
     }
 }
 

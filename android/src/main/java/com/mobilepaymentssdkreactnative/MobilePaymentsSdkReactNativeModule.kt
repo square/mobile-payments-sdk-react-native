@@ -28,6 +28,7 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
   private var paymentHandle: PaymentHandle? = null
   private var authStateCallback: CallbackReference? = null
   private var readerChangedCallbacks = mutableMapOf<String, CallbackReference>();
+  private var cardEntryMethodsCallbacks = mutableMapOf<String, CallbackReference>();
   private var pairingHandler: PairingHandle? = null
 
   override fun getName(): String {
@@ -141,6 +142,25 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
       val settingsManager = MobilePaymentsSdk.settingsManager()
       promise.resolve(settingsManager.closeSettings())
     }
+  }
+
+  @ReactMethod
+  fun getSdkSettings(promise: Promise) {
+    val settingsManager = MobilePaymentsSdk.settingsManager()
+    promise.resolve(settingsManager.getSdkSettings().toSdkSettingsMap())
+  }
+
+  @ReactMethod
+  fun getTrackingConsentState(promise: Promise) {
+    val settingsManager = MobilePaymentsSdk.settingsManager()
+    promise.resolve(settingsManager.trackingConsentState.toTrackingConsentStateString())
+  }
+
+  @ReactMethod
+  fun updateTrackingConsent(granted: Boolean, promise: Promise) {
+    val settingsManager = MobilePaymentsSdk.settingsManager()
+    settingsManager.updateTrackingConsent(granted)
+    promise.resolve(null)
   }
 
   @ReactMethod
@@ -279,6 +299,88 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
   }
 
   @ReactMethod
+  fun getIdempotencyKey(paymentAttemptId: String, promise: Promise) {
+    val paymentManager = MobilePaymentsSdk.paymentManager()
+    when (val result = paymentManager.getIdempotencyKey(paymentAttemptId)) {
+      is Success -> promise.resolve(result.value)
+      is Failure ->
+        promise.reject("GET_IDEMPOTENCY_KEY_FAILED", result.errorMessage, result.toErrorMap())
+    }
+  }
+
+  @ReactMethod
+  fun getAllIdempotencyKeys(promise: Promise) {
+    reactContext.runOnUiQueueThread {
+      val paymentManager = MobilePaymentsSdk.paymentManager()
+      paymentManager.getAllIdempotencyKeys { result ->
+        when (result) {
+          is Success -> {
+            val keys = Arguments.createArray()
+            result.value.forEach { keys.pushMap(it.toIdempotencyKeyDataMap()) }
+            promise.resolve(keys)
+          }
+          is Failure ->
+            promise.reject("GET_IDEMPOTENCY_KEYS_FAILED", result.errorMessage, result.toErrorMap())
+        }
+      }
+    }
+  }
+
+  @ReactMethod
+  fun completePayment(paymentId: String, promise: Promise) {
+    reactContext.runOnUiQueueThread {
+      val paymentManager = MobilePaymentsSdk.paymentManager()
+      paymentManager.completePayment(paymentId) { result ->
+        when (result) {
+          is Success -> promise.resolve(result.value.toPaymentMap())
+          is Failure ->
+            promise.reject("COMPLETE_PAYMENT_FAILED", result.errorMessage, result.toErrorMap())
+        }
+      }
+    }
+  }
+
+  @ReactMethod
+  fun isPaymentInProgress(promise: Promise) {
+    reactContext.runOnUiQueueThread {
+      val paymentManager = MobilePaymentsSdk.paymentManager()
+      promise.resolve(paymentManager.currentPaymentHandle != null)
+    }
+  }
+
+  @ReactMethod
+  fun getAvailableCardEntryMethods(promise: Promise) {
+    val paymentManager = MobilePaymentsSdk.paymentManager()
+    promise.resolve(paymentManager.getAvailableCardEntryMethods().toCardEntryMethodsArray())
+  }
+
+  @ReactMethod
+  fun addAvailableCardEntryMethodsCallback(refId: String, promise: Promise) {
+    val paymentManager = MobilePaymentsSdk.paymentManager()
+    val ref = paymentManager.setAvailableCardEntryMethodChangedCallback { methods ->
+      emitEvent(
+        reactContext,
+        "AvailableCardEntryMethodsChanged-${refId}",
+        WritableNativeMap().apply {
+          putArray("methods", methods.toCardEntryMethodsArray())
+        }
+      )
+    }
+    cardEntryMethodsCallbacks.put(refId, ref)
+    promise.resolve(refId)
+  }
+
+  @ReactMethod
+  fun removeAvailableCardEntryMethodsCallback(refId: String, promise: Promise) {
+    val ref = cardEntryMethodsCallbacks.get(refId)
+    if (ref != null) {
+      ref.clear()
+      cardEntryMethodsCallbacks.remove(refId)
+    }
+    promise.resolve(null)
+  }
+
+  @ReactMethod
   fun getReaders(promise: Promise) {
     val readerManager = MobilePaymentsSdk.readerManager()
     val readers = readerManager.getReaders()
@@ -343,6 +445,26 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
     promise.resolve(null)
   }
   // ---
+
+  @ReactMethod
+  fun setPreferredFirmwareUpdateTime(time: ReadableMap?, promise: Promise) {
+    val timeOfDay = try {
+      time?.toTimeOfDay()
+    } catch (e: IllegalArgumentException) {
+      promise.reject("INVALID_TIME_OF_DAY", "hour and minute are required and must form a valid time of day", e)
+      return
+    }
+    val readerManager = MobilePaymentsSdk.readerManager()
+    readerManager.readerSettings.preferredFirmwareUpdateTime = timeOfDay
+    promise.resolve(null)
+  }
+
+  @ReactMethod
+  fun setReducedChargingModeEnabled(enabled: Boolean, promise: Promise) {
+    val readerManager = MobilePaymentsSdk.readerManager()
+    readerManager.readerSettings.isReducedChargingModeEnabled = enabled
+    promise.resolve(null)
+  }
 
   @ReactMethod
   fun retryConnection(id: String, promise: Promise) {
