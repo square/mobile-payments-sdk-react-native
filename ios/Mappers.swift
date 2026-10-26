@@ -150,7 +150,8 @@ class Mappers {
             "name" : reader.name,
             "serialNumber" : reader.serialNumber ?? NSNull(),
             "status" : reader.statusInfo.toMap(),
-            "supportedCardEntryMethods" : reader.supportedInputMethods.toList()
+            "supportedCardEntryMethods" : reader.supportedInputMethods.toList(),
+            "warnings" : reader.warnings.toList()
         ]
     }
 }

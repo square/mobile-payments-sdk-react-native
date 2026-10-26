@@ -145,6 +145,11 @@ class MobilePaymentsSdkReactNative: RCTEventEmitter {
         return resolve(mobilePaymentsSDK.settingsManager.sdkSettings.version)
     }
 
+    @objc(getMpocVersion:withRejecter:)
+    func getMpocVersion(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+        return resolve(mobilePaymentsSDK.settingsManager.sdkSettings.mpocVersion)
+    }
+
     func parseTapToPayError(error: NSError, defaultError: String) -> String {
 
       let tapToPayReaderError = TapToPayReaderError(rawValue: (error).code)
@@ -544,6 +549,16 @@ class MobilePaymentsSdkReactNative: RCTEventEmitter {
     func readerSettings(resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         let settings = mobilePaymentsSDK.readerManager.readerSettings
         resolve(settings.toMap())
+    }
+
+    @objc(setUsbPowerMode:withResolve:withRejecter:)
+    func setUsbPowerMode(mode: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+        guard let powerMode = PowerMode.from(name: mode) else {
+            reject("INVALID_POWER_MODE", "Invalid power mode '\(mode)'", nil)
+            return
+        }
+        mobilePaymentsSDK.readerManager.readerSettings.usbPowerMode = powerMode
+        resolve(NSNull())
     }
 }
 

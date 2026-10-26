@@ -5,7 +5,7 @@ This repo is the `mobile-payments-sdk-react-native` wrapper plus the Donut Count
 
 Working on the wrapper itself rather than integrating it? See [CONTRIBUTING_AGENTS.md](CONTRIBUTING_AGENTS.md).
 
-Current package version: **2026.8.1**, wrapping native SDK **iOS 2.6.0** / **Android 2.6.1**.
+Current package version: **2026.10.1**, wrapping native SDK **iOS 2.7.0** / **Android 2.6.1**.
 
 ## Install
 
@@ -75,7 +75,7 @@ This is a temporary workaround; it can be removed once React Native ships Kotlin
 
 ### iOS
 
-Minimum deployment target **iOS 16**. Run `pod install` in `ios/`.
+Minimum deployment target **iOS 17.1**. Run `pod install` in `ios/`.
 
 **The setup run script is mandatory.** On the app target's **Build Phases** tab, add a **New Run Script Phase**, positioned *after* any `[CP] Embed Pods Frameworks` or `Embed Frameworks` phase:
 

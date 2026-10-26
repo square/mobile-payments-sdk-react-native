@@ -123,6 +123,7 @@ Method                                                    | Returns             
 --------------------------------------------------------- | --------------------------------- | ---
 [showMockReaderUI](#showMockReaderUI) | void | Shows the mock reader UI, which allows to connect mock readers and simulate card interactions.
 [hideMockReaderUI](#hideMockReaderUI) | void | Hides the mock reader UI.
+[setUsbPowerMode](#setUsbPowerMode) | void | Sets the USB power mode applied to connected readers (iOS only).
 
 
 ## Method details
@@ -142,6 +143,18 @@ Dismisses the mock reader.
 * **On failure**: throws an error if the reader can't be dismissed, for instance, if it's not presented.
 
 ---
+### setUsbPowerMode
+
+Sets the USB power mode applied to connected readers. With `POWER_ONLY`, supported readers treat the USB cable as power-only and stop checking for a USB data connection. The mode is applied when a reader connects and whenever the value changes. **iOS only**; rejects on Android, where the native SDK has no equivalent.
+
+Parameter | Type   | Description
+--------- | ------ | -----------
+mode | PowerMode | `DEFAULT`, `POWER_ONLY` or `FULL`.
+
+* **On success**: the setting is updated.
+* **On failure**: throws `INVALID_POWER_MODE` if the mode is not a `PowerMode` value.
+
+---
 ### Settings (reader.ts)
 
 The Settings Manager provides an optional device management UI that you can use in your application and provides details about the current SDK version and environment.
@@ -151,6 +164,7 @@ Method                                                    | Returns             
 [showSettings](#showSettings) | void | Shows the reader settings screen, which shows available readers, and SDK information.
 [getEnvironment](#getEnvironment) | String | Returns the current environment the SDK was initialized on.
 [getSdkVersion](#getSdkVersion) | String | Returns the current Mobile Payments SDK version.
+[getMpocVersion](#getMpocVersion) | String | Returns the MPoC (Mobile Payments on COTS) version of the SDK (iOS only).
 
 ### TapToPaySettings Namespace
 
@@ -186,6 +200,14 @@ Returns the current Mobile Payments SDK version running. Note this is the versio
 
 * **On success**: returns a String with the current Mobile Payments SDK version.
 * **On failure**: Not applicable.
+
+---
+### getMpocVersion
+
+Returns the MPoC (Mobile Payments on COTS) version of the Mobile Payments SDK. **iOS only**; rejects on Android, where the native SDK has no equivalent.
+
+* **On success**: returns a String with the MPoC version.
+* **On failure**: throws an error if called on Android.
 
 ---
 ### TapToPaySettings Methods
@@ -360,6 +382,14 @@ The Type of Payment that is about to take place.
 
 * `ALL` - Instructs the SDK to begin a payment showing all the available payment methods in the account and device.
 * `KEYED` - Instructs the SDK to begin a payment for a keyed in credit card.
+---
+### PowerMode
+
+The USB power mode applied to connected readers (iOS only).
+
+* `DEFAULT` - Clears any override and uses the reader's own default behavior.
+* `POWER_ONLY` - Supported readers treat the USB cable as power-only and disable USB data communications.
+* `FULL` - All USB functionality is allowed.
 ---
 ### PromptMode
 

@@ -1,5 +1,15 @@
 ## Changelog
 
+### v2026.10.1 Oct 25, 2026
+
+* Upgrade iOS native SDK to `2.7.0`. See the native changelog: [https://developer.squareup.com/docs/changelog/mobile-logs/2026-10-23](https://developer.squareup.com/docs/changelog/mobile-logs/2026-10-23)
+* **Breaking (iOS):** The minimum supported iOS version is now `17.1` (was `16`). Apps that still support iOS 16 should stay on `v2026.8.1`
+* **iOS:** CocoaPods trunk becomes read-only on December 2, 2026, so native `2.7.0` is expected to be the last Mobile Payments SDK release published to CocoaPods
+* **iOS:** Add `ReaderInfo.warnings` and a new `ReaderWarning` enum (`USB_THERMAL_FAULT`, `THERMAL_FAULT_DISCONNECT_USB`, `THERMAL_FAULT_POWER_OFF`), the advisory thermal warnings the reader has reported during the current connection. Warnings don't change the reader's status and clear when it disconnects or reconnects
+* **iOS:** Add `WARNING_RAISED` to `ReaderChange`, emitted when a reader reports a new warning
+* **iOS:** Add `ReaderSettings.usbPowerMode`, a new `PowerMode` enum (`DEFAULT`, `POWER_ONLY`, `FULL`) and `ReaderManager.setUsbPowerMode(mode)`. With `POWER_ONLY`, supported readers treat the USB cable as power-only
+* **iOS:** Add `SettingsManager.getMpocVersion()`, which returns the SDK's MPoC (Mobile Payments on COTS) version
+
 ### v2026.8.1 Aug 24, 2026
 
 * Upgrade Android native SDK to `2.6.1`, which fixes a bug where Tap to Pay on Android became unavailable for up to 2 hours before the daily payment-key rotation
