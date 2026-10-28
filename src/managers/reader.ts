@@ -9,7 +9,7 @@ import type {
   ReaderInfo,
   ReaderSettings,
 } from '../models/objects';
-import type { RetryConnectionResult } from '../models/enums';
+import type { PowerMode, RetryConnectionResult } from '../models/enums';
 
 export const readerEventEmitter = new NativeEventEmitter(
   MobilePaymentsSdkReactNative
@@ -50,6 +50,14 @@ export const isPairingInProgress = (): Promise<boolean> => {
 
 export const readerSettings = (): Promise<ReaderSettings> => {
   return MobilePaymentsSdkReactNative.readerSettings();
+};
+
+export const setUsbPowerMode = (mode: PowerMode): Promise<void> => {
+  return Platform.select({
+    ios: () => MobilePaymentsSdkReactNative.setUsbPowerMode(mode),
+    android: () =>
+      Promise.reject(new Error('This feature is only available on iOS.')),
+  })!();
 };
 
 const addReaderChangedCallback = (refId: String): Promise<String> => {

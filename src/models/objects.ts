@@ -10,6 +10,7 @@ import type {
   EntryMethod,
   OfflinePaymentStatus,
   PaymentStatus,
+  PowerMode,
   PromptMode,
   ReaderBatteryLevel,
   ReaderChange,
@@ -19,6 +20,7 @@ import type {
   ReaderInternalStatus,
   ReaderModel,
   ReaderUnavailableReason,
+  ReaderWarning,
   SourceType,
 } from './enums';
 
@@ -188,6 +190,7 @@ export type ReaderInfo = {
   cardInsertionStatus?: CardInsertionStatus;
   firmwareInfo?: ReaderFirmwareInfo;
   isConnectionRetryable?: Boolean;
+  warnings?: ReaderWarning[];
 };
 
 export type ReaderChangedEvent = {
@@ -204,4 +207,5 @@ export type TimeOfDay = {
 export type ReaderSettings = {
   isReducedChargingModeEnabled: boolean;
   preferredFirmwareUpdateTime?: TimeOfDay | null;
+  usbPowerMode?: PowerMode;
 };

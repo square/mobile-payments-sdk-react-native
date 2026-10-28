@@ -4,7 +4,7 @@
 
 Mobile Payments SDK for React Native supports the following SDK versions:
 
-  * [iOS](https://developer.squareup.com/docs/mobile-payments-sdk/ios#1-install-the-sdk-and-dependencies): 2.6.0 and above
+  * [iOS](https://developer.squareup.com/docs/mobile-payments-sdk/ios#1-install-the-sdk-and-dependencies): 2.7.0 and above
   * [Android](https://developer.squareup.com/docs/mobile-payments-sdk/android#1-install-the-sdk-and-dependencies): 2.6.1 and above
 
 ## Review requirements

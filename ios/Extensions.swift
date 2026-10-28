@@ -151,6 +151,8 @@ extension ReaderChange {
             return "FIRMWARE_UPDATE_DID_FAILED"
         case .firmwareUpdatePercentDidChange:
             return "FIRMWARE_UPDATE_PERCENT_DID_CHANGED"
+        case .warningRaised:
+            return "WARNING_RAISED"
         default: return "UNKNOWN"
         }
     }
@@ -177,9 +179,48 @@ extension ReaderSettings {
   func toMap() -> NSDictionary {
     return [
       "isReducedChargingModeEnabled" : reducedChargingModeEnabled,
-      "preferredFirmwareUpdateTime" : preferredFirmwareUpdateTime?.toMap() ?? NSNull()
+      "preferredFirmwareUpdateTime" : preferredFirmwareUpdateTime?.toMap() ?? NSNull(),
+      "usbPowerMode" : usbPowerMode.toName()
     ]
   }
+}
+
+extension PowerMode {
+    static func from(name: String) -> PowerMode? {
+        switch name {
+        case "DEFAULT":
+            return .default
+        case "POWER_ONLY":
+            return .powerOnly
+        case "FULL":
+            return .full
+        default:
+            return nil
+        }
+    }
+
+    func toName() -> String {
+        switch self {
+        case .default:
+            return "DEFAULT"
+        case .powerOnly:
+            return "POWER_ONLY"
+        case .full:
+            return "FULL"
+        @unknown default:
+            return "DEFAULT"
+        }
+    }
+}
+
+extension ReaderWarnings {
+    func toList() -> NSArray {
+        var result: [String] = []
+        if contains(.usbThermalFault) { result.append("USB_THERMAL_FAULT") }
+        if contains(.thermalFaultDisconnectUsb) { result.append("THERMAL_FAULT_DISCONNECT_USB") }
+        if contains(.thermalFaultPowerOff) { result.append("THERMAL_FAULT_POWER_OFF") }
+        return result as NSArray
+    }
 }
 
 extension TimeOfDay {

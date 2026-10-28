@@ -7,11 +7,11 @@ PODS:
   - hermes-engine (0.75.3):
     - hermes-engine/Pre-built (= 0.75.3)
   - hermes-engine/Pre-built (0.75.3)
-  - mobile-payments-sdk-react-native (2026.7.1):
+  - mobile-payments-sdk-react-native (2026.10.1):
     - DoubleConversion
     - glog
     - hermes-engine
-    - MockReaderUI (~> 2.6.0)
+    - MockReaderUI (~> 2.7.0)
     - RCT-Folly (= 2024.01.01.00)
     - RCTRequired
     - RCTTypeSafety
@@ -28,9 +28,9 @@ PODS:
     - ReactCodegen
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
-    - SquareMobilePaymentsSDK (~> 2.6.0)
+    - SquareMobilePaymentsSDK (~> 2.7.0)
     - Yoga
-  - MockReaderUI (2.6.0)
+  - MockReaderUI (2.7.0)
   - Permission-BluetoothPeripheral (3.10.1):
     - RNPermissions
   - Permission-LocationAccuracy (3.10.1):
@@ -1581,7 +1581,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - Yoga
   - SocketRocket (0.7.0)
-  - SquareMobilePaymentsSDK (2.6.0)
+  - SquareMobilePaymentsSDK (2.7.0)
   - Yoga (0.0.0)
 
 DEPENDENCIES:
@@ -1823,8 +1823,8 @@ SPEC CHECKSUMS:
   fmt: 4c2741a687cc09f0634a2e2c72a838b99f1ff120
   glog: 69ef571f3de08433d766d614c73a9838a06bf7eb
   hermes-engine: 8d2103d6c0176779aea4e25df6bb1410f9946680
-  mobile-payments-sdk-react-native: 0127c776080d69197430521a51c9e6061f00d0fc
-  MockReaderUI: f920dd06eaa41846b5c033da4bc01993b5ad4e50
+  mobile-payments-sdk-react-native: 1a4dbbc3b3e23d010d290eb79695001f00b6c2e9
+  MockReaderUI: 8b33eed0e29151b002329b8bce50169034346671
   Permission-BluetoothPeripheral: 34ab829f159c6cf400c57bac05f5ba1b0af7a86e
   Permission-LocationAccuracy: 30c5421911024b28d8916db5cbd728097da54434
   Permission-LocationAlways: af165dee8a5a5888df6764f9f6ba98b112893709
@@ -1891,9 +1891,9 @@ SPEC CHECKSUMS:
   RNScreens: 35bb8e81aeccf111baa0ea01a54231390dbbcfd9
   RNVectorIcons: 182892e7d1a2f27b52d3c627eca5d2665a22ee28
   SocketRocket: abac6f5de4d4d62d24e11868d7a2f427e0ef940d
-  SquareMobilePaymentsSDK: 7fd3fd8f9c3b114d5a0e747bc52120a6edd87c4b
+  SquareMobilePaymentsSDK: 213fe698078208d6ee909b2f19408f421995d110
   Yoga: 4ef80d96a5534f0e01b3055f17d1e19a9fc61b63
 
-PODFILE CHECKSUM: 81d2f9e3393262e2bc7a99478a8e3a6741f0482e
+PODFILE CHECKSUM: bfe38792c03eba60e43335d99e970ae6f29c8f34
 
 COCOAPODS: 1.16.2

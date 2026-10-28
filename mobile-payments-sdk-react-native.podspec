@@ -11,11 +11,11 @@ Pod::Spec.new do |s|
   s.license      = package["license"]
   s.authors      = package["author"]
 
-  s.platforms    = { :ios => "16" }
+  s.platforms    = { :ios => "17.1" }
   s.source       = { :git => "https://github.com/square//mobile-payments-sdk-react-native.git", :tag => "#{s.version}" }
 
-  s.dependency "MockReaderUI", "~> 2.6.0"
-  s.dependency "SquareMobilePaymentsSDK", "~> 2.6.0"
+  s.dependency "MockReaderUI", "~> 2.7.0"
+  s.dependency "SquareMobilePaymentsSDK", "~> 2.7.0"
 
   s.source_files = "ios/**/*.{h,m,mm,swift}"
   # Exclude local CocoaPods output from the standalone ios/ Xcode project.

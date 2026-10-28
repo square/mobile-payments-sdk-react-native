@@ -137,6 +137,8 @@ export enum ReaderChange {
   BATTERY_CHARGING,
   FIRMWARE_PROGRESS,
   REMOVED,
+  //--ios
+  WARNING_RAISED,
 }
 
 export enum ReaderConnectionFailureRecoverySuggestion {
@@ -265,4 +267,16 @@ export enum RetryConnectionResult {
   READER_ALREADY_CONNECTING_TO_SQUARE = 'READER_ALREADY_CONNECTING_TO_SQUARE',
   UNABLE_TO_RETRY = 'UNABLE_TO_RETRY',
   READER_NOT_FOUND = 'READER_NOT_FOUND',
+}
+
+export enum ReaderWarning {
+  USB_THERMAL_FAULT = 'USB_THERMAL_FAULT',
+  THERMAL_FAULT_DISCONNECT_USB = 'THERMAL_FAULT_DISCONNECT_USB',
+  THERMAL_FAULT_POWER_OFF = 'THERMAL_FAULT_POWER_OFF',
+}
+
+export enum PowerMode {
+  DEFAULT = 'DEFAULT',
+  POWER_ONLY = 'POWER_ONLY',
+  FULL = 'FULL',
 }

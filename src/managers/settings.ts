@@ -1,3 +1,4 @@
+import { Platform } from 'react-native';
 import MobilePaymentsSdkReactNative from '../base_sdk';
 import type { Money } from '../models/objects';
 
@@ -11,6 +12,14 @@ export const getEnvironment = (): Promise<String> => {
 
 export const getSdkVersion = (): Promise<String> => {
   return MobilePaymentsSdkReactNative.getSdkVersion();
+};
+
+export const getMpocVersion = (): Promise<String> => {
+  return Platform.select({
+    ios: () => MobilePaymentsSdkReactNative.getMpocVersion(),
+    android: () =>
+      Promise.reject(new Error('This feature is only available on iOS.')),
+  })!();
 };
 
 export const isShowingSettings = (): Promise<boolean> => {
