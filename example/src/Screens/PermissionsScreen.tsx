@@ -38,7 +38,7 @@ export const requestBluetooth = () => {
         PERMISSIONS.ANDROID.BLUETOOTH_CONNECT,
         PERMISSIONS.ANDROID.BLUETOOTH_SCAN,
       ],
-      ios: [PERMISSIONS.IOS.BLUETOOTH_PERIPHERAL],
+      ios: [PERMISSIONS.IOS.BLUETOOTH],
       default: [],
     })
   ).then((statuses) => {
@@ -98,7 +98,7 @@ const checkPermissions = (
         PERMISSIONS.ANDROID.READ_PHONE_STATE,
       ],
       ios: [
-        PERMISSIONS.IOS.BLUETOOTH_PERIPHERAL,
+        PERMISSIONS.IOS.BLUETOOTH,
         PERMISSIONS.IOS.LOCATION_WHEN_IN_USE,
         PERMISSIONS.IOS.LOCATION_ALWAYS,
         PERMISSIONS.IOS.MICROPHONE,
@@ -122,7 +122,7 @@ const checkPermissions = (
     if (
       (statuses[PERMISSIONS.ANDROID.BLUETOOTH_SCAN] === RESULTS.GRANTED &&
         statuses[PERMISSIONS.ANDROID.BLUETOOTH_CONNECT] === RESULTS.GRANTED) ||
-      statuses[PERMISSIONS.IOS.BLUETOOTH_PERIPHERAL] === RESULTS.GRANTED
+      statuses[PERMISSIONS.IOS.BLUETOOTH] === RESULTS.GRANTED
     ) {
       setBluetoothPermission(true);
     }

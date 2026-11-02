@@ -44,7 +44,7 @@ If you need more assistance, contact [Developer and App Marketplace Support](htt
 ## Mobile Payments SDK Sample App
 <img src="./Images/donut-counter-home.png" width="300"/> <img src="./Images/donut-counter-take-payment.png" width="300"/>
 
-[Donut Counter](example/) is a sample application included in the `example` folder of this repository. It is built using React Native 0.75 and designed to help developers utilize the Square Mobile Payments SDK. This application serves as a practical guide for integrating and leveraging the SDK's capabilities within your own projects. It demonstrates essential functions such as initializing and authorizing the SDK, using mock readers, and processing a $1.00 payment.
+[Donut Counter](example/) is a sample application included in the `example` folder of this repository. It is built using React Native 0.88 and designed to help developers utilize the Square Mobile Payments SDK. This application serves as a practical guide for integrating and leveraging the SDK's capabilities within your own projects. It demonstrates essential functions such as initializing and authorizing the SDK, using mock readers, and processing a $1.00 payment.
 
 ## License
 

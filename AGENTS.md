@@ -240,7 +240,7 @@ src/                            published TypeScript API
   managers/                     auth, payment, reader, settings
   models/                       enums, objects, errors
 docs/                           setup guide, API reference, Kotlin patch
-example/                        Donut Counter sample (bare React Native 0.75)
+example/                        Donut Counter sample (bare React Native 0.88)
   android/app/app.properties    credential placeholders
 example-expo/                   the same sample as an Expo development build
 ```

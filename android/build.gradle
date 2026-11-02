@@ -8,7 +8,7 @@ buildscript {
   }
 
   dependencies {
-    classpath "com.android.tools.build:gradle:8.11.1"
+    classpath "com.android.tools.build:gradle:9.1.0"
     // noinspection DifferentKotlinGradleVersion
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
   }
@@ -24,10 +24,21 @@ def isNewArchitectureEnabled() {
 }
 
 apply plugin: "com.android.library"
-apply plugin: "kotlin-android"
+
+// AGP 9 compiles Kotlin itself unless the app opts out with `android.builtInKotlin=false`,
+// and applying the Kotlin Android plugin on top of built-in Kotlin fails the build.
+if (rootProject.findProperty("android.builtInKotlin")?.toString() == "false") {
+  apply plugin: "kotlin-android"
+}
 
 if (isNewArchitectureEnabled()) {
   apply plugin: "com.facebook.react"
+
+  // Only scan the library sources for codegen specs. The default root is the repo, which
+  // also holds the example apps and their node_modules.
+  react {
+    jsRootDir = file("../src/")
+  }
 }
 
 def getExtOrDefault(name) {
@@ -72,7 +83,7 @@ android {
     }
   }
 
-  lintOptions {
+  lint {
     disable "GradleCompatible"
   }
 
