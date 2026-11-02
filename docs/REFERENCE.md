@@ -164,7 +164,7 @@ Method                                                    | Returns             
 [showSettings](#showSettings) | void | Shows the reader settings screen, which shows available readers, and SDK information.
 [getEnvironment](#getEnvironment) | String | Returns the current environment the SDK was initialized on.
 [getSdkVersion](#getSdkVersion) | String | Returns the current Mobile Payments SDK version.
-[getMpocVersion](#getMpocVersion) | String | Returns the MPoC (Mobile Payments on COTS) version of the SDK (iOS only).
+[getMpocVersion](#getMpocVersion) | String | Returns the MPoC (Mobile Payments on COTS) version of the SDK.
 
 ### TapToPaySettings Namespace
 
@@ -204,7 +204,7 @@ Returns the current Mobile Payments SDK version running. Note this is the versio
 ---
 ### getMpocVersion
 
-Returns the MPoC (Mobile Payments on COTS) version of the Mobile Payments SDK. **iOS only**; rejects on Android, where the native SDK has no equivalent.
+Returns the MPoC (Mobile Payments on COTS) version of the Mobile Payments SDK.
 
 * **On success**: returns a String with the MPoC version.
 * **On failure**: throws an error if called on Android.

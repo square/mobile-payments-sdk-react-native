@@ -14,7 +14,7 @@ PODS:
   - hermes-engine (260318099.0.5):
     - hermes-engine/Pre-built (= 260318099.0.5)
   - hermes-engine/Pre-built (260318099.0.5)
-  - mobile-payments-sdk-react-native (2026.10.1):
+  - mobile-payments-sdk-react-native (2026.11.1):
     - hermes-engine
     - MockReaderUI (~> 2.7.0)
     - RCTRequired
@@ -2237,7 +2237,7 @@ SPEC CHECKSUMS:
   fmt: ba0886e864ebb21d14c98b2e12e164b8002f5b93
   glog: 3cf7cb46f743c4bc758ae3e6d9c15bd1b4cfd6d4
   hermes-engine: 79484fc4e58f328d01b9339ef899ca633d3702ee
-  mobile-payments-sdk-react-native: a25380aa13da0e3fda120cce1040dc87f376796a
+  mobile-payments-sdk-react-native: 8927d687a6df5532c95de22754acf6f0d0afc2fd
   MockReaderUI: 8b33eed0e29151b002329b8bce50169034346671
   RCT-Folly: 82921e585c0400eda46fac1068297aa9dfb035e4
   RCTDeprecation: c62b9b3fbf0d26b76755f3ebd1c913a4fb469dde

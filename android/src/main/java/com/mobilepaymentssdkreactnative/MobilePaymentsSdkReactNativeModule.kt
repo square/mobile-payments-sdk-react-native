@@ -128,6 +128,12 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
   }
 
   @ReactMethod
+  fun getMpocVersion(promise: Promise) {
+    val settingsManager = MobilePaymentsSdk.settingsManager()
+    promise.resolve(settingsManager.getSdkSettings().mpocVersion)
+  }
+
+  @ReactMethod
   fun isShowingSettings(promise: Promise) {
     reactContext.runOnUiQueueThread {
       val settingsManager = MobilePaymentsSdk.settingsManager()

@@ -32,6 +32,7 @@ import com.squareup.sdk.mobilepayments.payment.Payment.SourceType.CARD_ON_FILE
 import com.squareup.sdk.mobilepayments.payment.Payment.SourceType.CASH
 import com.squareup.sdk.mobilepayments.payment.Payment.SourceType.EXTERNAL
 import com.squareup.sdk.mobilepayments.payment.Payment.SourceType.SQUARE_ACCOUNT
+import com.squareup.sdk.mobilepayments.payment.Payment.SourceType.UNKNOWN
 import com.squareup.sdk.mobilepayments.payment.Payment.SourceType.WALLET
 import com.squareup.sdk.mobilepayments.payment.PaymentParameters
 import com.squareup.sdk.mobilepayments.payment.ProcessingMode
@@ -191,6 +192,7 @@ private fun SourceType.toEnumInt(): Int = when (this) {
   SQUARE_ACCOUNT -> 4
   CARD_ON_FILE -> 5
   WALLET -> 6
+  UNKNOWN -> 5
 }
 
 fun Payment.toPaymentMap(): ReadableMap {
@@ -364,6 +366,11 @@ fun ReaderInfo.toReaderInfoMap(): WritableMap {
     })
     putBoolean("isForgettable", isForgettable)
     putBoolean("isBlinkable", isBlinkable)
+    putArray("warnings", WritableNativeArray().apply {
+      warnings.forEach {
+        pushString(it.toWarningString())
+      }
+    })
   }
 }
 
@@ -395,6 +402,14 @@ fun ReaderInfo.BatteryStatus.toBatteryStatusMap(): WritableMap {
   return WritableNativeMap().apply {
     putBoolean("isCharging", isCharging)
     putInt("percent", percent)
+  }
+}
+
+fun ReaderInfo.ReaderWarning.toWarningString(): String {
+  return when(this) {
+    ReaderInfo.ReaderWarning.USB_THERMAL_FAULT -> "USB_THERMAL_FAULT"
+    ReaderInfo.ReaderWarning.THERMAL_FAULT_DISCONNECT_USB -> "THERMAL_FAULT_DISCONNECT_USB"
+    ReaderInfo.ReaderWarning.THERMAL_FAULT_POWER_OFF -> "THERMAL_FAULT_POWER_OFF"
   }
 }
 
@@ -439,6 +454,7 @@ fun ReaderInfo.Status.toUnavailableReasonString(): String? {
         ReaderInfo.Status.ReaderUnavailable.ReaderUnavailableReason.DEVICE_DEVELOPER_MODE -> "DEVICE_DEVELOPER_MODE"
         ReaderInfo.Status.ReaderUnavailable.ReaderUnavailableReason.DISABLED -> "DISABLED"
         ReaderInfo.Status.ReaderUnavailable.ReaderUnavailableReason.HOST_ID_MISMATCH -> "HOST_ID_MISMATCH"
+        ReaderInfo.Status.ReaderUnavailable.ReaderUnavailableReason.MICROPHONE_PERMISSION_REQUIRED -> "MICROPHONE_PERMISSION_REQUIRED"
       }
   }
   return  null;
@@ -467,6 +483,7 @@ fun ReaderChangedEvent.Change.toChangeString(): String {
     ReaderChangedEvent.Change.BATTERY_CHARGING -> "BATTERY_CHARGING"
     ReaderChangedEvent.Change.FIRMWARE_PROGRESS -> "FIRMWARE_PROGRESS"
     ReaderChangedEvent.Change.REMOVED -> "REMOVED"
+    ReaderChangedEvent.Change.WARNING_RAISED -> "WARNING_RAISED"
   }
 }
 

@@ -5,7 +5,7 @@ This repo is the `mobile-payments-sdk-react-native` wrapper plus the Donut Count
 
 Working on the wrapper itself rather than integrating it? See [CONTRIBUTING_AGENTS.md](CONTRIBUTING_AGENTS.md).
 
-Current package version: **2026.10.1**, wrapping native SDK **iOS 2.7.0** / **Android 2.6.1**.
+Current package version: **2026.11.1**, wrapping native SDK **iOS 2.7.0** / **Android 2.7.0**.
 
 ## Install
 
@@ -26,12 +26,14 @@ These silently break integrations. Check them before writing any code.
 | Constraint | Value |
 | :--- | :--- |
 | `minSdkVersion` | 28 |
-| `compileSdkVersion` / `targetSdkVersion` | 36 |
-| Android Gradle Plugin | 8.9.1 or later |
-| Gradle | 8.13 or later |
+| `compileSdkVersion` | 37 |
+| `targetSdkVersion` | 36 |
+| Android Gradle Plugin | 9.1.0 or later |
+| Gradle | 9.3.1 or later |
+| React Native | 0.87 or later (first release with an AGP 9 toolchain) |
 | Kotlin | 2.2.21 |
 
-In `android/build.gradle`: set those values in `ext { … }` along with `squareSdkVersion = "2.6.1"`, and add Square's Maven repo (it is not on Maven Central) to `allprojects.repositories`:
+In `android/build.gradle`: set those values in `ext { … }` along with `squareSdkVersion = "2.7.0"`, and add Square's Maven repo (it is not on Maven Central) to `allprojects.repositories`:
 
 ```gradle
 maven { url 'https://sdk.squareup.com/public/android/' }
@@ -58,20 +60,7 @@ android {
 
 This is the most expensive thing to get wrong: the debug build works, the release build compiles, and the failure only appears at runtime. Do not "fix" it by adding keep rules.
 
-The AGP/Gradle floor comes from `androidx.core:core:1.18.0`, which native SDK 2.6.x depends on. Older values fail during dependency resolution, not at runtime.
-
-### Android + Kotlin 2.2.x — patch required on React Native 0.75.x
-
-Native SDK 2.6.0 requires Kotlin 2.2.21. React Native's Gradle plugin (0.75.x and earlier) references `KotlinTopLevelExtension`, which Kotlin 2.2.x removed, and compiles itself with `allWarningsAsErrors = true`, which Gradle 8.13+ deprecation warnings then trip. Both make the Android build fail during Gradle configuration:
-
-```
-Unresolved reference: KotlinTopLevelExtension
-e: warnings found and -Werror specified
-```
-
-The fix is a `patch-package` patch against `@react-native/gradle-plugin`. Full steps and the patch diff: **[docs/KOTLIN_COMPATIBILITY.md](docs/KOTLIN_COMPATIBILITY.md)**. In short — install `patch-package`, add a `postinstall` script, and create `patches/@react-native+gradle-plugin+<your-rn-version>.patch` (the filename must match the installed `react-native` version exactly).
-
-This is a temporary workaround; it can be removed once React Native ships Kotlin 2.2.x support.
+The AGP / Gradle / `compileSdkVersion` floor comes from Jetpack Compose 1.12, which native SDK 2.7.x depends on. Older values fail in the `checkAarMetadata` task, not at runtime. The React Native template keeps `android.builtInKotlin=false` and `android.newDsl=false` in `gradle.properties`; the package works with or without those opt-outs.
 
 ### iOS
 
@@ -230,7 +219,7 @@ Fetch the `.md` variants. The HTML pages are iframe shells and return only navig
 - Build on iOS (native constraints) — https://developer.squareup.com/docs/mobile-payments-sdk/ios.md
 - Handling errors — https://developer.squareup.com/docs/mobile-payments-sdk/android/handling-errors.md and https://developer.squareup.com/docs/mobile-payments-sdk/ios/handling-errors.md
 
-In-repo: [docs/README.md](docs/README.md) is the step-by-step setup guide, [docs/REFERENCE.md](docs/REFERENCE.md) is the type and method reference, [docs/KOTLIN_COMPATIBILITY.md](docs/KOTLIN_COMPATIBILITY.md) is the Kotlin 2.2.x patch, and [CHANGELOG.md](CHANGELOG.md) records breaking changes per release.
+In-repo: [docs/README.md](docs/README.md) is the step-by-step setup guide, [docs/REFERENCE.md](docs/REFERENCE.md) is the type and method reference, and [CHANGELOG.md](CHANGELOG.md) records breaking changes per release.
 
 ## Repo layout
 

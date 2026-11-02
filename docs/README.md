@@ -5,7 +5,7 @@ This guide walks you through the process of setting up a new React Native projec
 ## Before you start
 
 * You will need a Square account enabled for payment processing. If you have not enabled payment processing on your account (or you are not sure), visit [squareup.com/activate](https://squareup.com/activate).
-* Set-up your React Native environment by following the [official guide](https://reactnative.dev/docs/0.75/set-up-your-environment).
+* Set-up your React Native environment by following the [official guide](https://reactnative.dev/docs/set-up-your-environment).
 
 
 ## Optional: Create a React Native project for Mobile Payments SDK
@@ -41,8 +41,8 @@ Make sure this build phase is after any `[CP] Embed Pods Frameworks` or `Embed F
 
 For Android:
 1. Modify your `/android/build.gradle`
-   - Add `squareSdkVersion = "2.6.1"` inside the `ext {...}` block
-   - Set `compileSdkVersion = 36` (or higher) and use Android Gradle Plugin `8.9.1` or higher with Gradle `8.13` or higher, as required by `androidx.core:core:1.18.0`
+   - Add `squareSdkVersion = "2.7.0"` inside the `ext {...}` block
+   - Set `compileSdkVersion = 37` (or higher) and use Android Gradle Plugin `9.1.0` or higher with Gradle `9.3.1` or higher (React Native 0.87 or later), as required by the SDK's Jetpack Compose 1.12 dependency
    - Add `maven { url 'https://sdk.squareup.com/public/android/' }` inside the `allprojects`'s `repositories {...}` block
 2. Modify your `/android/app/build.gradle`
    - Add `implementation("com.squareup.sdk:mobile-payments-sdk:$squareSdkVersion")` inside the `dependencies{...}` block

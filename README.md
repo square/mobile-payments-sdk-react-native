@@ -5,7 +5,7 @@
 Mobile Payments SDK for React Native supports the following SDK versions:
 
   * [iOS](https://developer.squareup.com/docs/mobile-payments-sdk/ios#1-install-the-sdk-and-dependencies): 2.7.0 and above
-  * [Android](https://developer.squareup.com/docs/mobile-payments-sdk/android#1-install-the-sdk-and-dependencies): 2.6.1 and above
+  * [Android](https://developer.squareup.com/docs/mobile-payments-sdk/android#1-install-the-sdk-and-dependencies): 2.7.0 and above
 
 ## Review requirements
 Before getting started, please review the Requirements and Limitations and Device Compatibility sections to ensure that the SDK can be used in your project:
@@ -14,16 +14,12 @@ Before getting started, please review the Requirements and Limitations and Devic
 
 ## Android build requirements
 
-Mobile Payments SDK 2.6.0 depends on `androidx.core:core:1.18.0`, which requires your Android app to be built with:
+Mobile Payments SDK 2.7.0 depends on Jetpack Compose 1.12, which requires your Android app to be built with:
 
-* `compileSdkVersion` 36 or higher
-* Android Gradle Plugin 8.9.1 or higher (Gradle 8.13 or higher)
+* `compileSdkVersion` 37 or higher (`minSdkVersion` 28 and `targetSdkVersion` 36 are unchanged)
+* Android Gradle Plugin 9.1.0 or higher (Gradle 9.3.1 or higher)
 
-Builds using older values fail during dependency resolution.
-
-## Android: Kotlin 2.2.x Compatibility
-
-Mobile Payments SDK 2.6.0 requires Kotlin 2.2.21, which is not yet supported by React Native's Gradle plugin (0.75.x and earlier). Android builds will fail unless you apply a small patch to your project. See the [Kotlin Compatibility Workaround](docs/KOTLIN_COMPATIBILITY.md) for step-by-step instructions.
+React Native moves its Android toolchain to Android Gradle Plugin 9 in 0.87, so your app needs React Native 0.87 or later. Builds using older values fail in the `checkAarMetadata` task.
 
 ## Installation
 ```sh
