@@ -242,5 +242,5 @@ src/                            published TypeScript API
 docs/                           setup guide, API reference, Kotlin patch
 example/                        Donut Counter sample (bare React Native 0.88)
   android/app/app.properties    credential placeholders
-example-expo/                   the same sample as an Expo development build
+example-expo/                   the same sample as an Expo development build (Expo SDK 58)
 ```

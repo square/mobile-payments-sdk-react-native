@@ -15,7 +15,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 export default function App() {
   return (
     <SafeAreaProvider>
-      <StatusBar backgroundColor="#fff" translucent={false} hidden={false} />
+      <StatusBar hidden={false} />
       <NavigationContainer>
         <Stack.Navigator>
           <Stack.Screen

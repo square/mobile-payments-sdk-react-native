@@ -7,7 +7,6 @@
     "icon": "./assets/images/appIcon.png",
     "scheme": "exampleexpo",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": false,
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
@@ -23,7 +22,6 @@
         "backgroundColor": "#ffffff",
         "foregroundImage": "./assets/images/appIcon.png"
       },
-      "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
       "package": "com.squareup.mobilepaymentssdk.exampleexpo"
     },
@@ -48,8 +46,7 @@
         "expo-build-properties",
         {
           "android": {
-            "minSdkVersion": 28,
-            "kotlinVersion": "2.1.20"
+            "minSdkVersion": 28
           },
           "ios": {
             "deploymentTarget": "17.1"

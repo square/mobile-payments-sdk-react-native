@@ -35,18 +35,6 @@ const withSquareMavenRepository = (config) => {
       const buildGradle = modConfig.modResults.contents;
       const mavenUrl =
         'maven { url("https://sdk.squareup.com/public/android/") }';
-      // Expo 54 KSP only maps Kotlin up to 2.2.20 (not 2.2.21 used by the RN
-      // library), and Square Mobile Payments SDK 2.6.0 is compiled with Kotlin
-      // 2.3.x metadata. We cannot align all Kotlin versions in this sample
-      // until Expo bumps its KSP/Kotlin support. This flag is required so the
-      // app compiles against the mixed metadata; remove once Expo supports the
-      // Kotlin version required by the Square SDK without a metadata mismatch.
-      const kotlinArgs = `
-    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
-        compilerOptions {
-            freeCompilerArgs.add("-Xskip-metadata-version-check")
-        }
-    }`;
 
       let newContents = buildGradle;
 
@@ -54,13 +42,6 @@ const withSquareMavenRepository = (config) => {
         newContents = newContents.replace(
           /allprojects\s*\{\s*repositories\s*\{/,
           `allprojects {\n    repositories {\n      ${mavenUrl}`
-        );
-      }
-
-      if (!newContents.includes('-Xskip-metadata-version-check')) {
-        newContents = newContents.replace(
-          /allprojects\s*\{/,
-          `allprojects {${kotlinArgs}`
         );
       }
 
@@ -298,27 +279,6 @@ SCRIPT
 end
 `;
 
-const IOS_PODFILE_FMT_PATCH = `
-def patch_fmt_for_xcode26(installer)
-  fmt_base = File.join(installer.sandbox.root, 'fmt', 'include', 'fmt', 'base.h')
-  return unless File.exist?(fmt_base)
-
-  content = File.read(fmt_base)
-  return if content.include?('Xcode 26 workaround')
-
-  patched = content.gsub(
-    /(#elif defined\\(__cpp_consteval\\)\\n#  define FMT_USE_CONSTEVAL) 1/,
-    "// Xcode 26 workaround: disable consteval\\n\\\\1 0"
-  )
-
-  return if patched == content
-
-  File.chmod(0644, fmt_base)
-  File.write(fmt_base, patched)
-end
-${IOS_PODFILE_SQUARE_SETUP_PATCH}
-`;
-
 const withIosPodfileWorkarounds = (config) => {
   return withDangerousMod(config, [
     'ios',
@@ -334,35 +294,27 @@ const withIosPodfileWorkarounds = (config) => {
 
       let contents = fs.readFileSync(podfilePath, 'utf8');
 
-      if (
-        !contents.includes('def patch_fmt_for_xcode26') ||
-        !contents.includes('def add_square_setup_build_phase')
-      ) {
-        if (!contents.includes('def patch_fmt_for_xcode26')) {
-          contents = contents.replace(
-            'prepare_react_native_project!',
-            `${IOS_PODFILE_FMT_PATCH}\nprepare_react_native_project!`
-          );
-        } else if (!contents.includes('def add_square_setup_build_phase')) {
-          contents = contents.replace(
-            'prepare_react_native_project!',
-            `${IOS_PODFILE_SQUARE_SETUP_PATCH}\nprepare_react_native_project!`
-          );
-        }
-      }
-
-      if (!/^\s+patch_fmt_for_xcode26\(installer\)/m.test(contents)) {
+      if (!contents.includes('def add_square_setup_build_phase')) {
         contents = contents.replace(
-          /(\s+)react_native_post_install\(/,
-          '$1patch_fmt_for_xcode26(installer)\n\n$1react_native_post_install('
+          'prepare_react_native_project!',
+          `${IOS_PODFILE_SQUARE_SETUP_PATCH}\nprepare_react_native_project!`
         );
       }
 
+      // `post_integrate` runs after CocoaPods adds its `[CP] Embed Pods
+      // Frameworks` phase, so the setup phase lands after it and finds the
+      // embedded SDK. From `post_install` it would run before the embed phase
+      // on the first `pod install` after a clean prebuild.
       if (!/^\s+add_square_setup_build_phase\(installer\)/m.test(contents)) {
-        contents = contents.replace(
-          /(\s+react_native_post_install\(\n[\s\S]*?\n\s+\)\n)/,
-          '$1\n    add_square_setup_build_phase(installer)\n'
-        );
+        contents += `
+post_integrate do |installer|
+  add_square_setup_build_phase(installer)
+
+  # Square ships its SDK binaries read-only, so CocoaPods can't strip the
+  # simulator architectures it isn't building for.
+  FileUtils.chmod_R('u+w', Dir[File.join(installer.sandbox.root, '{SquareMobilePaymentsSDK,MockReaderUI}')])
+end
+`;
       }
 
       fs.writeFileSync(podfilePath, contents);
