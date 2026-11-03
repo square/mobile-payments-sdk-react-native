@@ -31,7 +31,7 @@ These silently break integrations. Check them before writing any code.
 | Android Gradle Plugin | 9.1.0 or later |
 | Gradle | 9.3.1 or later |
 | React Native | 0.87 or later (first release with an AGP 9 toolchain) |
-| Kotlin | 2.2.21 |
+| Kotlin | 2.2.0 or later (the React Native 0.87+ default) |
 
 In `android/build.gradle`: set those values in `ext { … }` along with `squareSdkVersion = "2.7.0"`, and add Square's Maven repo (it is not on Maven Central) to `allprojects.repositories`:
 
@@ -60,7 +60,7 @@ android {
 
 This is the most expensive thing to get wrong: the debug build works, the release build compiles, and the failure only appears at runtime. Do not "fix" it by adding keep rules.
 
-The AGP / Gradle / `compileSdkVersion` floor comes from Jetpack Compose 1.12, which native SDK 2.7.x depends on. Older values fail in the `checkAarMetadata` task, not at runtime. The React Native template keeps `android.builtInKotlin=false` and `android.newDsl=false` in `gradle.properties`; the package works with or without those opt-outs.
+The AGP / Gradle / `compileSdkVersion` floor comes from Jetpack Compose 1.12, which native SDK 2.7.x depends on. Older values fail in the `checkAarMetadata` task, not at runtime. The Kotlin floor comes from the native SDK being compiled with Kotlin 2.3, and a Kotlin compiler only reads metadata up to one minor version ahead of itself. The React Native template keeps `android.builtInKotlin=false` and `android.newDsl=false` in `gradle.properties`; the package works with or without those opt-outs.
 
 ### iOS
 
@@ -228,7 +228,7 @@ src/                            published TypeScript API
   index.tsx                     re-exports everything
   managers/                     auth, payment, reader, settings
   models/                       enums, objects, errors
-docs/                           setup guide, API reference, Kotlin patch
+docs/                           setup guide, API reference
 example/                        Donut Counter sample (bare React Native 0.88)
   android/app/app.properties    credential placeholders
 example-expo/                   the same sample as an Expo development build (Expo SDK 58)

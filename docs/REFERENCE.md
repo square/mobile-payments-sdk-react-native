@@ -207,7 +207,7 @@ Returns the current Mobile Payments SDK version running. Note this is the versio
 Returns the MPoC (Mobile Payments on COTS) version of the Mobile Payments SDK.
 
 * **On success**: returns a String with the MPoC version.
-* **On failure**: throws an error if called on Android.
+* **On failure**: Not applicable.
 
 ---
 ### TapToPaySettings Methods
