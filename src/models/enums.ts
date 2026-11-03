@@ -137,7 +137,6 @@ export enum ReaderChange {
   BATTERY_CHARGING,
   FIRMWARE_PROGRESS,
   REMOVED,
-  //--android and ios
   WARNING_RAISED,
 }
 
