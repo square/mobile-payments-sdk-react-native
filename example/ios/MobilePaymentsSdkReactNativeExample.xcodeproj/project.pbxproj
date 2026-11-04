@@ -18,6 +18,7 @@
 		A1682D0D2CBE8D470011933F /* libmobile-payments-sdk-react-native.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A1682D0C2CBE8D470011933F /* libmobile-payments-sdk-react-native.a */; };
 		A1682D162CBE90620011933F /* SquareMobilePaymentsSDK.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1682D152CBE90620011933F /* SquareMobilePaymentsSDK.xcframework */; };
 		A1682D172CBE90620011933F /* SquareMobilePaymentsSDK.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A1682D152CBE90620011933F /* SquareMobilePaymentsSDK.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		A441EDB39A8FD851E7926BED /* SceneDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 84A9182DC46E672F16F063A0 /* SceneDelegate.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,11 +56,13 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = MobilePaymentsSdkReactNativeExample/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = MobilePaymentsSdkReactNativeExample/main.m; sourceTree = "<group>"; };
 		13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = PrivacyInfo.xcprivacy; path = MobilePaymentsSdkReactNativeExample/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		14C8521D5964F6C25A663D6A /* SceneDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SceneDelegate.h; path = MobilePaymentsSdkReactNativeExample/SceneDelegate.h; sourceTree = "<group>"; };
 		1DA8265643A6ECAEB8883020 /* Pods-MobilePaymentsSdkReactNativeExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MobilePaymentsSdkReactNativeExample.debug.xcconfig"; path = "Target Support Files/Pods-MobilePaymentsSdkReactNativeExample/Pods-MobilePaymentsSdkReactNativeExample.debug.xcconfig"; sourceTree = "<group>"; };
 		2D836B28FA8B57D7645367CD /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = MobilePaymentsSdkReactNativeExample/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		5EF6B75290F83F4093F5CD5A /* Pods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests.debug.xcconfig"; path = "Target Support Files/Pods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests/Pods-MobilePaymentsSdkReactNativeExample-MobilePaymentsSdkReactNativeExampleTests.debug.xcconfig"; sourceTree = "<group>"; };
 		65D88241E83508BA54D8AB2E /* Pods-MobilePaymentsSdkReactNativeExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MobilePaymentsSdkReactNativeExample.release.xcconfig"; path = "Target Support Files/Pods-MobilePaymentsSdkReactNativeExample/Pods-MobilePaymentsSdkReactNativeExample.release.xcconfig"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = MobilePaymentsSdkReactNativeExample/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		84A9182DC46E672F16F063A0 /* SceneDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = SceneDelegate.mm; path = MobilePaymentsSdkReactNativeExample/SceneDelegate.mm; sourceTree = "<group>"; };
 		A1682D0C2CBE8D470011933F /* libmobile-payments-sdk-react-native.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = "libmobile-payments-sdk-react-native.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A1682D0F2CBE902C0011933F /* libmobile-payments-sdk-react-native.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = "libmobile-payments-sdk-react-native.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A1682D152CBE90620011933F /* SquareMobilePaymentsSDK.xcframework */ = {isa = PBXFileReference; expectedSignature = "AppleDeveloperProgram:EYF346PHUG:Block, Inc."; lastKnownFileType = wrapper.xcframework; name = SquareMobilePaymentsSDK.xcframework; path = Pods/SquareMobilePaymentsSDK/SquareMobilePaymentsSDK.xcframework; sourceTree = "<group>"; };
@@ -121,6 +124,8 @@
 				13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */,
 				2D836B28FA8B57D7645367CD /* PrivacyInfo.xcprivacy */,
 				A1682D1C2CBE9EC10011933F /* MobilePaymentsSdkReactNativeExample-Bridging-Header.h */,
+				14C8521D5964F6C25A663D6A /* SceneDelegate.h */,
+				84A9182DC46E672F16F063A0 /* SceneDelegate.mm */,
 			);
 			name = MobilePaymentsSdkReactNativeExample;
 			sourceTree = "<group>";
@@ -454,6 +459,7 @@
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				A441EDB39A8FD851E7926BED /* SceneDelegate.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -652,6 +658,10 @@
 				);
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_CFLAGS = (
+					"$(inherited)",
+					"-DRCT_REMOVE_LEGACY_ARCH=1",
+				);
 				OTHER_CPLUSPLUSFLAGS = (
 					"$(OTHER_CFLAGS)",
 					"-DFOLLY_NO_CONFIG",
@@ -659,8 +669,10 @@
 					"-DFOLLY_USE_LIBCPP=1",
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
+					"-DRCT_REMOVE_LEGACY_ARCH=1",
 				);
 				OTHER_LDFLAGS = "$(inherited)";
+				PODFILE_DIR = "$(SRCROOT)";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) DEBUG";
@@ -726,6 +738,10 @@
 				);
 				"LIBRARY_SEARCH_PATHS[arch=*]" = "$(SRCROOT)/../example/ios\n";
 				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_CFLAGS = (
+					"$(inherited)",
+					"-DRCT_REMOVE_LEGACY_ARCH=1",
+				);
 				OTHER_CPLUSPLUSFLAGS = (
 					"$(OTHER_CFLAGS)",
 					"-DFOLLY_NO_CONFIG",
@@ -733,8 +749,10 @@
 					"-DFOLLY_USE_LIBCPP=1",
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
+					"-DRCT_REMOVE_LEGACY_ARCH=1",
 				);
 				OTHER_LDFLAGS = "$(inherited)";
+				PODFILE_DIR = "$(SRCROOT)";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;

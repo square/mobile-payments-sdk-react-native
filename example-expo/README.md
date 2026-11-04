@@ -18,7 +18,7 @@ This is the **Expo** version of the Donut Counter sample app, demonstrating how 
 ### 1. Requirements
 
 - A Square account enabled for payment processing
-- React Native development environment set up
+- React Native development environment set up (the app uses Expo SDK 58 with React Native 0.88)
 - Android: **minSdkVersion 28** (Android 9+)
 
 ### 2. Get application credentials

@@ -107,7 +107,7 @@ jobs:
           yarn turbo run build:android --cache-dir="${{ env.TURBO_CACHE_DIR }}"
 
   build-ios:
-    runs-on: macos-14
+    runs-on: macos-15
     env:
       TURBO_CACHE_DIR: .turbo/ios
     steps:
@@ -140,9 +140,9 @@ jobs:
         with:
           path: |
             **/ios/Pods
+          # No `restore-keys` fallback: `Pods/` from a different `Podfile.lock` has stale
+          # local podspecs (for example `hermes-engine`) and makes `pod install` fail.
           key: ${{ runner.os }}-cocoapods-${{ hashFiles('example/ios/Podfile.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-cocoapods-
 
       - name: Install cocoapods
         if: env.turbo_cache_hit != 1

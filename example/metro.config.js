@@ -11,8 +11,14 @@ const root = path.resolve(__dirname, '..');
  *
  * @type {import('metro-config').MetroConfig}
  */
-module.exports = getConfig(getDefaultConfig(__dirname), {
+const config = getConfig(getDefaultConfig(__dirname), {
   root,
   pkg,
   project: __dirname,
 });
+
+// Metro no longer reads `blacklistRE`, which bob sets to keep the root's copy
+// of react-native out of the bundle, so pass the same pattern as `blockList`.
+config.resolver.blockList = config.resolver.blacklistRE;
+
+module.exports = config;

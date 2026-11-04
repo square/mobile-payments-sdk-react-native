@@ -1,5 +1,15 @@
 ## Changelog
 
+### v2026.11.1 Nov 1, 2026
+
+* Upgrade Android native SDK to `2.7.0`. See the native release notes: [https://github.com/square/mobile-payments-sdk-android/releases/tag/2.7.0](https://github.com/square/mobile-payments-sdk-android/releases/tag/2.7.0)
+* **Breaking (Android):** Apps must be built with Android Gradle Plugin `9.1.0` or later, Gradle `9.3.1` or later and `compileSdkVersion` `37`. React Native ships that toolchain from 0.87, so apps on older React Native versions should stay on `v2026.10.1`. `minSdkVersion` (28) and `targetSdkVersion` (36) are unchanged
+* **Android:** The Kotlin Android plugin is now only applied when the app opts out of AGP 9 built-in Kotlin (`android.builtInKotlin=false`, as in the React Native template), and codegen only scans the package's `src/`
+* **Android:** `ReaderInfo.warnings`, the `WARNING_RAISED` `ReaderChange` and `SettingsManager.getMpocVersion()` now work on Android too
+* **Android:** Add `MICROPHONE_PERMISSION_REQUIRED` to `ReaderUnavailableReason`, reported by magstripe readers when the app hasn't been granted microphone permission
+* **Android:** Payments whose source type the native SDK doesn't recognize are now reported as `SourceType.UNKNOWN`
+* The example apps now use React Native 0.88 (bare) and Expo SDK 58 (Expo)
+
 ### v2026.10.1 Oct 25, 2026
 
 * Upgrade iOS native SDK to `2.7.0`. See the native changelog: [https://developer.squareup.com/docs/changelog/mobile-logs/2026-10-23](https://developer.squareup.com/docs/changelog/mobile-logs/2026-10-23)
