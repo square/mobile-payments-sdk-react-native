@@ -102,18 +102,24 @@ fun ReadableMap.readPromptParameters(): PromptParameters {
 
 
 /**
- * Converts a string to a [CurrencyCode] enum, defaulting to [CurrencyCode.USD] if the string
- * does not match any enum or is `null`.
+ * Converts a string to a [CurrencyCode] enum.
+ *
+ * A missing or unrecognised currency is a caller bug, not something we can guess at: silently
+ * falling back to USD would charge the card in the wrong currency. Throws
+ * [IllegalArgumentException] so `startPayment` rejects with `INVALID_PAYMENT_PARAMETERS`.
  */
 fun convertToCurrencyCode(value: String?): CurrencyCode {
-  if (value == null) return CurrencyCode.USD
-  return CurrencyCode.entries.firstOrNull { it.name == value.uppercase() } ?: CurrencyCode.USD
+  requireNotNull(value) { "currencyCode is required" }
+  return requireNotNull(CurrencyCode.entries.firstOrNull { it.name == value.uppercase() }) {
+    "Unknown currencyCode '$value'"
+  }
 }
 
 fun convertToMoney(map: ReadableMap?) : Money? {
   if (map == null) return null
   return Money(
-    amount = map.getLongOrNull("amount") ?: 0,
+    // A Money without an amount is not "free", it is a caller bug. Reject instead of charging 0.
+    amount = requireNotNull(map.getLongOrNull("amount")) { "Money amount is required" },
     currencyCode = convertToCurrencyCode(map.getString("currencyCode"))
   )
 }
@@ -128,7 +134,9 @@ fun convertToProcessingMode(value: Int?) = when (value) {
   0 -> ProcessingMode.ONLINE_ONLY
   1 -> ProcessingMode.OFFLINE_ONLY
   2 -> ProcessingMode.AUTO_DETECT
-  else -> ProcessingMode.AUTO_DETECT
+  // An unknown mode must NOT fall back to AUTO_DETECT: that can store a payment offline that the
+  // caller never agreed to take offline. Returning null lets `readPaymentParameters` reject it.
+  else -> null
 }
 
 fun convertToPromptMode(value: Int?) = when (value) {
@@ -171,8 +179,12 @@ fun ReadableMap.getBooleanOrNull(key: String): Boolean? {
   return if (hasKey(key)) getBoolean(key) else null
 }
 
+/** Reads a JS number as a [Long], rejecting fractions. */
 fun ReadableMap.getLongOrNull(key: String): Long? {
-  return if (hasKey(key)) getInt(key).toLong() else null
+  if (!hasKey(key) || isNull(key)) return null
+  val value = getDouble(key)
+  require(value.isFinite() && value == Math.rint(value)) { "'$key' must be a whole number, got $value" }
+  return value.toLong()
 }
 
 fun ReadableMap.getDoubleOrNull(key: String): Double? {
@@ -185,7 +197,7 @@ fun ReadableMap.getIntOrNull(key: String): Int? {
 
 fun Money?.toMoneyMap(): ReadableMap {
   return WritableNativeMap().apply {
-    putInt("amount", this@toMoneyMap?.amount?.toInt() ?: 0)
+    putDouble("amount", this@toMoneyMap?.amount?.toDouble() ?: 0.0)
     putString("currencyCode", this@toMoneyMap?.currencyCode?.name ?: CurrencyCode.USD.name)
   }
 }
@@ -195,9 +207,10 @@ private fun SourceType.toEnumInt(): Int = when (this) {
   CASH -> 2
   EXTERNAL -> 3
   SQUARE_ACCOUNT -> 4
-  CARD_ON_FILE -> 5
-  WALLET -> 6
   UNKNOWN -> 5
+  WALLET -> 6
+  // 5 was reused for CARD_ON_FILE, so card-on-file payments surfaced in JS as UNKNOWN.
+  CARD_ON_FILE -> 7
 }
 
 fun Payment.toPaymentMap(): ReadableMap {

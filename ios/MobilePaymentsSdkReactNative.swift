@@ -38,7 +38,8 @@ class MobilePaymentsSdkReactNative: RCTEventEmitter {
                     let anError = authError as NSError
                     return reject("AUTHENTICATION_ERROR", authError.localizedDescription, anError.reactNativeError)
                 }
-                return resolve("Authorized with token: \(accessToken) and location: \(locationId)")
+                // Never echo the access token back to JS: it ends up in logs and crash reports.
+                return resolve("Authorized with location: \(locationId)")
             }
     }
 
@@ -296,10 +297,6 @@ class MobilePaymentsSdkReactNative: RCTEventEmitter {
     /// Start Payment: https://developer.squareup.com/docs/mobile-payments-sdk/ios/take-payments
     @objc(startPayment:promptParameters:withResolver:withRejecter:)
     func startPayment(_ paymentParameters: [String: Any], promptParameters: [String: Any], resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
-        // Keeping a reference for the resolvers so the protocol can propagate the results
-        self.startPaymentResolveBlock = resolve
-        self.startPaymentRejectBlock = reject
-
         let params: PaymentParameters
         let paymentResult = Mappers.mapPaymentParameters(paymentParameters)
         switch paymentResult {
@@ -320,10 +317,24 @@ class MobilePaymentsSdkReactNative: RCTEventEmitter {
 
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
+            // Only one payment can be in flight. The check and the assignments below all happen on
+            // the main queue, so two quick calls cannot both pass the check (this method itself runs
+            // on the RN module queue). Storing the new resolvers before this check would hijack the
+            // running payment's promise. The resolvers stay set until the delegate fires, even after
+            // a successful cancel, so they are part of the "in progress" condition too.
+            guard self.paymentHandle == nil,
+                  self.startPaymentResolveBlock == nil,
+                  self.startPaymentRejectBlock == nil else {
+                return reject("PAYMENT_IN_PROGRESS", "A payment is already in progress", nil)
+            }
             // TODO: add support to custom prompts. For now only default is supported.
             guard let presentedViewController = RCTPresentedViewController() else {
                 return reject("NO_PRESENTED_VIEW_CONTROLLER", "Can't present payment view controller.", nil)
             }
+            // Keeping a reference for the resolvers so the delegate can propagate the result.
+            // Set only once validation passed and we are actually starting a payment.
+            self.startPaymentResolveBlock = resolve
+            self.startPaymentRejectBlock = reject
             self.paymentHandle = self.mobilePaymentsSDK.paymentManager.startPayment(
                 params,
                 promptParameters: promptParams,
@@ -346,7 +357,11 @@ class MobilePaymentsSdkReactNative: RCTEventEmitter {
             } else {
                 reject("PAYMENT_CANCEL_ERROR", "This payment cannot be canceled.", nil)
             }
-            paymentHandle = nil
+            // Do not clear paymentHandle here. If the cancel was refused the payment is still live
+            // and the in-progress guard must hold. If it was accepted, the SDK still owes us
+            // didCancel, and clearPaymentState() there is the single place that resets everything.
+            // Clearing early let a startPayment in that gap install resolvers that didCancel then
+            // rejected on the wrong payment's behalf.
         }
     }
 
@@ -538,9 +553,13 @@ class MobilePaymentsSdkReactNative: RCTEventEmitter {
     @objc(stopPairing:withRejecter:)
     func stopPairing(resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         pairingHandler?.stop()
+        // The SDK does not call the pairing delegate back after stop(), so settle the pending
+        // pairReader promise here or it hangs forever. `false` means pairing did not complete.
+        let pendingResolve = pairingResolveBlock
         pairingHandler = nil;
         pairingRejectBlock = nil
         pairingResolveBlock = nil
+        pendingResolve?(false)
         resolve(NSNull())
     }
     // ---
@@ -631,7 +650,7 @@ extension MobilePaymentsSdkReactNative : AuthorizationStateObserver {
 extension MobilePaymentsSdkReactNative: PaymentManagerDelegate {
     func paymentManager(_ paymentManager: PaymentManager, didFinish payment: Payment) {
         startPaymentResolveBlock?(Mappers.mapToDictionary(payment: payment))
-        paymentHandle = nil
+        clearPaymentState()
     }
 
     func paymentManager(_ paymentManager: PaymentManager, didFail payment: Payment, withError error: Error) {
@@ -670,7 +689,7 @@ extension MobilePaymentsSdkReactNative: PaymentManagerDelegate {
             errorMessage = "There has been an error taking a payment. Check the request details and try the payment again."
         }
         startPaymentRejectBlock?("PAYMENT_FAILED", errorMessage, (error as NSError).reactNativeError);
-        paymentHandle = nil
+        clearPaymentState()
     }
 
     func paymentManager(_ paymentManager: PaymentManager, didCancel payment: Payment) {
@@ -680,6 +699,12 @@ extension MobilePaymentsSdkReactNative: PaymentManagerDelegate {
         } else {
             startPaymentRejectBlock?("PAYMENT_CANCELED", "The payment has been canceled.", nil);
         }
+        clearPaymentState()
+    }
+
+    private func clearPaymentState() {
         paymentHandle = nil
+        startPaymentResolveBlock = nil
+        startPaymentRejectBlock = nil
     }
 }
