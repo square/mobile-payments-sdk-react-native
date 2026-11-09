@@ -57,7 +57,8 @@ fun ReadableMap.readPaymentParameters(): PaymentParameters {
   val autocomplete = getBooleanOrNull("autocomplete")
   val customerId = getString("customerId")
   val delayAction = convertToDelayAction(getIntOrNull("delayAction"))
-  val delayDuration = getLongOrNull("delayDuration")
+  // The JS API takes seconds (as on iOS), but the Android SDK expects milliseconds.
+  val delayDuration = getDoubleOrNull("delayDuration")?.let { (it * 1000).toLong() }
   val locationId = getString("locationId")
   val note = getString("note")
   val orderId = getString("orderId")
@@ -172,6 +173,10 @@ fun ReadableMap.getBooleanOrNull(key: String): Boolean? {
 
 fun ReadableMap.getLongOrNull(key: String): Long? {
   return if (hasKey(key)) getInt(key).toLong() else null
+}
+
+fun ReadableMap.getDoubleOrNull(key: String): Double? {
+  return if (hasKey(key) && !isNull(key)) getDouble(key) else null
 }
 
 fun ReadableMap.getIntOrNull(key: String): Int? {
