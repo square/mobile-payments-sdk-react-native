@@ -61,6 +61,8 @@ class Mappers {
         if let partialAuth = paymentParameters["acceptPartialAuthorization"] as? Bool {
             paymentParams.acceptPartialAuthorization = partialAuth
         }
+        // Android defaults this to false when absent; match it so both platforms behave the same.
+        paymentParams.allowCardSurcharge = paymentParameters["allowCardSurcharge"] as? Bool ?? false
         if let fee = paymentParameters["appFeeMoney"] as? [String : Any] {
             paymentParams.appFeeMoney = Money(fee)
         }

@@ -29,6 +29,9 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
   private var authStateCallback: CallbackReference? = null
   private var readerChangedCallbacks = mutableMapOf<String, CallbackReference>();
   private var pairingHandler: PairingHandle? = null
+  // The JS promise for the pairing in flight, kept so stopPairing can settle it: the SDK does not
+  // call the pairReader callback after stop().
+  private var pairingPromise: Promise? = null
 
   override fun getName(): String {
     return NAME
@@ -56,7 +59,8 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
     authorizationManager.authorize(accessToken, locationId) { result ->
       when (result) {
         is Success ->
-          promise.resolve("Authorized with token: $accessToken and location: $locationId")
+          // Never echo the access token back to JS: it ends up in logs and crash reports.
+          promise.resolve("Authorized with location: $locationId")
 
         is Failure ->
           promise.reject("AUTHENTICATION_ERROR", result.errorMessage, result.toErrorMap())
@@ -187,16 +191,19 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
     promise: Promise
   ) {
     val paymentManager = MobilePaymentsSdk.paymentManager()
+    // ReadableMap getters throw ClassCastException / NoSuchKeyException (both RuntimeExceptions)
+    // when JS passes the wrong type, so catching only IllegalArgumentException would let a typo
+    // in a JS arg crash the app instead of rejecting the promise.
     val parsedPaymentParameters = try {
       paymentParameters.readPaymentParameters()
-    } catch (e: IllegalArgumentException) {
+    } catch (e: RuntimeException) {
       promise.reject("INVALID_PAYMENT_PARAMETERS", e.message, e)
       return
     }
 
     val parsedPromptParameters = try {
       promptParameters.readPromptParameters()
-    } catch (e: IllegalArgumentException) {
+    } catch (e: RuntimeException) {
       promise.reject("INVALID_PAYMENT_PROMPT", e.message, e)
       return
     }
@@ -224,13 +231,19 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
   fun cancelPayment(promise: Promise) {
     val cancelResult = paymentHandle?.cancel()
     when (cancelResult) {
-      CANCELED -> promise.resolve("Payment successfully canceled")
+      CANCELED -> {
+        paymentHandle = null
+        promise.resolve("Payment successfully canceled")
+      }
+      // The payment is still live, so the handle must stay: dropping it here would disable the
+      // PAYMENT_IN_PROGRESS guard and let a second startPayment launch on top of this one.
       NOT_CANCELABLE ->
         promise.reject("PAYMENT_CANCEL_ERROR", "This payment cannot be canceled.")
-      NO_PAYMENT_IN_PROGRESS, null ->
+      NO_PAYMENT_IN_PROGRESS, null -> {
+        paymentHandle = null
         promise.reject("PAYMENT_CANCEL_ERROR", "No payment available to cancel.")
+      }
     }
-    paymentHandle = null
   }
 
   @ReactMethod
@@ -366,19 +379,17 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
   fun pairReader(promise: Promise) {
     if(pairingHandler != null) {
       promise.reject("PAIRING_IN_PROGRESS", "A pairing is already in progress")
+      return
     }
     val readerManager = MobilePaymentsSdk.readerManager()
+    pairingPromise = promise
     pairingHandler = readerManager.pairReader {
       result ->
+        val pending = takePairingPromise() ?: return@pairReader
+        pairingHandler = null
         when(result) {
-          is Success -> {
-            pairingHandler = null;
-            promise.resolve(result.value)
-          }
-          is Failure -> {
-            pairingHandler = null;
-            promise.reject("PAIRING_ERROR", result.errorMessage, result.toErrorMap())
-          }
+          is Success -> pending.resolve(result.value)
+          is Failure -> pending.reject("PAIRING_ERROR", result.errorMessage, result.toErrorMap())
         }
     }
   }
@@ -388,8 +399,18 @@ class MobilePaymentsSdkReactNativeModule(private val reactContext: ReactApplicat
     if(pairingHandler != null) {
       pairingHandler?.stop()
       pairingHandler = null;
+      // `false` means the pairing ended without completing.
+      takePairingPromise()?.resolve(false)
     }
     promise.resolve(null)
+  }
+
+  /** Returns the pending pairReader promise at most once so it is never settled twice. */
+  @Synchronized
+  private fun takePairingPromise(): Promise? {
+    val pending = pairingPromise
+    pairingPromise = null
+    return pending
   }
   // ---
 

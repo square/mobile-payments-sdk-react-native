@@ -108,6 +108,7 @@ export enum SourceType {
   SQUARE_ACCOUNT,
   UNKNOWN,
   WALLET,
+  CARD_ON_FILE,
 }
 
 // Reader Enums
