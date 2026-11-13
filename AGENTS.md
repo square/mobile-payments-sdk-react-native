@@ -5,7 +5,7 @@ This repo is the `mobile-payments-sdk-react-native` wrapper plus the Donut Count
 
 Working on the wrapper itself rather than integrating it? See [CONTRIBUTING_AGENTS.md](CONTRIBUTING_AGENTS.md).
 
-Current package version: **2026.11.1**, wrapping native SDK **iOS 2.7.0** / **Android 2.7.0**.
+Current package version: **2026.11.2**, wrapping native SDK **iOS 2.7.0** / **Android 2.7.0**.
 
 ## Install
 

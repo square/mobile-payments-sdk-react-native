@@ -1,5 +1,18 @@
 ## Changelog
 
+### v2026.11.2 Nov 13, 2026
+
+* **Breaking (iOS):** `allowCardSurcharge` is now passed to the native SDK and defaults to `false` when omitted, as on Android. Until now the plugin ignored it on iOS, so native `2.7.0`'s default of `true` applied: payments could be surcharged for sellers eligible for card surcharging, with no way to opt out. Apps that want surcharging on iOS must now pass `allowCardSurcharge: true`
+* **Breaking (Android):** `startPayment` now rejects with `INVALID_PAYMENT_PARAMETERS` instead of substituting a default when `currencyCode` is missing or unknown (was `USD`), `processingMode` is unknown (was `AUTO_DETECT`), or a `Money` has no `amount` (was `0`). `amount` must be a whole number, and amounts above 2^31 are no longer truncated
+* **Breaking (Android):** `delayDuration` is now read as seconds, as on iOS and as documented in [REFERENCE.md](docs/REFERENCE.md). It was previously passed to the native SDK as milliseconds, so the `delayAction` fired 1000 times sooner than requested. Apps that worked around this by passing milliseconds on Android must switch to seconds
+* **Android:** `startPayment` now rejects with `INVALID_PAYMENT_PARAMETERS` when a parameter has the wrong JS type, instead of crashing the app
+* **Android:** Card-on-file payments are now reported as the new `SourceType.CARD_ON_FILE` instead of `SourceType.UNKNOWN`
+* **iOS:** Calling `startPayment` while a payment is in progress now rejects with `PAYMENT_IN_PROGRESS`. Previously the second call took over the first payment's promise
+* `cancelPayment` no longer clears the in-progress payment when the cancel is refused (`NOT_CANCELABLE`) or, on iOS, before the SDK confirms the cancel. A `startPayment` in that window now rejects with `PAYMENT_IN_PROGRESS` instead of starting a second payment or getting the first payment's result
+* `stopPairing` now resolves the pending `pairReader` promise with `false` instead of leaving it pending forever
+* **Android:** Calling `pairReader` while a pairing is in progress no longer starts a second pairing after rejecting with `PAIRING_IN_PROGRESS`
+* `authorize` no longer includes the access token in its resolved message
+
 ### v2026.11.1 Nov 1, 2026
 
 * Upgrade Android native SDK to `2.7.0`. See the native release notes: [https://github.com/square/mobile-payments-sdk-android/releases/tag/2.7.0](https://github.com/square/mobile-payments-sdk-android/releases/tag/2.7.0)
